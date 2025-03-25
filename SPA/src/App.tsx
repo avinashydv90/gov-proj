@@ -16,8 +16,11 @@ function App() {
     <>
       <Header />
       <NavigationMenu />
-      <Breadcrumbs />
-      <Outlet />
+      <div style={{ padding: "15px" }}>
+        <Breadcrumbs />
+        <Outlet />
+      </div>
+
       <Footer />
 
       {/* <div className="container mt-3">
