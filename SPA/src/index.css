@@ -88,3 +88,8 @@ button:focus-visible {
 .right-logo{
   width:10rem;
 }
+.carousel-image {
+  width: 100%;        /* Full width */
+  height: 70vh;       /* 60% of the viewport height */
+ 
+}
