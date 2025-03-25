@@ -32,9 +32,25 @@ const Header = () => {
             xs={4}
             className="d-flex flex-column align-items-center text-center"
           >
-            <div className=" d-flex flex-column align-items-center">
+            {/* <div className=" d-flex flex-column align-items-center">
               <div className="logo_text">
                 <strong>महाराष्ट्र शासन</strong>
+                <span className="site_name_english d-block">
+                  आदिवासी विकास विभाग <br />
+                  प्रकल्प अधिकारी, एकात्मिक आदिवासी विकास प्रकल्प शहापूर ऋतु
+                  पार्क, दुसरा मजला, रिलाईन्स स्मार्ट पॉईंट शेजारी,
+                  गोठेघर-शहापूर ता. शहापूर जि.ठाणे
+                </span>
+              </div>
+            </div> */}
+            <div className="d-flex flex-column align-items-center">
+              <img
+                src="../public/images/emblem_transparent.png"
+                alt="Additional Image"
+                className="additional-image"
+              />
+              <div className="logo_text">
+                <strong className="maharashtra-gov">महाराष्ट्र शासन</strong>
                 <span className="site_name_english d-block">
                   आदिवासी विकास विभाग <br />
                   प्रकल्प अधिकारी, एकात्मिक आदिवासी विकास प्रकल्प शहापूर ऋतु

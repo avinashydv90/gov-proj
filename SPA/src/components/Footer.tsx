@@ -6,54 +6,58 @@ const Footer = () => {
         <div className="footerMenu">
           <ul className="list-inline">
             <li className="list-inline-item mx-3">
-              <a
+              {/* <a
                 href="https://dhule.gov.in/website-policies/"
                 className="text-white"
               >
                 Website Policies
-              </a>
+              </a> */}
             </li>
             <li className="list-inline-item mx-3">
-              <a href="https://dhule.gov.in/help/" className="text-white">
+              {/* <a href="https://dhule.gov.in/help/" className="text-white">
                 Help
-              </a>
+              </a> */}
             </li>
             <li className="list-inline-item mx-3">
-              <a href="https://dhule.gov.in/contact-us/" className="text-white">
+              {/* <a href="https://dhule.gov.in/contact-us/" className="text-white">
                 Contact Us
-              </a>
+              </a> */}
             </li>
             <li className="list-inline-item mx-3">
-              <a href="https://dhule.gov.in/feedback/" className="text-white">
+              {/* <a href="https://dhule.gov.in/feedback/" className="text-white">
                 Feedback
-              </a>
+              </a> */}
             </li>
           </ul>
         </div>
 
         {/* Content Owned */}
         <div className="mt-3">
-          <p className="mb-1">Content Owned by District Administration</p>
+          <p className="mb-1">
+            Content Owned by एकात्मिक आदिवासी विकास - शहापूर
+          </p>
           <p>
-            © District Administration, Dhule. Developed and hosted by{" "}
-            <a
-              href="http://www.nic.in/"
+            आदिवासींच्या कल्याणाच्या योजनांची परिणामकारक अंमलबजावणी करण्यासाठी
+            सन १९७२ मध्ये समाजकल्याण विभागांतर्गत आदिवासी विकास संचलनालयाची
+            स्थापना करण्यात आली होती{" "}
+            {/* <a
+              // href="http://www.nic.in/"
               target="_blank"
               rel="noopener noreferrer"
               className="text-white"
             >
               National Informatics Centre
-            </a>
+            </a> */}
             ,<br />
-            <a
-              href="http://meity.gov.in/"
+            {/* <a
+              // href="http://meity.gov.in/"
               target="_blank"
               rel="noopener noreferrer"
               className="text-white"
             >
-              Ministry of Electronics & Information Technology
+              Ministry of E
             </a>
-            , Government of India
+            , Government of India */}
           </p>
           <p>
             Last Updated: <strong>Mar 21, 2025</strong>
@@ -61,9 +65,9 @@ const Footer = () => {
         </div>
 
         {/* Logos */}
-        <div className="mt-3">
+        {/* <div className="mt-3">
           <a
-            href="https://s3waas.gov.in/"
+            // href="https://s3waas.gov.in/"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -98,7 +102,7 @@ const Footer = () => {
               width="120"
             />
           </a>
-        </div>
+        </div> */}
       </div>
     </footer>
   );
