@@ -45,7 +45,7 @@ const Breadcrumbs = () => {
   return (
     <Breadcrumb className="mt-3">
       {matches.map((match, index) => {
-        const label = match.handle?.label || match.pathname.split("/").pop(); // Use last segment if no label
+        const label = match.pathname.split("/").pop(); // Use last segment if no label
         const isLast = index === matches.length - 1;
 
         return (
