@@ -6,51 +6,43 @@ const NavigationMenu: React.FC = () => {
   const location = useLocation(); // Get current path
 
   return (
-    <Navbar bg="dark" variant="dark" expand="lg">
+    <Navbar expand="lg">
       <Container>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
+          <Nav className="me-auto navmenu">
             <Nav.Link
               as={Link}
               to="/"
-              className={location.pathname === "/" ? "active-link" : ""}
+              className={location.pathname === "/" ? "active" : ""}
             >
               Home
             </Nav.Link>
             <Nav.Link
               as={Link}
               to="/introduction"
-              className={
-                location.pathname === "/introduction" ? "active-link" : ""
-              }
+              className={location.pathname === "/introduction" ? "active" : ""}
             >
               About us
             </Nav.Link>
             <Nav.Link
               as={Link}
               to="/ashramschool"
-              className={
-                location.pathname === "/ashramschool" ? "active-link" : ""
-              }
+              className={location.pathname === "/ashramschool" ? "active" : ""}
             >
               Ashram School
             </Nav.Link>
             <Nav.Link
               as={Link}
               to="/govhostel"
-              className={
-                location.pathname === "/govhostel" ? "active-link" : ""
-              }
+              className={location.pathname === "/govhostel" ? "active" : ""}
             >
               Gov. Hostel
             </Nav.Link>
             <Nav.Link
               as={Link}
               to="/aidedAshram"
-              className={
-                location.pathname === "/aidedAshram" ? "active-link" : ""
-              }
+              className={location.pathname === "/aidedAshram" ? "active" : ""}
             >
               Aided Ashram School
             </Nav.Link>
@@ -58,9 +50,7 @@ const NavigationMenu: React.FC = () => {
               as={Link}
               to="/projectOfficerContact"
               className={
-                location.pathname === "/projectOfficerContact"
-                  ? "active-link"
-                  : ""
+                location.pathname === "/projectOfficerContact" ? "active" : ""
               }
             >
               Project Officer
@@ -70,9 +60,7 @@ const NavigationMenu: React.FC = () => {
                 as={Link}
                 to="/innovation-challenge"
                 className={
-                  location.pathname === "/innovation-challenge"
-                    ? "active-link"
-                    : ""
+                  location.pathname === "/innovation-challenge" ? "active" : ""
                 }
               >
                 About the Challenge
@@ -82,7 +70,7 @@ const NavigationMenu: React.FC = () => {
                 to="/innovation-challenge/scope-of-work"
                 className={
                   location.pathname === "/innovation-challenge/scope-of-work"
-                    ? "active-link"
+                    ? "active"
                     : ""
                 }
               >
@@ -91,7 +79,7 @@ const NavigationMenu: React.FC = () => {
               <NavDropdown.Item
                 as={Link}
                 to="/faqs"
-                className={location.pathname === "/faqs" ? "active-link" : ""}
+                className={location.pathname === "/faqs" ? "active" : ""}
               >
                 FAQs
               </NavDropdown.Item>

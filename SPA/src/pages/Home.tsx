@@ -1,42 +1,44 @@
 import Carousel from "react-bootstrap/Carousel";
 import Image from "react-bootstrap/Image";
+import HomeDetail from "../components/HomeDetail";
+import React from "react";
 
-const Home = () => (
-  <Carousel fade>
-    <Carousel.Item interval={500}>
-      <Image
-        src="../public/images/NewArticle.png"
-        // alt="Serene Waterfall"
-        className="d-block w-100 carousel-image"
-      />
-      <Carousel.Caption>
-        {/* <h3>Serene Waterfall</h3>
-        <p>Experience the beauty and calmness of nature.</p> */}
-      </Carousel.Caption>
-    </Carousel.Item>
-    <Carousel.Item interval={500}>
-      <Image
-        src="../public/images/NewsArticle2.png"
-        // alt="City Skyline"
-        className="d-block w-100 carousel-image"
-      />
-      <Carousel.Caption>
-        <h3>City Skyline</h3>
-        <p>A breathtaking view of the city lights at night.</p>
-      </Carousel.Caption>
-    </Carousel.Item>
-    <Carousel.Item interval={500}>
-      <Image
-        src="../public/images/NewsArticle3.png"
-        // alt="Snowy Mountains"
-        className="d-block w-100 carousel-image"
-      />
-      <Carousel.Caption>
-        {/* <h3>Snowy Mountains</h3>
-        <p>Witness the majestic beauty of snow-covered peaks.</p> */}
-      </Carousel.Caption>
-    </Carousel.Item>
-  </Carousel>
-);
+const Home = () => {
+  const stylea: React.CSSProperties = {
+    height: "40vh",
+  };
+  return (
+    <>
+      <Carousel fade>
+        <Carousel.Item interval={500} style={stylea}>
+          <Image
+            src="../public/images/hero-carousel-1.jpg"
+            className="d-block w-100 carousel-image"
+          />
+          <Carousel.Caption></Carousel.Caption>
+        </Carousel.Item>
+        <Carousel.Item interval={500} style={stylea}>
+          <Image
+            src="../public/images/hero-carousel-2.jpg"
+            // alt="City Skyline"
+            className="d-block w-100 carousel-image"
+          />
+          <Carousel.Caption>
+            <h3>City Skyline</h3>
+            <p>A breathtaking view of the city lights at night.</p>
+          </Carousel.Caption>
+        </Carousel.Item>
+        <Carousel.Item interval={500} style={stylea}>
+          <Image
+            src="../public/images/hero-carousel-3.jpg"
+            className="d-block w-100 carousel-image"
+          />
+          <Carousel.Caption></Carousel.Caption>
+        </Carousel.Item>
+      </Carousel>
+      <HomeDetail />
+    </>
+  );
+};
 
 export default Home;

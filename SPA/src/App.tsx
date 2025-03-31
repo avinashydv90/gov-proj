@@ -2,10 +2,11 @@
 // import reactLogo from "./assets/react.svg";
 // import viteLogo from "/vite.svg";
 import "./App.css";
-import Breadcrumbs from "./components/Breadcrumbs";
+// import Breadcrumbs from "./components/Breadcrumbs";
 import Footer from "./components/Footer";
 // import { Button } from "react-bootstrap";
 import Header from "./components/Header";
+
 import NavigationMenu from "./components/NavigationMenu";
 import { Outlet } from "react-router-dom";
 
@@ -16,7 +17,7 @@ function App() {
     <>
       <Header />
       <NavigationMenu />
-      <Breadcrumbs />
+      {/* <Breadcrumbs /> */}
       <Outlet />
       <Footer />
 

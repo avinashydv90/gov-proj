@@ -1,14 +1,21 @@
 import React from "react";
 import { Container, Row, Col, Image } from "react-bootstrap";
+import NavigationMenu from "./NavigationMenu";
 
 const Header = () => {
   return (
-    <div className="header-wrapper w-100 bg-light py-2">
+    <div
+      className="header-wrapper w-100 bg-light py-2 "
+      style={{
+        backgroundRepeat: "repeat",
+        // backgroundImage: "url(../images/3.jpg)",
+      }}
+    >
       <Container fluid>
         <Row className="align-items-center justify-content-between">
           {/* Logo Section */}
           <Col lg={4} md={4} sm={4} xs={4}>
-            <div className="logo d-flex align-items-center">
+            <div className="logo d-flex align-items-center justify-content-center">
               <a
                 href="/"
                 title="Go to home"
@@ -22,47 +29,68 @@ const Header = () => {
                   alt="State Emblem of India"
                   fluid
                 />
+                <Image
+                  className="sw-logo header-logo right-logo"
+                  src="/images/headerRightLogo.png"
+                  alt="Digital India"
+                  fluid
+                />
+                <img
+                  src="../public/images/emblem_transparent1.png"
+                  alt="Additional Image"
+                  className="additional-image"
+                />
+                <span>
+                  <strong className="maharashtra-gov small">
+                    महाराष्ट्र शासन
+                  </strong>
+                  <span className="site_name_english d-block large">
+                    आदिवासी विकास विभाग
+                  </span>
+                </span>
               </a>
             </div>
           </Col>
-          <Col
+          <Col>
+            <NavigationMenu />
+          </Col>
+          {/* <Col
             lg={4}
             md={4}
             sm={4}
             xs={4}
-            className="d-flex flex-column align-items-center text-center"
+            className="d-flex flex-column align-items-center"
           >
-            {/* <div className=" d-flex flex-column align-items-center">
-              <div className="logo_text">
-                <strong>महाराष्ट्र शासन</strong>
-                <span className="site_name_english d-block">
-                  आदिवासी विकास विभाग <br />
-                  प्रकल्प अधिकारी, एकात्मिक आदिवासी विकास प्रकल्प शहापूर ऋतु
-                  पार्क, दुसरा मजला, रिलाईन्स स्मार्ट पॉईंट शेजारी,
-                  गोठेघर-शहापूर ता. शहापूर जि.ठाणे
-                </span>
-              </div>
-            </div> */}
-            <div className="d-flex flex-column align-items-center">
+            <div className="d-flex flex-row align-items-center">
               <img
-                src="../public/images/emblem_transparent.png"
+                src="../public/images/emblem_transparent1.png"
                 alt="Additional Image"
                 className="additional-image"
               />
-              <div className="logo_text">
-                <strong className="maharashtra-gov">महाराष्ट्र शासन</strong>
-                <span className="site_name_english d-block">
-                  आदिवासी विकास विभाग <br />
-                  प्रकल्प अधिकारी, एकात्मिक आदिवासी विकास प्रकल्प शहापूर ऋतु
-                  पार्क, दुसरा मजला, रिलाईन्स स्मार्ट पॉईंट शेजारी,
-                  गोठेघर-शहापूर ता. शहापूर जि.ठाणे
+              <span>
+                <strong className="maharashtra-gov small">
+                  महाराष्ट्र शासन
+                </strong>
+                <span className="site_name_english d-block large">
+                  आदिवासी विकास विभाग
                 </span>
-              </div>
+              </span>
             </div>
-          </Col>
+          </Col> */}
 
           {/* Right Section */}
-          <Col lg={4} md={4} sm={4} xs={4} className="text-end">
+
+          {/* <Col lg={4} md={4} sm={4} xs={4}>
+            <div className="logo d-flex align-items-center justify-content-center">
+              <Image
+                className="sw-logo header-logo right-logo"
+                src="/images/headerRightLogo.png"
+                alt="Digital India"
+                fluid
+              />
+            </div>
+          </Col> */}
+          {/* <Col lg={4} md={4} sm={4} xs={4} className="text-end">
             <div className="header-right d-none d-sm-inline-block">
               <a
                 aria-label="Digital India - External site that opens in a new window"
@@ -84,7 +112,7 @@ const Header = () => {
                 />
               </a>
             </div>
-          </Col>
+          </Col> */}
         </Row>
       </Container>
     </div>
