@@ -6,17 +6,39 @@ import { FaBars, FaTimes } from "react-icons/fa";
 
 const Topbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const menuItems = ["Home", "About", "Services", "Contact"];
+  const menuItems = [
+    "मुख्य पृष्ठ",
+    "आश्रमशाळा",
+    "वसतीगृह",
+    "विकास योजना",
+    "यशोगाथा",
+  ];
 
   return (
     <div className="fixed top-0 left-0 w-full bg-white/30 backdrop-blur-md border-b border-gray-300 z-50">
       <div className="flex justify-between items-center px-4 py-3">
         {/* Left section: Logos + text */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
-          <div className="flex gap-2 items-center">
-            <img src={logo1} alt="Logo 1" className="h-12" />
-            <img src={logo2} alt="Logo 2" className="h-12" />
-            <img src={logo3} alt="Logo 3" className="h-12" />
+          <div className="flex gap-1 items-center">
+            <div className="w-px h-16 bg-white mx-2 shadow-md rounded" />
+            <img
+              src={logo1}
+              alt="Logo 1"
+              className="w-16 h-16 object-contain"
+            />
+            <div className="w-px h-16 bg-white mx-2 shadow-md rounded" />
+            <img
+              src={logo2}
+              alt="Logo 2"
+              className="w-16 h-16 object-contain"
+            />
+            <div className="w-px h-16 bg-white mx-2 shadow-md rounded" />
+            <img
+              src={logo3}
+              alt="Logo 3"
+              className="w-16 h-16 object-contain"
+            />
+            <div className="w-px h-16 bg-white mx-2 shadow-md rounded" />
           </div>
           <span className="text-gray-700 font-semibold text-sm sm:text-base">
             Government of XYZ | Digital Services Portal
