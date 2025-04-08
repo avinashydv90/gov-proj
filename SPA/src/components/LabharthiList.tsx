@@ -1,7 +1,7 @@
 import React from "react";
 import ComingSoon from "./ComingSoon";
 
-const GovHostels: React.FC = () => {
+const LabharthiList = () => {
   return (
     <>
       <ComingSoon />
@@ -9,4 +9,4 @@ const GovHostels: React.FC = () => {
   );
 };
 
-export default GovHostels;
+export default LabharthiList;

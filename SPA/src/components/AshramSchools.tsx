@@ -1,7 +1,8 @@
 import React from "react";
+import ComingSoon from "./ComingSoon";
 
 const AshramSchools: React.FC = () => {
-  return <h1 style={{ paddingTop: "100px" }}>coming soon</h1>;
+  return <ComingSoon />;
 };
 
 export default AshramSchools;
