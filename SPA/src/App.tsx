@@ -1,18 +1,18 @@
+import { Outlet } from "react-router-dom";
 import "./App.css";
-import Carousel from "./components/Caroucel";
 import Footer from "./components/Footer";
-import Gallery from "./components/Gallery";
-import Layout from "./components/Layout";
+import Topbar from "./components/Topbar";
 // import Topbar from "./components/Topbar";
 
 function App() {
   return (
     <div className="font-sans">
-      {/* <Topbar /> */}
-      <Carousel />
-      <Layout />
+      <div className="absolute top-0 left-0 w-full z-20">
+        <Topbar />
+      </div>
 
-      <Gallery />
+      <Outlet />
+
       <Footer />
 
       {/* <Header />

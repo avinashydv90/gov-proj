@@ -1,17 +1,21 @@
 import React, { useState } from "react";
 import logo1 from "../assets/logo1.png";
 import logo2 from "../assets/logo2.png";
-import logo3 from "../assets/logo3.png";
+import logo3 from "../assets/emblem_transparent1.png";
 import { FaBars, FaTimes } from "react-icons/fa";
+import { NavLink } from "react-router-dom";
 
 const Topbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuItems = [
-    "मुख्य पृष्ठ",
-    "आश्रमशाळा",
-    "वसतीगृह",
-    "विकास योजना",
-    "यशोगाथा",
+    // "मुख्य पृष्ठ",
+    // "आश्रमशाळा",
+    // "वसतीगृह",
+    // "विकास योजना",
+    // "यशोगाथा",
+    { label: "मुख्य पृष्ठ", path: "/" },
+    { label: "About", path: "/introduction" },
+    { label: "आश्रमशाळा", path: "/ashramschool" },
   ];
 
   return (
@@ -48,8 +52,17 @@ const Topbar = () => {
         {/* Navigation for desktop */}
         <ul className="hidden md:flex gap-6 text-primary font-medium ml-auto">
           {menuItems.map((item, index) => (
-            <li key={index} className="cursor-pointer hover:underline">
-              {item}
+            <li key={index} className="cursor-pointer">
+              <NavLink
+                to={item.path}
+                className={({ isActive }) =>
+                  isActive
+                    ? "text-blue-600 font-semibold underline"
+                    : "hover:underline"
+                }
+              >
+                {item.label}
+              </NavLink>
             </li>
           ))}
         </ul>
@@ -68,8 +81,18 @@ const Topbar = () => {
         <div className="md:hidden bg-white shadow-md">
           <ul className="flex flex-col gap-4 px-6 py-4 text-primary font-medium">
             {menuItems.map((item, index) => (
-              <li key={index} className="cursor-pointer hover:underline">
-                {item}
+              <li key={index}>
+                <NavLink
+                  to={item.path}
+                  className={({ isActive }) =>
+                    isActive
+                      ? "text-blue-600 font-semibold underline"
+                      : "hover:underline"
+                  }
+                  onClick={() => setMenuOpen(false)} // close menu on click
+                >
+                  {item.label}
+                </NavLink>
               </li>
             ))}
           </ul>

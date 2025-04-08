@@ -1,5 +1,3 @@
-import "bootstrap/dist/css/bootstrap.min.css";
-
 const Introduction = () => {
   return (
     <div className="container">

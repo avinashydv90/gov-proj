@@ -3,8 +3,6 @@ import { Autoplay, Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 
-import Topbar from "./Topbar";
-
 const images = [
   "/images/slide1.jpg",
   "/images/slide2.jpg",
@@ -36,11 +34,6 @@ export default function CarouselWithTopbar() {
           </SwiperSlide>
         ))}
       </Swiper>
-
-      {/* Topbar */}
-      <div className="absolute top-0 left-0 w-full z-20">
-        <Topbar />
-      </div>
     </div>
   );
 }

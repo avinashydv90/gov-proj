@@ -9,22 +9,14 @@ const Layout = () => {
       <LayoutHeader />
 
       {/* Main Content */}
-      <div className="flex flex-col lg:flex-row justify-center px-4 gap-6 py-6">
-        {/* Left Side (50%) */}
-        <div className="w-full">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 px-4 py-6">
+        {/* Left Side (8 columns) */}
+        <div className="lg:col-span-8">
           <InfoCard />
         </div>
 
-        {/* Right Side (20%) */}
-        <div
-          className="
-            w-[300px] h-[400px]              // Base (mobile)
-            md:w-[350px] md:h-[500px]        // Medium
-            lg:w-[40%] lg:h-auto             // Large
-            xl:w-[20%] xl:h-auto             // Extra large
-            2xl:w-[20%] 2xl:h-auto           // 2x Extra large
-          "
-        >
+        {/* Right Side (4 columns) */}
+        <div className="lg:col-span-4 w-full h-auto">
           <PeopleList />
         </div>
       </div>
