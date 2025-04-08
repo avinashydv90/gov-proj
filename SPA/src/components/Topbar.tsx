@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import logo1 from "../assets/logo1.png";
 import logo2 from "../assets/logo2.png";
 import logo3 from "../assets/emblem_transparent1.png";
@@ -31,36 +31,49 @@ const Topbar = () => {
       <div className="flex justify-between items-center px-4 py-3">
         {/* Left section: Logos + text */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
-          <div className="flex gap-1 items-center">
-            <div className="w-px h-16 bg-white mx-2 shadow-md rounded" />
-            <img
-              src={logo1}
-              alt="Logo 1"
-              className="w-16 h-16 object-contain"
-            />
-            <div className="w-px h-16 bg-white mx-2 shadow-md rounded" />
-            <img
-              src={logo2}
-              alt="Logo 2"
-              className="w-16 h-16 object-contain"
-            />
-            <div className="w-px h-16 bg-white mx-2 shadow-md rounded" />
-            <img
-              src={logo3}
-              alt="Logo 3"
-              className="w-16 h-16 object-contain"
-            />
-            <div className="w-px h-16 bg-white mx-2 shadow-md rounded" />
+          <div>
+            <div className="flex gap-1 items-center">
+              <div className="w-px h-16 bg-white mx-2 shadow-md rounded" />
+              <img
+                src={logo1}
+                alt="Logo 1"
+                className="w-16 h-16 object-contain"
+              />
+              <div className="w-px h-16 bg-white mx-2 shadow-md rounded" />
+              <img
+                src={logo2}
+                alt="Logo 2"
+                className="w-16 h-16 object-contain"
+              />
+              <div className="w-px h-16 bg-white mx-2 shadow-md rounded" />
+              <img
+                src={logo3}
+                alt="Logo 3"
+                className="w-16 h-16 object-contain"
+              />
+              <div className="w-px h-16 bg-white mx-2 shadow-md rounded" />
+            </div>
+            <span className="text-gray-700 font-semibold text-1xl">
+              एकात्मिक आदिवासी विकास प्रकल्प, शहापुर
+            </span>
           </div>
-          <span className="text-gray-700 font-semibold text-2xl ">
-            एकात्मिक आदिवासी विकास प्रकल्प, शहापुर
-          </span>
         </div>
 
         {/* Navigation for desktop */}
-        <ul className="hidden md:flex gap-6 text-primary font-medium ml-auto text-lg">
+        <ul
+          className="hidden md:flex text-primary font-medium ml-auto text-1xl"
+          style={{ padding: "0px 8px" }}
+        >
           {menuItems.map((item, index) => (
-            <li key={index} className="cursor-pointer w-min">
+            <li
+              key={index}
+              className="cursor-pointer"
+              style={{
+                padding: "0px 5px",
+                fontWeight: "700",
+                width: "min-content",
+              }}
+            >
               <NavLink
                 to={item.path}
                 className={({ isActive }) =>

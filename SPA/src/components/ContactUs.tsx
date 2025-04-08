@@ -1,7 +1,7 @@
 import React from "react";
 import ComingSoon from "./ComingSoon";
 
-const ContactUs = () => {
+const ContactUs: React.FC = () => {
   return (
     <>
       <ComingSoon />
