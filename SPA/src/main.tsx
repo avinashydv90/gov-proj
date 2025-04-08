@@ -1,4 +1,3 @@
-import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.tsx";
@@ -10,6 +9,13 @@ import AshramSchools from "./components/AshramSchools.tsx";
 import GovHostels from "./components/GovHostels.tsx";
 import AidedAshramSchool from "./components/AidedAshramSchool.tsx";
 import ProjectOfficerContact from "./components/ProjectOfficerContact.tsx";
+import VikasYojana from "./components/VikasYojana.tsx";
+import Gallery from "./components/Gallery.tsx";
+import DownloadForm from "./components/DownloadForm.tsx";
+import LabharthiList from "./components/LabharthiList.tsx";
+import LoksevaHakka from "./components/LoksevaHakka.tsx";
+import ContactUs from "./components/ContactUs.tsx";
+import RightToInformation from "./components/RightToInformation.tsx";
 
 export const router = createHashRouter([
   {
@@ -21,7 +27,7 @@ export const router = createHashRouter([
       {
         path: "/introduction",
         element: <Introduction />,
-        handle: { label: RouteNames.Introduction },
+        handle: { label: RouteNames.About },
       },
       {
         path: "/ashramschool",
@@ -42,6 +48,41 @@ export const router = createHashRouter([
         path: "/projectOfficerContact",
         element: <ProjectOfficerContact />,
         handle: { label: RouteNames.ProjectOfficerContact },
+      },
+      {
+        path: "/vikasyojana",
+        element: <VikasYojana />,
+        handle: { label: RouteNames.VikasYoujna },
+      },
+      {
+        path: "/gallery",
+        element: <Gallery />,
+        handle: { label: RouteNames.Gallery },
+      },
+      {
+        path: "/downloadForm",
+        element: <DownloadForm />,
+        handle: { label: RouteNames.DownloadForm },
+      },
+      {
+        path: "/labharthiList",
+        element: <LabharthiList />,
+        handle: { label: RouteNames.LabharthiList },
+      },
+      {
+        path: "/loksevahakka",
+        element: <LoksevaHakka />,
+        handle: { label: RouteNames.LokSevaHakka },
+      },
+      {
+        path: "/contactUs",
+        element: <ContactUs />,
+        handle: { label: RouteNames.ContactUs },
+      },
+      {
+        path: "/rti",
+        element: <RightToInformation />,
+        handle: { label: RouteNames.RightToInformation },
       },
       // {
       //   path: "/innovation-challenge",

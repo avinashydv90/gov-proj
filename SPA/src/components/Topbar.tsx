@@ -14,8 +14,16 @@ const Topbar = () => {
     // "विकास योजना",
     // "यशोगाथा",
     { label: "मुख्य पृष्ठ", path: "/" },
-    { label: "About", path: "/introduction" },
     { label: "आश्रमशाळा", path: "/ashramschool" },
+    { label: "वसतीगृह", path: "./govhostel" },
+    { label: "विकास योजना", path: "/vikasyojana" },
+    { label: "यशोगाथा", path: "/gallery" },
+    { label: "डाउनलोड फॉर्म ", path: "/downloadForm" },
+    { label: "लाभार्थी यादी", path: "/labharthiList" },
+    { label: "लोकसेवा हक्क", path: "/loksevahakka" },
+    { label: "माहितीचा अधिकार अधिनियम", path: "/rti" },
+    { label: "परिचय", path: "/introduction" },
+    { label: "संपर्क", path: "/contactUs" },
   ];
 
   return (
@@ -44,15 +52,15 @@ const Topbar = () => {
             />
             <div className="w-px h-16 bg-white mx-2 shadow-md rounded" />
           </div>
-          <span className="text-gray-700 font-semibold text-sm sm:text-base">
-            Government of XYZ | Digital Services Portal
+          <span className="text-gray-700 font-semibold text-2xl ">
+            एकात्मिक आदिवासी विकास प्रकल्प, शहापुर
           </span>
         </div>
 
         {/* Navigation for desktop */}
-        <ul className="hidden md:flex gap-6 text-primary font-medium ml-auto">
+        <ul className="hidden md:flex gap-6 text-primary font-medium ml-auto text-lg">
           {menuItems.map((item, index) => (
-            <li key={index} className="cursor-pointer">
+            <li key={index} className="cursor-pointer w-min">
               <NavLink
                 to={item.path}
                 className={({ isActive }) =>
@@ -81,7 +89,7 @@ const Topbar = () => {
         <div className="md:hidden bg-white shadow-md">
           <ul className="flex flex-col gap-4 px-6 py-4 text-primary font-medium">
             {menuItems.map((item, index) => (
-              <li key={index}>
+              <li className="w-min" key={index}>
                 <NavLink
                   to={item.path}
                   className={({ isActive }) =>
