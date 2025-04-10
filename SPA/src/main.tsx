@@ -1,7 +1,7 @@
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.tsx";
-import { createHashRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { RouteNames } from "./constants/RouteNames.ts";
 import Home from "./pages/Home.tsx";
 import Introduction from "./components/Introduction.tsx";
@@ -17,7 +17,7 @@ import LoksevaHakka from "./components/LoksevaHakka.tsx";
 import ContactUs from "./components/ContactUs.tsx";
 import RightToInformation from "./components/RightToInformation.tsx";
 
-export const router = createHashRouter([
+export const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
