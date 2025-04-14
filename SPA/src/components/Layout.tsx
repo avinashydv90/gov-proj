@@ -9,7 +9,7 @@ const Layout = () => {
       <LayoutHeader />
 
       {/* Main Content */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 px-4 py-6">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 px-4 py-6 h-max">
         {/* Left Side (8 columns) */}
         <div className="lg:col-span-8">
           <InfoCard />

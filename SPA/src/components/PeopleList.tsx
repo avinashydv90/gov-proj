@@ -49,10 +49,10 @@ const Vipimages = [
 const PeopleList = () => {
   return (
     <div className="bg-white shadow-md p-4 md:p-6 rounded-lg border border-gray-300">
-      <h2 className="bg-[#891538] text-white p-3 rounded-md text-lg font-semibold text-center">
+      <h2 className="bg-[#5E3023] text-white p-3 rounded-md text-lg font-semibold text-center">
         महत्वाच्या व्यक्ती
       </h2>
-      <ul className="mt-4 space-y-4 max-h-[480px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100">
+      <ul className="mt-4 space-y-4 max-h-[701px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100">
         {people.map((person, index) => (
           <li key={index} className="flex items-center gap-4 border-b pb-3">
             <img

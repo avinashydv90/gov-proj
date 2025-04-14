@@ -1,18 +1,15 @@
-import { useState } from "react";
-import logo1 from "../assets/logo1.png";
-import logo2 from "../assets/logo2.png";
-import logo3 from "../assets/emblem_transparent1.png";
+import { useState, useEffect } from "react";
+import logo1 from "../assets/adivasi-vikas-vibhag.png";
+import logo2 from "../assets/headerRightLogo.png";
+import logo3 from "../assets/nationalemblem.png";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
 
 const Topbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [hideLogo, setHideLogo] = useState(false);
+
   const menuItems = [
-    // "मुख्य पृष्ठ",
-    // "आश्रमशाळा",
-    // "वसतीगृह",
-    // "विकास योजना",
-    // "यशोगाथा",
     { label: "मुख्य पृष्ठ", path: "/" },
     { label: "आश्रमशाळा", path: "/ashramschool" },
     { label: "वसतीगृह", path: "./govhostel" },
@@ -26,99 +23,98 @@ const Topbar = () => {
     { label: "संपर्क", path: "/contactUs" },
   ];
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setHideLogo(window.scrollY > 50);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <div className="fixed top-0 left-0 w-full bg-white/30 backdrop-blur-md border-b border-gray-300 z-50">
-      <div className="flex justify-between items-center px-4 py-3">
-        {/* Left section: Logos + text */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
-          <div>
-            <div className="flex gap-1 items-center">
-              <div className="w-px h-16 bg-white mx-2 shadow-md rounded" />
-              <img
-                src={logo1}
-                alt="Logo 1"
-                className="w-16 h-16 object-contain"
-              />
-              <div className="w-px h-16 bg-white mx-2 shadow-md rounded" />
-              <img
-                src={logo2}
-                alt="Logo 2"
-                className="w-16 h-16 object-contain"
-              />
-              <div className="w-px h-16 bg-white mx-2 shadow-md rounded" />
-              <img
-                src={logo3}
-                alt="Logo 3"
-                className="w-16 h-16 object-contain"
-              />
-              <div className="w-px h-16 bg-white mx-2 shadow-md rounded" />
-            </div>
-            <span className="text-gray-700 font-semibold text-1xl">
-              एकात्मिक आदिवासी विकास प्रकल्प, शहापुर
-            </span>
+    <div className="fixed top-0 left-0 w-full z-50">
+      {/* Top Logo Bar (hidden on scroll) */}
+      <div
+        className={`transition-all duration-500 border-b border-gray-300 ${
+          hideLogo ? "opacity-0 h-0 overflow-hidden" : "opacity-100 py-3"
+        }`}
+        style={{
+          backgroundColor: "rgba(245, 245, 220, 0.6)", // Beige with 0.6 opacity
+          backdropFilter: "blur(4px)",
+        }}
+      >
+        <div className="flex flex-col items-center">
+          <div className="flex gap-3 items-center">
+            <img
+              src={logo1}
+              alt="Logo 1"
+              className="w-[72px] h-[72px] object-contain"
+            />
+            <img
+              src={logo2}
+              alt="Logo 2"
+              className="w-[72px] h-[72px] object-contain"
+            />
+            <img
+              src={logo3}
+              alt="Logo 3"
+              className="w-[72px] h-[72px] object-contain"
+            />
           </div>
+          <span className="text-[#5C4033] font-semibold text-xl mt-2 text-center">
+            एकात्मिक आदिवासी विकास प्रकल्प, शहापुर
+          </span>
         </div>
-
-        {/* Navigation for desktop */}
-        <ul
-          className="hidden md:flex text-primary font-medium ml-auto text-1xl"
-          style={{ padding: "0px 8px" }}
-        >
-          {menuItems.map((item, index) => (
-            <li
-              key={index}
-              className="cursor-pointer"
-              style={{
-                padding: "0px 5px",
-                fontWeight: "700",
-                width: "min-content",
-              }}
-            >
-              <NavLink
-                to={item.path}
-                className={({ isActive }) =>
-                  isActive
-                    ? "text-blue-600 font-semibold underline"
-                    : "hover:underline"
-                }
-              >
-                {item.label}
-              </NavLink>
-            </li>
-          ))}
-        </ul>
-
-        {/* Mobile menu toggle */}
-        <button
-          className="md:hidden text-primary text-xl ml-auto"
-          onClick={() => setMenuOpen(!menuOpen)}
-        >
-          {menuOpen ? <FaTimes /> : <FaBars />}
-        </button>
       </div>
 
-      {/* Mobile nav */}
-      {menuOpen && (
-        <div className="md:hidden bg-white shadow-md">
-          <ul className="flex flex-col gap-4 px-6 py-4 text-primary font-medium">
+      {/* Navigation Bar */}
+      <div className="bg-white/70 backdrop-blur-md border-b border-gray-300">
+        <div className="flex items-center px-4 py-2" style={{ height: "55px" }}>
+          {/* Desktop Nav */}
+          <ul className="hidden md:flex m-auto font-semibold gap-4">
             {menuItems.map((item, index) => (
-              <li className="w-min" key={index}>
+              <li key={index} className="cursor-pointer">
                 <NavLink
                   to={item.path}
                   className={({ isActive }) =>
-                    isActive
-                      ? "text-blue-600 font-semibold underline"
-                      : "hover:underline"
+                    isActive ? "nav-link active" : "nav-link"
                   }
-                  onClick={() => setMenuOpen(false)} // close menu on click
                 >
                   {item.label}
                 </NavLink>
               </li>
             ))}
           </ul>
+
+          {/* Mobile Menu Toggle */}
+          <button
+            className="md:hidden ml-auto text-2xl text-gray-800"
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
+            {menuOpen ? <FaTimes /> : <FaBars />}
+          </button>
         </div>
-      )}
+
+        {/* Mobile Nav Menu */}
+        {menuOpen && (
+          <ul className="md:hidden flex flex-col gap-3 px-6 py-4 font-medium bg-white">
+            {menuItems.map((item, index) => (
+              <li key={index}>
+                <NavLink
+                  to={item.path}
+                  onClick={() => setMenuOpen(false)}
+                  className={({ isActive }) =>
+                    isActive ? "nav-link active" : "nav-link"
+                  }
+                >
+                  {item.label}
+                </NavLink>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   );
 };
