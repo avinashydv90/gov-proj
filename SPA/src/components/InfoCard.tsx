@@ -1,6 +1,6 @@
 const InfoCard = () => {
   return (
-    <div className="bg-white shadow-md p-4 md:p-6 rounded-lg border border-gray-300">
+    <div className="bg-white shadow-md p-4 md:p-6 rounded-lg border border-gray-300 h-[100%]">
       <h2 className="bg-[#5E3023] text-white p-3 rounded-md text-lg font-semibold">
         आदिवासी विकास बधळ
       </h2>

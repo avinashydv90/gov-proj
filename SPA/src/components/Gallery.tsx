@@ -37,7 +37,7 @@ const Gallery = () => {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-10">
-      <h2 className="text-2xl font-bold text-center text-[#5E3023] mb-8">
+      <h2 className="text-[#5E3023] text-center p-5 text-xl font-bold bg-[#5E3023] text-white p-3 rounded-md text-lg font-semibold px-4">
         आमचे गॅलरी
       </h2>
 
