@@ -9,7 +9,7 @@ const images = [
 
 export default function CarouselWithTopbar() {
   return (
-    <div className="relative w-full h-[60vh]">
+    <div className="relative w-full h-[80vh]">
       {/* Swiper Carousel */}
       <Swiper
         modules={[Autoplay, Navigation]}

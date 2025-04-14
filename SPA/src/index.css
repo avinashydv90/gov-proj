@@ -2,7 +2,11 @@
 @import "tailwindcss";
 @import 'swiper/css';
 @import 'swiper/css/navigation';
-/* @import './input.css'; */
+@import 'swiper/css/pagination';
+
+@theme {
+  --color-primaryBrown: #5E3023;
+}
 
 .nav-link {
   position: relative;
@@ -32,4 +36,24 @@
 
 .nav-link:hover {
   color: #8A4B38; /* Burnt Sienna on hover */
+}
+
+
+.swiper-button-next{
+  color: #5E3023 !important;
+  
+}
+
+.swiper-button-prev{
+  color: #5E3023 !important;
+}
+
+.swiper-pagination-bullet-active
+{
+  background: #5E3023 !important;
+}
+
+.swiper-pagination-bullet
+{
+  color: #5E3023 !important;
 }

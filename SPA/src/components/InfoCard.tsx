@@ -1,10 +1,20 @@
+import { motion } from "framer-motion";
+import HeadingText from "../shared-components/HeadingText";
+
 const InfoCard = () => {
   return (
     <div className="bg-white shadow-md p-4 md:p-6 rounded-lg border border-gray-300 h-[100%]">
-      <h2 className="bg-[#5E3023] text-white p-3 rounded-md text-lg font-semibold">
+      {/* <h2 className="bg-primaryBrown text-white p-2 rounded-md text-lg font-semibold">
         आदिवासी विकास बधळ
-      </h2>
-      <p className="text-gray-700 mt-4">
+      </h2> */}
+      <HeadingText text="आदिवासी विकास बधळ" />
+      <motion.p
+        className="text-gray-700 mt-4"
+        initial={{ opacity: 0, x: -50 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.5 }}
+        viewport={{ once: true }}
+      >
         आदिवासींच्या कल्याणाच्या योजनांची परिणामकारक अंमलबजावणी
         करण्यासाठी...मराठी भाषा मनाला भावणारी आणि सांस्कृतिक दृष्टिकोनातून
         समृद्ध आहे. सकाळची कोवळी किरणं जशी मनाला उबदार वाटतात, तसंच एखादं गोडसं
@@ -18,7 +28,7 @@ const InfoCard = () => {
         अजूनही कुठेतरी कपाटात पडून असतात. शांत संध्याकाळी एखादं जुनं गाणं हळूच
         मनात उमटतं. रात्रीच्या आभाळात चांदण्यांशी गप्पा माराव्याशा वाटतात. आणि
         या साऱ्या क्षणांमध्ये एक न सांगता येणारा गोडवा असतो.
-      </p>
+      </motion.p>
 
       {/* Icons Section */}
       <div className="grid grid-cols-2 gap-4 mt-6">

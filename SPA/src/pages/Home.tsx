@@ -1,6 +1,6 @@
 import Layout from "../components/Layout";
-import Gallery from "../components/Gallery";
 import CarouselWithTopbar from "../components/CarouselWithTopbar";
+import Gallery from "../components/Gallery";
 
 const Home = () => {
   return (

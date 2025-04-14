@@ -1,4 +1,5 @@
 import { useState } from "react";
+import HeadingText from "../shared-components/HeadingText";
 
 const galleryImages = [
   "/images/gallery1.jpg",
@@ -36,10 +37,11 @@ const Gallery = () => {
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-10">
-      <h2 className="text-[#5E3023] text-center p-5 text-xl font-bold bg-[#5E3023] text-white p-3 rounded-md text-lg font-semibold px-4">
+    <div className="min-h-[40%] m-0 md:m-5 lg:m-5">
+      {/* <h2 className="text-primaryBrown text-center p-5 text-xl font-bold bg-primaryBrown text-white p-3 rounded-md text-lg font-semibold mb-[5px]">
         आमचे गॅलरी
-      </h2>
+      </h2> */}
+      <HeadingText text="आमचे गॅलरी" />
 
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
         {galleryImages.map((src, index) => (

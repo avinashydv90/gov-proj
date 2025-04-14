@@ -1,3 +1,5 @@
+import { motion } from "framer-motion";
+import HeadingText from "../shared-components/HeadingText";
 const people = [
   {
     name: "श्री. देवेंद्र फडणवीस",
@@ -48,30 +50,40 @@ const Vipimages = [
 
 const PeopleList = () => {
   return (
-    <div className="bg-white shadow-md p-4 md:p-6 rounded-lg border border-gray-300">
-      <h2 className="bg-[#5E3023] text-white p-3 rounded-md text-lg font-semibold text-center">
+    <>
+      <div className="bg-white shadow-md p-4 md:p-6 rounded-lg border border-gray-300">
+        {/* <h2 className="bg-primaryBrown text-white p-2 rounded-md text-lg font-semibold text-center">
         महत्वाच्या व्यक्ती
-      </h2>
-      <ul className="mt-4 space-y-4 max-h-[701px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100">
-        {people.map((person, index) => (
-          <li key={index} className="flex items-center gap-4 border-b pb-3">
-            <img
-              src={Vipimages[index % Vipimages.length]}
-              alt={person.name}
-              className="w-[49px] h-[49px] rounded-full object-cover shadow-sm"
-            />
-            <div className="flex flex-col justify-center">
-              <span className="text-gray-800 font-semibold leading-tight">
-                {person.name}
-              </span>
-              <span className="text-gray-500 text-sm leading-tight">
-                {person.title}
-              </span>
-            </div>
-          </li>
-        ))}
-      </ul>
-    </div>
+      </h2> */}
+        <HeadingText text="महत्वाच्या व्यक्ती" />
+        <ul className="mt-4 space-y-4 max-h-[701px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100">
+          {people.map((person, index) => (
+            <motion.li
+              key={index}
+              className="flex items-center gap-4 border-b pb-3"
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              viewport={{ once: true }}
+            >
+              <img
+                src={Vipimages[index % Vipimages.length]}
+                alt={person.name}
+                className="w-[49px] h-[49px] rounded-full object-fill shadow-sm"
+              />
+              <div className="flex flex-col justify-center">
+                <span className="text-gray-800 font-semibold leading-tight">
+                  {person.name}
+                </span>
+                <span className="text-gray-500 text-sm leading-tight">
+                  {person.title}
+                </span>
+              </div>
+            </motion.li>
+          ))}
+        </ul>
+      </div>
+    </>
   );
 };
 
