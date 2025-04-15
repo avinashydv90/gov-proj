@@ -1,23 +1,25 @@
+import PageLayout from "../shared-components/PageLayout";
+
 const Introduction = () => {
   return (
-    <div className="container">
-      {/* Header Section */}
-      <header className="bg-primary text-white text-center py-4">
-        <h1>एकात्मिक आदिवासी विकास प्रकल्प, शहापूर</h1>
-      </header>
+    <PageLayout>
+      <div className="container">
+        {/* Header Section */}
+        <header className="bg-primary text-white text-center py-4">
+          <h1>एकात्मिक आदिवासी विकास प्रकल्प, शहापूर</h1>
+        </header>
 
-      {/* Main Content Section */}
-      <main className="mt-4">
-        <div className="row">
-          <div className="col-md-12">
-            <p>
+        {/* Main Content Section */}
+        <main className="mt-4">
+          <div className="max-w-4xl mx-auto px-4 py-6 text-gray-800 leading-relaxed">
+            <p className="mb-4">
               महाराष्ट्र राज्यातील काही मोजक्या औद्योगिकदृष्टया प्रगत
               जिल्हयापैकी ठाणे हा एक कोकण विभागातील उत्तरेकडचा जिल्हा असून
               जनगणना 2011 नुसार लोकसंख्येच्या दृष्टिने त्याचा राज्यात तिसरा
               क्रमांक आहे. जिल्हयाचे क्षेत्रफळ 4214 चौ.कि.मी. असून ते राज्याच्या
               1.37 टक्के आहे.
             </p>
-            <p>
+            <p className="mb-4">
               आदिवासींच्या कल्याणाच्या योजनांची परिणामकारक अंमलबजावणी करण्यासाठी
               सन १९७२ मध्ये समाजकल्याण विभागांतर्गत आदिवासी विकास संचलनालयाची
               स्थापना करण्यात आली होती. त्यानंतर राज्य शासनाने आदिवासींसाठी एक
@@ -26,26 +28,35 @@ const Introduction = () => {
               ०१/०४/१९७७ नुसार एकात्मिक आदिवासी विकास प्रकल्प शहापूर या
               कार्यालयाची स्थापना करण्यात आली.
             </p>
-            <h2>व्याप्ती</h2>
-            <p>
+
+            <h2 className="text-xl font-semibold mt-6 mb-2 text-[#5E3023]">
+              व्याप्ती
+            </h2>
+            <p className="mb-4">
               प्रकल्प कार्यालय, शहापूर अंतर्गत शहापूर, मुरबाड, भिवंडी, कल्याण,
               उल्हासनगर, अंबरनाथ, व ठाणे हे 7 तालुके मोडतात. संपुर्ण शहापूर
               तालुक्यातील 223 गावे, मुरबाड तालुक्यातील 77 गावे व भिवंडी
               तालुक्यातील 73 गावे आदिवासी उपयोजना क्षेत्रात मोडतात.
             </p>
-            <h2>शैक्षणिक संस्था</h2>
-            <p>
+
+            <h2 className="text-xl font-semibold mt-6 mb-2 text-[#5E3023]">
+              शैक्षणिक संस्था
+            </h2>
+            <p className="mb-4">
               या प्रकल्पाअंतर्गत 23 शासकीय आश्रमशाळा, 13 अनुदानित आश्रमशाळा व 12
               शासकीय आदिवासी मुलां / मुलींचे वसतिगृह कार्यरत आहेत. त्यात शासकीय
               आश्रमशाळेत 9217, अनुदानित आश्रमशाळेत 5808 व शासकीय वसतीगृहात 945
               विध्यार्थी शिक्षण घेत आहेत.
             </p>
-            <h2>कल्याणकारी योजना</h2>
-            <p>
+
+            <h2 className="text-xl font-semibold mt-6 mb-2 text-[#5E3023]">
+              कल्याणकारी योजना
+            </h2>
+            <p className="mb-2">
               आदिवासींच्या सर्वांगीण विकासाकरिता विविध प्रकारच्या योजना
               राबविल्या जातात:
             </p>
-            <ul>
+            <ul className="list-disc pl-6 space-y-1">
               <li>विशेष केंद्रीय सहाय्य योजना</li>
               <li>न्युक्लीअस बजेट योजना</li>
               <li>नाविन्यपूर्ण योजना</li>
@@ -54,9 +65,9 @@ const Introduction = () => {
               <li>शबरी घरकुल योजना</li>
             </ul>
           </div>
-        </div>
-      </main>
-    </div>
+        </main>
+      </div>
+    </PageLayout>
   );
 };
 

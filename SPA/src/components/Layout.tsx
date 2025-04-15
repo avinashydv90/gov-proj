@@ -1,4 +1,3 @@
-import InfoCard from "./InfoCard";
 import LayoutHeader from "./LayoutHeader";
 import PeopleList from "./PeopleList";
 import YojnaCarousel from "./YojnaCarousel";

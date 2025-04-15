@@ -1,29 +1,21 @@
 const Footer = () => {
   return (
-    <footer className="bg-primaryBrown text-white py-6 mt-10">
-      <div className="max-w-6xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4">
-        {/* Logo / Title */}
-        <div className="text-xl font-bold">आपली संस्था</div>
-
-        {/* Navigation Links */}
-        <div className="flex gap-4 text-sm flex-wrap justify-center">
-          <a href="#" className="hover:underline">
-            About
-          </a>
-          <a href="#" className="hover:underline">
-            Contact
-          </a>
-          <a href="#" className="hover:underline">
-            Gallery
-          </a>
-          <a href="#" className="hover:underline">
-            Events
-          </a>
+    <footer className="bg-[#5E3023] text-white mt-8">
+      <div className="max-w-4xl mx-auto px-4 py-4 flex flex-col items-center text-center gap-4">
+        {/* Title / Info */}
+        <div className="text-sm leading-relaxed">
+          <p className="font-semibold mb-2">एकात्मिक आदिवासी विकास - शहापूर</p>
+          <p>
+            आदिवासींच्या कल्याणाच्या योजनांची परिणामकारक अंमलबजावणी करण्यासाठी
+            सन १९७२ मध्ये समाजकल्याण विभागांतर्गत आदिवासी विकास संचलनालयाची
+            स्थापना करण्यात आली होती.
+          </p>
         </div>
 
         {/* Copyright */}
-        <div className="text-xs text-center md:text-right">
-          © {new Date().getFullYear()} आपली संस्था. All rights reserved.
+        <div className="text-xs">
+          © {new Date().getFullYear()} एकात्मिक आदिवासी विकास - शहापूर. All
+          rights reserved.
         </div>
       </div>
     </footer>

@@ -1,18 +1,55 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import HeadingText from "../shared-components/HeadingText";
 
-const galleryImages = [
-  "/images/gallery1.jpg",
-  "/images/gallery2.jpg",
-  "/images/gallery3.jpg",
-  "/images/gallery4.jpg",
-  "/images/gallery5.jpg",
-  "/images/gallery6.jpg",
-];
+interface GalleryItem {
+  id: number;
+  imageUrl: string;
+}
 
 const Gallery = () => {
+  const [images, setImages] = useState<GalleryItem[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState<number | null>(null);
+
+  // Fetch images from API
+  // useEffect(() => {
+  //   const fetchGalleryImages = async () => {
+  //     try {
+  //       const response = await fetch("/api/gallery"); // Replace with your actual endpoint
+  //       const data = await response.json();
+  //       setImages(data);
+  //     } catch (error) {
+  //       console.error("Failed to fetch gallery images:", error);
+  //     }
+  //   };
+
+  //   fetchGalleryImages();
+  // }, []);
+
+  useEffect(() => {
+    const fetchImages = async () => {
+      // Replace this with real API call
+      const data: GalleryItem[] = [
+        { id: 1, imageUrl: "/images/Gallery/gallery1.jpg" },
+        { id: 2, imageUrl: "/images/Gallery/gallery2.jpg" },
+        { id: 3, imageUrl: "/images/Gallery/gallery3.jpg" },
+        { id: 4, imageUrl: "/images/Gallery/gallery4.jpg" },
+        { id: 5, imageUrl: "/images/Gallery/gallery5.jpg" },
+        { id: 6, imageUrl: "/images/Gallery/gallery6.png" },
+        { id: 7, imageUrl: "/images/Gallery/gallery7.png" },
+        { id: 8, imageUrl: "/images/Gallery/gallery8.png" },
+        { id: 9, imageUrl: "/images/Gallery/gallery9.jpeg" },
+        { id: 10, imageUrl: "/images/Gallery/gallery10.jpeg" },
+        { id: 11, imageUrl: "/images/Gallery/gallery11.jpeg" },
+        { id: 12, imageUrl: "/images/Gallery/gallery12.jpeg" },
+        { id: 13, imageUrl: "/images/Gallery/gallery13.jpeg" },
+        { id: 14, imageUrl: "/images/Gallery/gallery14.jpeg" },
+      ];
+      setImages(data);
+    };
+
+    fetchImages();
+  }, []);
 
   const openModal = (index: number) => {
     setCurrentIndex(index);
@@ -26,37 +63,36 @@ const Gallery = () => {
 
   const showPrev = () => {
     setCurrentIndex((prev) =>
-      prev !== null && prev > 0 ? prev - 1 : galleryImages.length - 1
+      prev !== null && prev > 0 ? prev - 1 : images.length - 1
     );
   };
 
   const showNext = () => {
     setCurrentIndex((prev) =>
-      prev !== null && prev < galleryImages.length - 1 ? prev + 1 : 0
+      prev !== null && prev < images.length - 1 ? prev + 1 : 0
     );
   };
 
   return (
     <div className="min-h-[40%] m-0 md:m-5 lg:m-5">
-      {/* <h2 className="text-primaryBrown text-center p-5 text-xl font-bold bg-primaryBrown text-white p-3 rounded-md text-lg font-semibold mb-[5px]">
-        आमचे गॅलरी
-      </h2> */}
-      <HeadingText text="आमचे गॅलरी" />
+      <HeadingText text="यशोगाथा" />
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-        {galleryImages.map((src, index) => (
-          <div
-            key={index}
-            className="relative w-full pt-[100%] overflow-hidden rounded-md shadow hover:shadow-lg cursor-pointer"
-            onClick={() => openModal(index)}
-          >
-            <img
-              src={src}
-              alt={`Gallery image ${index + 1}`}
-              className="absolute top-0 left-0 w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-            />
-          </div>
-        ))}
+      <div className="max-h-[600px] overflow-y-auto pr-2">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+          {images.map((item, index) => (
+            <div
+              key={item.id}
+              className="relative w-full pt-[100%] overflow-hidden rounded-md shadow hover:shadow-lg cursor-pointer"
+              onClick={() => openModal(index)}
+            >
+              <img
+                src={item.imageUrl}
+                alt={`Gallery image ${item.id}`}
+                className="absolute top-0 left-0 w-full h-full object-containt transition-transform duration-300 hover:scale-105"
+              />
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Modal */}
@@ -70,9 +106,9 @@ const Gallery = () => {
             onClick={(e) => e.stopPropagation()}
           >
             <img
-              src={galleryImages[currentIndex]}
+              src={images[currentIndex].imageUrl}
               alt="Preview"
-              className="w-full h-full object-cover"
+              className="w-full h-full object-containt"
             />
 
             {/* Close Button */}
@@ -89,11 +125,7 @@ const Gallery = () => {
               onClick={showPrev}
             >
               <div
-                style={{
-                  display: "flex",
-                  position: "relative",
-                  top: "-7px",
-                }}
+                style={{ display: "flex", position: "relative", top: "-7px" }}
               >
                 ‹
               </div>
@@ -103,11 +135,7 @@ const Gallery = () => {
               onClick={showNext}
             >
               <div
-                style={{
-                  display: "flex",
-                  position: "relative",
-                  top: "-7px",
-                }}
+                style={{ display: "flex", position: "relative", top: "-7px" }}
               >
                 ›
               </div>
