@@ -1,9 +1,12 @@
-import ComingSoon from "./ComingSoon";
+import DocumentExplorer from "../shared-components/DocumentExplorer";
+import PageLayout from "../shared-components/PageLayout";
 
 const LabharthiList = () => {
   return (
     <>
-      <ComingSoon />
+      <PageLayout>
+        <DocumentExplorer />
+      </PageLayout>
     </>
   );
 };

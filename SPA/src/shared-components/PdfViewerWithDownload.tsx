@@ -7,7 +7,7 @@ interface PdfViewerWithDownloadProps {
 const PdfViewerWithDownload: React.FC<PdfViewerWithDownloadProps> = ({
   fileName,
 }) => {
-  const filePath = `/pdf/${fileName}`;
+  const filePath = fileName;
 
   return (
     <div className="flex flex-col gap-4">

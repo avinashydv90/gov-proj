@@ -44,7 +44,7 @@ const DownloadForm: React.FC = () => {
       );
     }
 
-    return <PdfViewerWithDownload fileName={selected.fileName} />;
+    return <PdfViewerWithDownload fileName={"/pdf/" + selected.fileName} />;
   };
 
   return (

@@ -73,3 +73,41 @@ body {
 {
   color: #5E3023 !important;
 }
+
+.tree-container {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 14px;
+  color: #5E3023;
+  padding: 10px;
+  background-color: #f9f6f4;
+  border-radius: 8px;
+  max-width: 400px;
+}
+
+.tree-node {
+  margin-left: 12px;
+}
+
+.folder summary {
+  cursor: pointer;
+  font-weight: 600;
+  padding: 4px;
+  border-radius: 4px;
+  transition: background 0.2s ease-in-out;
+}
+
+.folder summary:hover {
+  background-color: #e0d4ce;
+}
+
+.file {
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  margin-left: 16px;
+  transition: background 0.2s ease-in-out;
+}
+
+.file:hover {
+  background-color: #e0d4ce;
+}
