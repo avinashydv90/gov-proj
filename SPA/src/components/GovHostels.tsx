@@ -28,7 +28,7 @@ const data = [
 ];
 
 const GovHostels: React.FC = () => {
-  const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [selectedId, setSelectedId] = useState<number | null>(data.length>0 ? data[0].id :null);
   const selectedSchool = data.find((school) => school.id === selectedId);
 
   return (

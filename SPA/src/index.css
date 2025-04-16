@@ -8,6 +8,22 @@
   --color-primaryBrown: #5E3023;
 }
 
+/* @font-face {
+  font-family: "MyCustomFont";
+  src: url("/Shivaji05.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  font-family: "MyCustomFont", sans-serif !important;
+}
+
+* {
+  font-family: "MyCustomFont", sans-serif !important;
+} */
+
+
 .nav-link {
   position: relative;
   display: inline-block;

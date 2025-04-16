@@ -22,7 +22,7 @@ const categoryData = [
 
 const AshramSchools: React.FC = () => {
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(
-    null
+    categoryData.length > 0 ? categoryData[0].id : null
   );
   const [selectedHostelId, setSelectedHostelId] = useState<number | null>(null);
 
