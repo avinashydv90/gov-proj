@@ -11,18 +11,19 @@ const PdfViewerWithDownload: React.FC<PdfViewerWithDownloadProps> = ({
 
   return (
     <div className="flex flex-col gap-4">
-      <iframe
-        src={filePath}
-        title={fileName}
-        width="100%"
-        height="500px"
-        className="border rounded"
-      />
+      <div className="w-full border rounded overflow-hidden">
+        <iframe
+          src={filePath}
+          title={fileName}
+          className="w-full h-[60vh] sm:h-[70vh] md:h-[80vh] lg:h-[80vh]"
+        />
+      </div>
+
       <div>
         <a
           href={filePath}
           download={fileName}
-          className="bg-blue-600 text-white px-4 py-2 rounded bg-primaryBrown hover:bg-[#8A4B38]"
+          className="bg-[#5E3023] text-white px-4 py-2 rounded hover:bg-[#8A4B38] transition"
         >
           PDF डाउनलोड करा
         </a>

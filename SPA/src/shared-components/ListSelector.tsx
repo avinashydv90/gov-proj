@@ -10,15 +10,17 @@ interface ListSelectorProps {
   selectedId: number | null;
   onSelect: (id: number) => void;
   title?: string;
+  displaySize?: boolean;
 }
 
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE = 15;
 
 const ListSelector: React.FC<ListSelectorProps> = ({
   items,
   selectedId,
   onSelect,
   title = "सदर यादी",
+  displaySize = false,
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -30,22 +32,30 @@ const ListSelector: React.FC<ListSelectorProps> = ({
   const handleNext = () => setCurrentPage((p) => Math.min(p + 1, totalPages));
 
   return (
-    <div className="md:w-1/3 bg-white shadow-lg rounded-xl p-4 border border-gray-200">
+    <div
+      className={`md:w-1/3 bg-white shadow-lg rounded-xl p-4 border border-gray-200 flex flex-col ${
+        displaySize ? "h-[80vh] md:h-[90vh]" : ""
+      }`}
+    >
       <h3 className="text-lg font-semibold mb-4 text-gray-800">{title}</h3>
 
-      <div className="space-y-2">
+      {/* Scrollable List Section */}
+      <div
+        className={`space-y-2 overflow-y-auto ${
+          displaySize ? "flex-1 pr-1" : ""
+        }`}
+      >
         {currentItems.map((item) => {
           const isSelected = selectedId === item.id;
           return (
             <button
               key={item.id}
               onClick={() => onSelect(item.id)}
-              className={`relative group overflow-hidden w-full px-4 py-2 border-2 font-semibold rounded-full flex items-center gap-3 transition duration-300 
-                ${
-                  isSelected
-                    ? "bg-[#5E3023] text-white border-[#8A4B38]"
-                    : "text-[#5E3023] border-[#8A4B38] hover:text-white"
-                }`}
+              className={`relative group overflow-hidden w-full px-4 py-2 border-2 font-semibold rounded-full flex items-center gap-3 transition duration-300 ${
+                isSelected
+                  ? "bg-[#5E3023] text-white border-[#8A4B38]"
+                  : "text-[#5E3023] border-[#8A4B38] hover:text-white"
+              }`}
             >
               <span
                 className={`absolute inset-0 transition-transform duration-500 ease-out z-0 rounded-full ${
@@ -76,7 +86,7 @@ const ListSelector: React.FC<ListSelectorProps> = ({
         })}
       </div>
 
-      {/* Pagination Controls */}
+      {/* Pagination */}
       {totalPages > 1 && (
         <div className="mt-4 flex justify-between items-center text-sm text-gray-700">
           <button

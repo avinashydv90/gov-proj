@@ -2,13 +2,22 @@ import React from "react";
 
 type Hostel = {
   id: number;
-  Name: string;
-  Address: string;
-  place: string;
-  District: string;
-  WARDAN: string;
-  contact: string;
-  EmailId: string;
+  school_name: string;
+  taluka: string;
+  district: string;
+  principal: {
+    name: string;
+    contact: string;
+  };
+  superintendent: {
+    name: string;
+    contact: string;
+  };
+  female_superintendent: {
+    name: string;
+    contact: string;
+  };
+  email: string;
 };
 
 const ShaskiyaList: React.FC<{
@@ -22,25 +31,38 @@ const ShaskiyaList: React.FC<{
     return (
       <div>
         <h2 className="text-2xl font-bold text-[#5E3023] mb-2">
-          {selected.Name}
+          {selected.school_name}
         </h2>
+
         <p className="text-gray-700 mb-1">
-          <strong>पत्ता:</strong> {selected.Address}
+          <strong>तालुका:</strong> {selected.taluka}
         </p>
         <p className="text-gray-700 mb-1">
-          <strong>तालुका:</strong> {selected.place}
+          <strong>जिल्हा:</strong> {selected.district}
         </p>
         <p className="text-gray-700 mb-1">
-          <strong>जिल्हा:</strong> {selected.District}
-        </p>
-        <p className="text-gray-700 mb-1">
-          <strong>वार्डन:</strong> {selected.WARDAN}
-        </p>
-        <p className="text-gray-700 mb-1">
-          <strong>संपर्क:</strong> {selected.contact}
+          <strong>मुख्याध्यापक नाव:</strong> {selected.principal.name}
         </p>
         <p className="text-gray-700">
-          <strong>ईमेल:</strong> {selected.EmailId}
+          <strong>संपर्क क्रमांक:</strong> {selected.principal.contact}
+        </p>
+
+        <p className="text-gray-700 mb-1">
+          <strong>अधिक्षक नाव:</strong> {selected.superintendent.name}
+        </p>
+        <p className="text-gray-700">
+          <strong>संपर्क क्रमांक:</strong> {selected.superintendent.contact}
+        </p>
+        <p className="text-gray-700 mb-1">
+          <strong>स्त्री अधिकक्षीका नाव:</strong>{" "}
+          {selected.female_superintendent.name}
+        </p>
+        <p className="text-gray-700">
+          <strong>संपर्क क्रमांक:</strong>{" "}
+          {selected.female_superintendent.contact}
+        </p>
+        <p className="text-gray-700">
+          <strong>शाळेचा ई-मेल आय डी:</strong> {selected.email}
         </p>
 
         <button
@@ -92,7 +114,7 @@ const ShaskiyaList: React.FC<{
                   d="M9 5l7 7-7 7"
                 />
               </svg>
-              <span>{hostel.Name}</span>
+              <span>{hostel.school_name}</span>
             </span>
           </button>
         ))}

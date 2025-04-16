@@ -2,19 +2,16 @@ import React from "react";
 
 type Hostel = {
   id: number;
-  schoolName: string;
+  Name: string;
+  Address: string;
   place: string;
-  district: string;
-  principalName: string;
+  District: string;
+  WARDAN: string;
   contact: string;
-  president: string;
-  presidentContact: string;
-  vicePresident: string;
-  vicePresidentContact: string;
-  email: string;
+  EmailId: string;
 };
 
-const AnudanitList: React.FC<{
+const ShaskiyaList: React.FC<{
   data: Hostel[];
   selectedId: number | null;
   onSelect: (id: number | null) => void;
@@ -25,34 +22,25 @@ const AnudanitList: React.FC<{
     return (
       <div>
         <h2 className="text-2xl font-bold text-[#5E3023] mb-2">
-          {selected.schoolName}
+          {selected.Name}
         </h2>
         <p className="text-gray-700 mb-1">
-          <strong>पत्ता:</strong> {selected.place}
+          <strong>पत्ता:</strong> {selected.Address}
         </p>
         <p className="text-gray-700 mb-1">
-          <strong>जिल्हा:</strong> {selected.district}
+          <strong>तालुका:</strong> {selected.place}
         </p>
         <p className="text-gray-700 mb-1">
-          <strong>प्राचार्य:</strong> {selected.principalName}
+          <strong>जिल्हा:</strong> {selected.District}
+        </p>
+        <p className="text-gray-700 mb-1">
+          <strong>वार्डन:</strong> {selected.WARDAN}
         </p>
         <p className="text-gray-700 mb-1">
           <strong>संपर्क:</strong> {selected.contact}
         </p>
-        <p className="text-gray-700 mb-1">
-          <strong>अध्यक्ष:</strong> {selected.president}
-        </p>
-        <p className="text-gray-700 mb-1">
-          <strong>अध्यक्ष संपर्क:</strong> {selected.presidentContact}
-        </p>
-        <p className="text-gray-700 mb-1">
-          <strong>उपाध्यक्ष:</strong> {selected.vicePresident}
-        </p>
-        <p className="text-gray-700 mb-1">
-          <strong>उपाध्यक्ष संपर्क:</strong> {selected.vicePresidentContact}
-        </p>
         <p className="text-gray-700">
-          <strong>ईमेल:</strong> {selected.email}
+          <strong>ईमेल:</strong> {selected.EmailId}
         </p>
 
         <button
@@ -68,7 +56,7 @@ const AnudanitList: React.FC<{
   return (
     <>
       <h2 className="w-full text-xl font-bold text-white bg-[#5E3023] border border-[#8A4B38] rounded-xl px-4 py-3 mb-4 text-center">
-        अनुदानित यादी
+        शासकीय यादी
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         {data.map((hostel) => (
@@ -104,7 +92,7 @@ const AnudanitList: React.FC<{
                   d="M9 5l7 7-7 7"
                 />
               </svg>
-              <span>{hostel.schoolName}</span>
+              <span>{hostel.Name}</span>
             </span>
           </button>
         ))}
@@ -113,4 +101,4 @@ const AnudanitList: React.FC<{
   );
 };
 
-export default AnudanitList;
+export default ShaskiyaList;

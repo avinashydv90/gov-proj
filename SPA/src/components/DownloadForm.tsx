@@ -57,6 +57,7 @@ const DownloadForm: React.FC = () => {
           selectedId={selectedFormTypeId}
           onSelect={(id) => setselectedFormTypeId(id)}
           title="डाउनलोड फॉर्म प्रकार निवडा"
+          displaySize={true}
         />
         <div className="md:w-2/3 bg-white shadow-lg rounded-xl p-6 border border-gray-200">
           {renderCategoryContent()}
