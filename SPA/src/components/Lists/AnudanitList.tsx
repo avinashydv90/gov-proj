@@ -1,0 +1,116 @@
+import React from "react";
+
+type Hostel = {
+  id: number;
+  schoolName: string;
+  place: string;
+  District: string;
+  PricipalName: string;
+  contact: string;
+  president: string;
+  presidentContact: string;
+  VicePresident: string;
+  VicePresidentContact: string;
+  EmailId: string;
+};
+
+const AnudanitList: React.FC<{
+  data: Hostel[];
+  selectedId: number | null;
+  onSelect: (id: number | null) => void;
+}> = ({ data, selectedId, onSelect }) => {
+  const selected = data.find((item) => item.id === selectedId);
+
+  if (selectedId && selected) {
+    return (
+      <div>
+        <h2 className="text-2xl font-bold text-[#5E3023] mb-2">
+          {selected.schoolName}
+        </h2>
+        <p className="text-gray-700 mb-1">
+          <strong>पत्ता:</strong> {selected.place}
+        </p>
+        <p className="text-gray-700 mb-1">
+          <strong>जिल्हा:</strong> {selected.District}
+        </p>
+        <p className="text-gray-700 mb-1">
+          <strong>प्राचार्य:</strong> {selected.PricipalName}
+        </p>
+        <p className="text-gray-700 mb-1">
+          <strong>संपर्क:</strong> {selected.contact}
+        </p>
+        <p className="text-gray-700 mb-1">
+          <strong>अध्यक्ष:</strong> {selected.president}
+        </p>
+        <p className="text-gray-700 mb-1">
+          <strong>अध्यक्ष संपर्क:</strong> {selected.presidentContact}
+        </p>
+        <p className="text-gray-700 mb-1">
+          <strong>उपाध्यक्ष:</strong> {selected.VicePresident}
+        </p>
+        <p className="text-gray-700 mb-1">
+          <strong>उपाध्यक्ष संपर्क:</strong> {selected.VicePresidentContact}
+        </p>
+        <p className="text-gray-700">
+          <strong>ईमेल:</strong> {selected.EmailId}
+        </p>
+
+        <button
+          onClick={() => onSelect(null)}
+          className="text-sm font-bold text-white bg-[#5E3023] border border-[#8A4B38] rounded-xl px-3 py-3 mt-4 text-center"
+        >
+          ← परत जा
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <h2 className="w-full text-xl font-bold text-white bg-[#5E3023] border border-[#8A4B38] rounded-xl px-4 py-3 mb-4 text-center">
+        अनुदानित यादी
+      </h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        {data.map((hostel) => (
+          <button
+            key={hostel.id}
+            onClick={() => onSelect(hostel.id)}
+            className={`relative group overflow-hidden w-full px-4 py-2 border-2 font-semibold rounded-full flex items-center gap-3 transition duration-300 
+              ${
+                selectedId === hostel.id
+                  ? "bg-[#5E3023] text-white border-[#8A4B38]"
+                  : "text-[#5E3023] border-[#8A4B38] hover:text-white"
+              }`}
+          >
+            <span
+              className={`absolute inset-0 transition-transform duration-500 ease-out z-0 rounded-full ${
+                selectedId === hostel.id
+                  ? "bg-[#5E3023] scale-x-100"
+                  : "bg-[#5E3023] scale-x-0 origin-left group-hover:scale-x-100"
+              }`}
+            ></span>
+            <span className="z-10 flex items-center gap-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-4 h-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
+              <span>{hostel.schoolName}</span>
+            </span>
+          </button>
+        ))}
+      </div>
+    </>
+  );
+};
+
+export default AnudanitList;

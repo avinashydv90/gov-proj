@@ -16,7 +16,7 @@ const Topbar = () => {
     { label: "विकास योजना", path: "/vikasyojana" },
     { label: "यशोगाथा", path: "/gallery" },
     { label: "डाउनलोड फॉर्म ", path: "/downloadForm" },
-    { label: "लाभार्थी यादी", path: "/labharthiList" },
+    { label: "विभागीय योजना", path: "/labharthiList" },
     { label: "लोकसेवा हक्क", path: "/loksevahakka" },
     { label: "माहितीचा अधिकार अधिनियम", path: "/rti" },
     { label: "परिचय", path: "/introduction" },
