@@ -1,9 +1,12 @@
-import ComingSoon from "./ComingSoon";
+import PageLayout from "../shared-components/PageLayout";
+import LoksevaTable from "./RTI/LoksevaTable";
 
 const LoksevaHakka = () => {
   return (
     <>
-      <ComingSoon />
+      <PageLayout>
+        <LoksevaTable />
+      </PageLayout>
     </>
   );
 };

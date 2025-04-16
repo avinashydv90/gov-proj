@@ -1,49 +1,59 @@
 import { motion } from "framer-motion";
 import HeadingText from "../shared-components/HeadingText";
-import { PrakalpKaryalayAdhikari } from "../constants/PrakalpKaryalayAdhikari"; // adjust path as needed
+import { PrakalpKaryalayAdhikari } from "../constants/PrakalpKaryalayAdhikari";
 import PageLayout from "../shared-components/PageLayout";
 
 const Vipimages = [
-  "/images/VipImages/slide1.jpg",
-  "/images/VipImages/slide2.jpg",
-  "/images/VipImages/slide3.jpg",
-  "/images/VipImages/slide4.jpg",
-  "/images/VipImages/slide5.jpg",
-  "/images/VipImages/slide6.jpg",
-  "/images/VipImages/slide7.jpg",
-  "/images/VipImages/slide8.jpg",
-  "/images/VipImages/slide9.jpg",
+  "/images/ContactusImage/rajendrakumarHausabaiBhanudasHiwale.jpg",
+  "/images/ContactusImage/diwakarGaukarnaDevidasKalpande.jpg",
+  "/images/ContactusImage/arvindSaraswatiRamlalJadhav.jpg",
+  "/images/ContactusImage/pandharinathLakshmibaiNarayanWekhande.jpg",
+  "/images/ContactusImage/bapuraoVatsalabaiRamaJadhav.jpg",
+  "/images/ContactusImage/sunilsingAnusayaNavalsingPatil.jpg",
+  "/images/ContactusImage/vilasJanabaiNamdevChanne.jpg",
 ];
+
+const primaryColor = "#5E3023";
 
 const ContactUs = () => {
   return (
     <PageLayout>
-      <div className="bg-white shadow-md p-4 md:p-6 rounded-lg border border-gray-300">
-        <HeadingText text="महत्वाच्या व्यक्ती" />
-        <ul className="mt-4 space-y-4 max-h-[701px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100">
+      <div className="bg-white shadow-xl p-6 md:p-10 rounded-xl border border-gray-200">
+        <HeadingText text="प्रकल्प कार्यालय अधिकारी संपर्क" />
+        <ul className="mt-6 grid gap-6 max-h-[750px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 sm:grid-cols-1 md:grid-cols-2">
           {PrakalpKaryalayAdhikari.map((person, index) => (
             <motion.li
               key={person.id}
-              className="flex items-center gap-4 border-b pb-3"
-              initial={{ opacity: 0, x: -50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
+              className="flex items-center gap-5 bg-gray-50 rounded-lg p-4 border border-gray-200 hover:shadow-lg transition-all duration-300 group"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: index * 0.1 }}
               viewport={{ once: true }}
+              style={{ borderLeft: `4px solid ${primaryColor}` }}
             >
               <img
                 src={Vipimages[index % Vipimages.length]}
                 alt={person.officerName}
-                className="w-[49px] h-[49px] rounded-full object-fill shadow-sm"
+                onError={(e) =>
+                  (e.currentTarget.src = "/images/ContactusImage/default.jpg")
+                }
+                className="w-20 h-20 rounded-lg object-cover shadow-sm border border-gray-300"
               />
               <div className="flex flex-col justify-center">
-                <span className="text-gray-800 font-semibold leading-tight">
+                <span
+                  className="font-bold text-base md:text-lg leading-tight"
+                  style={{ color: primaryColor }}
+                >
                   {person.officerName}
                 </span>
-                <span className="text-gray-500 text-sm leading-tight">
-                  {person.title} - {person.Designation}
+                <span className="text-gray-600 text-sm md:text-base">
+                  {person.title} –{" "}
+                  <span className="italic">{person.Designation}</span>
                 </span>
-                <span className="text-gray-500 text-sm">{person.Contact}</span>
-                <span className="text-gray-500 text-sm">{person.Email}</span>
+                <span className="text-gray-500 text-sm mt-1">
+                  📞 {person.Contact}
+                </span>
+                <span className="text-gray-500 text-sm">📧 {person.Email}</span>
               </div>
             </motion.li>
           ))}

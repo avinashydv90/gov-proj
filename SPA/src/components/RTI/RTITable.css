@@ -1,0 +1,33 @@
+.rti-container {
+  /* font-family: 'Segoe UI', sans-serif; */
+  background-color: #f9f9f9;
+  padding: 24px;
+  color: #333;
+  border-radius: 8px;
+}
+
+
+
+.rti-container table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background-color: #fff;
+}
+
+.rti-container th,
+.rti-container td {
+  border: 1px solid #aaa;
+  padding: 12px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.rti-container th {
+  background-color: #e0d4ce;
+  color: #5E3023;
+}
+
+.rti-container tr:nth-child(even) {
+  background-color: #f5f0ee;
+}
