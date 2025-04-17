@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import HeadingText from "../shared-components/HeadingText";
 import PageLayout from "../shared-components/PageLayout";
-import ListSelector from "../shared-components/ListSelector";
 import { Shaskiya } from "../constants/Shaskiya";
 import { Anudanit } from "../constants/Anudanit";
 import { Namankit } from "../constants/Namankit";
+import { Emrs } from "../constants/Emrs";
 import ShaskiyaList from "./Lists/ShaskiyaList";
 import AnudanitList from "./Lists/AnudanitList";
 import NamankitList from "./Lists/NamankitList";
 import EmrsList from "./Lists/ErmsList";
-import { Emrs } from "../constants/Emrs";
+import ListSelector from "../shared-components/ListSelector";
 
 const categoryData = [
   { id: 1, title: "शासकीय", description: "Located in the forest region..." },
@@ -28,8 +28,8 @@ const AshramSchools: React.FC = () => {
     setSelectedHostelId(null);
   };
 
-  const renderCategoryList = () => {
-    switch (selectedCategoryId) {
+  const renderCategoryList = (id: number | null) => {
+    switch (id) {
       case 1:
         return (
           <ShaskiyaList
@@ -75,7 +75,8 @@ const AshramSchools: React.FC = () => {
     <PageLayout>
       <HeadingText text="आदिवासी विकास" />
 
-      <div className="mt-6 flex flex-col md:flex-row gap-4">
+      {/* Desktop View */}
+      <div className="hidden md:flex mt-6 flex-col md:flex-row gap-4">
         {/* Left: Category Selector */}
         <ListSelector
           items={categoryData}
@@ -87,10 +88,46 @@ const AshramSchools: React.FC = () => {
           title="आश्रमशाळा यादी"
         />
 
-        {/* Right: Category Details or List */}
+        {/* Right: Category Details */}
         <div className="md:w-2/3 bg-white shadow-lg rounded-xl p-6 border border-gray-200">
-          {renderCategoryList()}
+          {renderCategoryList(selectedCategoryId)}
         </div>
+      </div>
+
+      {/* Mobile View */}
+      <div className="block md:hidden mt-6 space-y-4">
+        {categoryData.map((category) => (
+          <div
+            key={category.id}
+            className="rounded-xl border border-gray-200 shadow-md"
+          >
+            <button
+              className="w-full text-left px-4 py-3 text-white font-semibold rounded-t-xl transition-colors duration-200 btn-primary"
+              style={{ backgroundColor: "#5E3023" }}
+              onClick={() =>
+                setSelectedCategoryId(
+                  selectedCategoryId === category.id ? null : category.id
+                )
+              }
+            >
+              {category.title}
+            </button>
+
+            <div
+              className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                selectedCategoryId === category.id
+                  ? "max-h-[1000px]"
+                  : "max-h-0"
+              }`}
+              style={{ overflow: "hidden scroll" }}
+            >
+              <div className="p-4">
+                {selectedCategoryId === category.id &&
+                  renderCategoryList(category.id)}
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
     </PageLayout>
   );

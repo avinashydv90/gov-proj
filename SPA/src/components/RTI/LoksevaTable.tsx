@@ -1,8 +1,27 @@
 import React from "react";
 import "./RTITable.css";
 import HeadingText from "../../shared-components/HeadingText";
+import { motion } from "framer-motion";
 
 const LoksevaTable: React.FC = () => {
+  const links = [
+    {
+      label: "महाराष्ट्र लोकसेवा हक्क अधिनियम, 2015",
+      href: "pdf/RTS_act_2015.pdf",
+    },
+    {
+      label: "महाराष्ट्र लोकसेवा हक्क अधिनियम नियम राजपत्र",
+      href: "pdf/RTS_Rules_Gazette.pdf",
+    },
+    {
+      label: "लोकसेवा हक्क कायद्यांतर्गत अधिसूचित सेवांची यादी",
+      href: "https://aaplesarkar.mahaonline.gov.in/en/CommonForm/ViewAllServices",
+    },
+    {
+      label: "आपले सरकार सेवा केंद्राची यादी",
+      href: "https://aaplesarkar.mahaonline.gov.in/en/CommonForm/SewaKendraDetails",
+    },
+  ];
   return (
     <div className="rti-container space-y-6">
       <HeadingText text="“महाराष्ट्र लोकसेवा हक्क अधिनियम २०१५”" />
@@ -196,6 +215,23 @@ const LoksevaTable: React.FC = () => {
             </tbody>
           </table>
         </div>
+      </div>
+      <div className="w-full flex flex-col sm:flex-row flex-wrap gap-4 p-[10px]">
+        {links.map((link, index) => (
+          <motion.a
+            key={index}
+            href={link.href}
+            target="_blank"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.97 }}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: index * 0.1 }}
+            className="bg-[#5E3023] hover:bg-[#4c261c] text-white px-5 py-2 rounded-xl text-center shadow-md transition duration-300 w-full sm:w-auto"
+          >
+            {link.label}
+          </motion.a>
+        ))}
       </div>
     </div>
   );

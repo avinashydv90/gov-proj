@@ -111,3 +111,15 @@ body {
 .file:hover {
   background-color: #e0d4ce;
 }
+
+.btn-primary{
+  background-color: #5E3023;  
+  color: white;
+
+}
+
+.btn-primary:hover{
+  background-color: #8A4B38 !important;  
+  cursor: pointer;
+
+}

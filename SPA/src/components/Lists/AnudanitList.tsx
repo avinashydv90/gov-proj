@@ -75,7 +75,7 @@ const AnudanitList: React.FC<{
           <button
             key={hostel.id}
             onClick={() => onSelect(hostel.id)}
-            className={`relative group overflow-hidden w-full px-4 py-2 border-2 font-semibold rounded-full flex items-center gap-3 transition duration-300 
+            className={`relative group overflow-hidden w-full px-4 py-2 border-2 font-semibold rounded-full flex items-center gap-3 transition duration-300
               ${
                 selectedId === hostel.id
                   ? "bg-[#5E3023] text-white border-[#8A4B38]"
