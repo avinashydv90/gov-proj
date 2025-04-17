@@ -24,7 +24,7 @@ const DocumentExplorer: React.FC = () => {
     <div className="flex gap-6 p-4">
       {/* Left: Tree View */}
       <div className="md:w-1/3 bg-white shadow-lg rounded-xl p-4 border border-gray-200">
-        <HeadingText text="लाभार्थी यादी" />
+        <HeadingText text="विभागीय योजना" />
         <TreeView data={treeData} onSelect={setSelectedPdf} />
       </div>
 

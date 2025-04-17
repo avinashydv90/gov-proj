@@ -40,11 +40,10 @@ const Gallery = () => {
         { id: 7, imageUrl: "/images/Gallery/gallery7.png" },
         { id: 8, imageUrl: "/images/Gallery/gallery8.png" },
         { id: 9, imageUrl: "/images/Gallery/gallery9.jpeg" },
-        { id: 10, imageUrl: "/images/Gallery/gallery10.jpeg" },
-        { id: 11, imageUrl: "/images/Gallery/gallery11.jpeg" },
-        { id: 12, imageUrl: "/images/Gallery/gallery12.jpeg" },
-        { id: 13, imageUrl: "/images/Gallery/gallery13.jpeg" },
-        { id: 14, imageUrl: "/images/Gallery/gallery14.jpeg" },
+        { id: 10, imageUrl: "/images/Gallery/gallery11.jpeg" },
+        { id: 11, imageUrl: "/images/Gallery/gallery12.jpeg" },
+        { id: 12, imageUrl: "/images/Gallery/gallery13.jpeg" },
+        { id: 13, imageUrl: "/images/Gallery/gallery14.jpeg" },
       ];
       setImages(data);
     };

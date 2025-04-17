@@ -36,7 +36,9 @@ const VikasYojana: React.FC = () => {
                 {selectedHostel.title}
               </h2>
               <div
-                dangerouslySetInnerHTML={{ __html: selectedHostel.description }}
+                dangerouslySetInnerHTML={{
+                  __html: selectedHostel.description as string,
+                }}
                 className="mb-4 overflow-hidden"
                 style={{
                   flexShrink: 0,

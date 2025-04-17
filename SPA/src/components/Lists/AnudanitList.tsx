@@ -28,31 +28,31 @@ const AnudanitList: React.FC<{
           {selected.schoolName}
         </h2>
         <p className="text-gray-700 mb-1">
-          <strong>पत्ता:</strong> {selected.place}
+          <strong>तालुका :</strong> {selected.place}
         </p>
         <p className="text-gray-700 mb-1">
-          <strong>जिल्हा:</strong> {selected.district}
+          <strong>जिल्हा :</strong> {selected.district}
         </p>
         <p className="text-gray-700 mb-1">
-          <strong>प्राचार्य:</strong> {selected.principalName}
+          <strong>मुख्याध्यापक नाव :</strong> {selected.principalName}
         </p>
         <p className="text-gray-700 mb-1">
-          <strong>संपर्क:</strong> {selected.contact}
+          <strong>संपर्क क्रमांक :</strong> {selected.contact}
         </p>
         <p className="text-gray-700 mb-1">
-          <strong>अध्यक्ष:</strong> {selected.president}
+          <strong>अध्यक्ष :</strong> {selected.president}
         </p>
         <p className="text-gray-700 mb-1">
-          <strong>अध्यक्ष संपर्क:</strong> {selected.presidentContact}
+          <strong>संपर्क क्रमांक :</strong> {selected.presidentContact}
         </p>
         <p className="text-gray-700 mb-1">
-          <strong>उपाध्यक्ष:</strong> {selected.vicePresident}
+          <strong>स्त्री अधिक्षिका नाव :</strong> {selected.vicePresident}
         </p>
         <p className="text-gray-700 mb-1">
-          <strong>उपाध्यक्ष संपर्क:</strong> {selected.vicePresidentContact}
+          <strong>संपर्क क्रमांक:</strong> {selected.vicePresidentContact}
         </p>
         <p className="text-gray-700">
-          <strong>ईमेल:</strong> {selected.email}
+          <strong>शाळेचा ई-मेल आय डी:</strong> {selected.email}
         </p>
 
         <button

@@ -31,3 +31,17 @@
 .rti-container tr:nth-child(even) {
   background-color: #f5f0ee;
 }
+
+table {
+  border-collapse: collapse;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 0.5rem;
+  vertical-align: top;
+}
+
+thead {
+  background-color: #f0f0f0;
+}

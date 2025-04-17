@@ -54,7 +54,7 @@ const ShaskiyaList: React.FC<{
           <strong>संपर्क क्रमांक:</strong> {selected.superintendent.contact}
         </p>
         <p className="text-gray-700 mb-1">
-          <strong>स्त्री अधिकक्षीका नाव:</strong>{" "}
+          <strong>स्त्री अधिक्षिका नाव :</strong>{" "}
           {selected.female_superintendent.name}
         </p>
         <p className="text-gray-700">
