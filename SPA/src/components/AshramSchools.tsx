@@ -73,7 +73,7 @@ const AshramSchools: React.FC = () => {
 
   return (
     <PageLayout>
-      <HeadingText text="आदिवासी विकास" />
+      <HeadingText text="आश्रमशाळा" />
 
       {/* Desktop View */}
       <div className="hidden md:flex mt-6 flex-col md:flex-row gap-4">

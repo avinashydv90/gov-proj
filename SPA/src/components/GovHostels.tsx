@@ -37,7 +37,7 @@ const GovHostels: React.FC = () => {
 
   return (
     <PageLayout>
-      <HeadingText text="आदिवासी विकास" />
+      <HeadingText text="वसतिगृह" />
 
       {/* Desktop Layout */}
       <div className="hidden md:flex mt-6 flex-col md:flex-row gap-4">

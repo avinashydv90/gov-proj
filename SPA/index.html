@@ -1,6 +1,23 @@
 <!doctype html>
 <html lang="en">
-  <head>
+  <head>    
+    <script>      
+      if (location.hostname === "poitdp.shahapur-mh.in") {
+        const gaScript = document.createElement("script");
+        gaScript.setAttribute("async", "");
+        gaScript.src = "https://www.googletagmanager.com/gtag/js?id=G-YN3T2K6QHK";
+        document.head.appendChild(gaScript);
+
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+          dataLayer.push(arguments);
+        }
+        window.gtag = gtag;
+
+        gtag("js", new Date());
+        gtag("config", "G-YN3T2K6QHK");
+      }
+    </script>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/Adivasi_Vikas_Prakalp_Shahapur.svg" />
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js"></script>
@@ -11,7 +28,7 @@
     <title>एकात्मिक आदिवासी विकास प्रकल्प, शहापुर| Adivasi Vikas Prakalp Shahapur</title>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root"></div>    
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
