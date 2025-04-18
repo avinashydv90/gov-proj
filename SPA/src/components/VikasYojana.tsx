@@ -34,10 +34,10 @@ const VikasYojana: React.FC = () => {
       {/* Desktop Layout */}
       <div className="hidden md:flex mt-6 flex-col md:flex-row gap-4">
         <ListSelector
-          items={yojnas.map((y) => ({
-            id: y.id,
-            title: y.title,
-            description: y.description,
+          items={yojnas.map((h) => ({
+            id: h.id,
+            title: h.title,
+            description: h.description,
           }))}
           selectedId={selectedId}
           onSelect={setSelectedId}

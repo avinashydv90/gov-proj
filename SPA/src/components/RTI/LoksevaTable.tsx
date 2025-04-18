@@ -79,8 +79,9 @@ const LoksevaTable: React.FC = () => {
           क्र.३१ ) मधील कलम ३ च्या उपकलम (१) अन्वये प्रदान करण्यात आलेल्या
           आदिवासी विकास विभागाच्या अधिसूचित सेवांचा तपशिल
         </p>
+
         <div className="overflow-auto border mt-2">
-          <table className="min-w-[800px] w-full table-auto">
+          <table className="min-w-[600px] w-full table-auto">
             <thead>
               <tr>
                 <th>अ.क्र</th>
@@ -141,7 +142,7 @@ const LoksevaTable: React.FC = () => {
           आदिवासी विकास विभागाच्या अधिसूचित सेवांचा तपशिल
         </p>
         <div className="overflow-auto border">
-          <table className="min-w-[1000px] w-full table-auto">
+          <table className="min-w-[600px] w-full table-auto">
             <thead>
               <tr>
                 <th>अ.क्र.</th>
