@@ -1,3 +1,4 @@
+//import HeadingText from "../shared-components/HeadingText";
 import PageLayout from "../shared-components/PageLayout";
 
 const Introduction = () => {

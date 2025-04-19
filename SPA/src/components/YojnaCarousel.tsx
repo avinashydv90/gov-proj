@@ -51,7 +51,9 @@ const YojnaCarousel = () => {
                 {yojna.title}
               </h1>
               <div
-                dangerouslySetInnerHTML={{ __html: yojna.description }}
+                dangerouslySetInnerHTML={{
+                  __html: yojna.description as string,
+                }}
                 className="mb-4 overflow-hidden"
                 style={{
                   flexShrink: 0,

@@ -1,9 +1,12 @@
-import ComingSoon from "./ComingSoon";
+import PageLayout from "../shared-components/PageLayout";
+import RTITable from "./RTI/RTITable";
 
 const RightToInformation = () => {
   return (
     <>
-      <ComingSoon />
+      <PageLayout>
+        <RTITable />
+      </PageLayout>
     </>
   );
 };

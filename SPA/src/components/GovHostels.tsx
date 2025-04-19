@@ -1,64 +1,114 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import HeadingText from "../shared-components/HeadingText";
 import ListSelector from "../shared-components/ListSelector";
 import PageLayout from "../shared-components/PageLayout";
-
-const data = [
-  {
-    id: 1,
-    title: "शासकीय",
-    description:
-      "Located in the forest region, serving tribal students since 1985.",
-  },
-  {
-    id: 2,
-    title: "अनुदानित",
-    description: "Known for excellent academic results in the past 5 years.",
-  },
-  {
-    id: 3,
-    title: "नामांकित",
-    description: "Focuses on sports and physical education for tribal youth.",
-  },
-  {
-    id: 4,
-    title: "EMRS",
-    description: "Provides free meals and hostel facilities to students.",
-  },
-];
+interface ShaskiyaHostel {
+  id: number;
+  hostelName: string;
+  address: string;
+  city: string;
+  district: string;
+  wardenName: string;
+  contact: string;
+  hostelEmail: string;
+}
 
 const GovHostels: React.FC = () => {
+  // const [selectedId, setSelectedId] = useState<number | null>(
+  //   Hostel.length > 0 ? Hostel[0].id : null
+  // );
+  const [data, setData] = useState<ShaskiyaHostel[]>([]);
   const [selectedId, setSelectedId] = useState<number | null>(null);
-  const selectedSchool = data.find((school) => school.id === selectedId);
+
+  useEffect(() => {
+    fetch("https://api.poitdp.shahapur-mh.in/api/Hostel/hostel")
+      .then((res) => res.json())
+      .then((json) => setData(json))
+      .catch((err) => console.error("Error fetching data:", err));
+  }, []);
+
+  const selectedHostel = data.find((hostel) => hostel.id === selectedId);
+
+  const renderHostelDetails = (hostel: (typeof data)[0]) => (
+    <div className="p-4 bg-white rounded-b-xl border-gray-200">
+      <h2 className="text-xl font-bold text-[#5E3023] mb-2">
+        {hostel.hostelName}
+      </h2>
+      <p className="text-gray-700 mb-1">
+        <strong>पत्ता:</strong> {hostel.address}
+      </p>
+      <p className="text-gray-700 mb-1">
+        <strong>तालुका:</strong> {hostel.city}
+      </p>
+      <p className="text-gray-700 mb-1">
+        <strong>जिल्हा:</strong> {hostel.district}
+      </p>
+      <p className="text-gray-700 mb-1">
+        <strong>वार्डन:</strong> {hostel.wardenName}
+      </p>
+      <p className="text-gray-700 mb-1">
+        <strong>संपर्क:</strong> {hostel.contact}
+      </p>
+      <p className="text-gray-700">
+        <strong>ईमेल:</strong> {hostel.hostelEmail}
+      </p>
+    </div>
+  );
 
   return (
     <PageLayout>
       <HeadingText text="आदिवासी विकास" />
 
-      <div className="mt-6 flex flex-col md:flex-row gap-4">
-        {/* Reusable Left Selector */}
+      {/* Desktop Layout */}
+      <div className="hidden md:flex mt-6 flex-col md:flex-row gap-4">
+        {/* Left: List */}
         <ListSelector
-          items={data}
+          items={data.map((h) => ({
+            id: h.id,
+            title: h.hostelName,
+            description: h.address,
+          }))}
           selectedId={selectedId}
-          onSelect={(id) => setSelectedId(id)}
-          title="आश्रमशाळा यादी"
+          onSelect={setSelectedId}
+          title="शासकीय वसतिगृह"
         />
 
-        {/* Right - Card */}
+        {/* Right: Details */}
         <div className="md:w-2/3 bg-white shadow-lg rounded-xl p-6 border border-gray-200">
-          {selectedSchool ? (
-            <>
-              <h2 className="text-2xl font-bold text-blue-700 mb-2">
-                {selectedSchool.title}
-              </h2>
-              <p className="text-gray-700">{selectedSchool.description}</p>
-            </>
+          {selectedHostel ? (
+            renderHostelDetails(selectedHostel)
           ) : (
-            <p className="text-gray-500 italic">
-              कृपया डाव्या बाजूने शाळा निवडा.
-            </p>
+            <p className="text-gray-500 italic">कृपया वसतिगृह निवडा.</p>
           )}
         </div>
+      </div>
+
+      {/* Mobile Accordion Layout */}
+      <div className="block md:hidden mt-6 space-y-4">
+        {data.map((hostel) => (
+          <div
+            key={hostel.id}
+            className="rounded-xl border border-gray-200 shadow-md"
+          >
+            <button
+              className="w-full text-left px-4 py-3 text-white font-semibold rounded-t-xl transition-colors duration-200 btn-primary"
+              style={{ backgroundColor: "#5E3023" }}
+              onClick={() =>
+                setSelectedId(selectedId === hostel.id ? null : hostel.id)
+              }
+            >
+              {hostel.hostelName}
+            </button>
+
+            <div
+              className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                selectedId === hostel.id ? "max-h-[1000px]" : "max-h-0"
+              }`}
+            >
+              {selectedId === hostel.id && renderHostelDetails(hostel)}
+            </div>
+          </div>
+        ))}
       </div>
     </PageLayout>
   );

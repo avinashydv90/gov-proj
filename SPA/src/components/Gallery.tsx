@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import HeadingText from "../shared-components/HeadingText";
+import PageLayout from "../shared-components/PageLayout";
 
 interface GalleryItem {
   id: number;
@@ -39,11 +40,10 @@ const Gallery = () => {
         { id: 7, imageUrl: "/images/Gallery/gallery7.png" },
         { id: 8, imageUrl: "/images/Gallery/gallery8.png" },
         { id: 9, imageUrl: "/images/Gallery/gallery9.jpeg" },
-        { id: 10, imageUrl: "/images/Gallery/gallery10.jpeg" },
-        { id: 11, imageUrl: "/images/Gallery/gallery11.jpeg" },
-        { id: 12, imageUrl: "/images/Gallery/gallery12.jpeg" },
-        { id: 13, imageUrl: "/images/Gallery/gallery13.jpeg" },
-        { id: 14, imageUrl: "/images/Gallery/gallery14.jpeg" },
+        { id: 10, imageUrl: "/images/Gallery/gallery11.jpeg" },
+        { id: 11, imageUrl: "/images/Gallery/gallery12.jpeg" },
+        { id: 12, imageUrl: "/images/Gallery/gallery13.jpeg" },
+        { id: 13, imageUrl: "/images/Gallery/gallery14.jpeg" },
       ];
       setImages(data);
     };
@@ -74,76 +74,78 @@ const Gallery = () => {
   };
 
   return (
-    <div className="min-h-[40%] m-0 md:m-5 lg:m-5">
-      <HeadingText text="यशोगाथा" />
+    <PageLayout>
+      <div className=" m-0 md:m-5 lg:m-5">
+        <HeadingText text="यशोगाथा" />
 
-      <div className="max-h-[600px] overflow-y-auto pr-2">
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-          {images.map((item, index) => (
-            <div
-              key={item.id}
-              className="relative w-full pt-[100%] overflow-hidden rounded-md shadow hover:shadow-lg cursor-pointer"
-              onClick={() => openModal(index)}
-            >
-              <img
-                src={item.imageUrl}
-                alt={`Gallery image ${item.id}`}
-                className="absolute top-0 left-0 w-full h-full object-containt transition-transform duration-300 hover:scale-105"
-              />
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Modal */}
-      {isOpen && currentIndex !== null && (
-        <div
-          className="fixed inset-0 bg-white/20 backdrop-blur-sm flex items-center justify-center z-50"
-          onClick={closeModal}
-        >
-          <div
-            className="relative w-[300px] h-[400px] sm:w-[300px] sm:h-[400px] md:w-[500px] md:h-[600px] lg:w-[700px] lg:h-[600px] xl:w-[800px] xl:h-[600px] 2xl:w-[1200px] 2xl:h-[800px] bg-black rounded overflow-hidden"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <img
-              src={images[currentIndex].imageUrl}
-              alt="Preview"
-              className="w-full h-full object-containt"
-            />
-
-            {/* Close Button */}
-            <button
-              className="absolute top-4 right-4 text-white text-2xl bg-black/60 rounded-full w-10 h-10 flex items-center justify-center"
-              onClick={closeModal}
-            >
-              ✕
-            </button>
-
-            {/* Prev/Next Buttons */}
-            <button
-              className="absolute top-1/2 left-4 transform text-white text-6xl bg-black/60 rounded-full w-12 h-12 flex items-center justify-center"
-              onClick={showPrev}
-            >
+        <div className="pr-2">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            {images.map((item, index) => (
               <div
-                style={{ display: "flex", position: "relative", top: "-7px" }}
+                key={item.id}
+                className="relative w-full pt-[100%] overflow-hidden rounded-md shadow hover:shadow-lg cursor-pointer"
+                onClick={() => openModal(index)}
               >
-                ‹
+                <img
+                  src={item.imageUrl}
+                  alt={`Gallery image ${item.id}`}
+                  className="absolute top-0 left-0 w-full h-full object-containt transition-transform duration-300 hover:scale-105"
+                />
               </div>
-            </button>
-            <button
-              className="absolute top-1/2 right-4 transform text-white text-6xl bg-black/60 rounded-full w-12 h-12 flex items-center justify-center"
-              onClick={showNext}
-            >
-              <div
-                style={{ display: "flex", position: "relative", top: "-7px" }}
-              >
-                ›
-              </div>
-            </button>
+            ))}
           </div>
         </div>
-      )}
-    </div>
+
+        {/* Modal */}
+        {isOpen && currentIndex !== null && (
+          <div
+            className="fixed inset-0 bg-white/20 backdrop-blur-sm flex items-center justify-center z-50"
+            onClick={closeModal}
+          >
+            <div
+              className="relative w-[300px] h-[400px] sm:w-[300px] sm:h-[400px] md:w-[500px] md:h-[600px] lg:w-[700px] lg:h-[600px] xl:w-[800px] xl:h-[600px] 2xl:w-[1200px] 2xl:h-[800px] bg-black rounded overflow-hidden"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <img
+                src={images[currentIndex].imageUrl}
+                alt="Preview"
+                className="w-full h-full object-containt"
+              />
+
+              {/* Close Button */}
+              <button
+                className="absolute top-4 right-4 text-white text-2xl bg-black/60 rounded-full w-10 h-10 flex items-center justify-center"
+                onClick={closeModal}
+              >
+                ✕
+              </button>
+
+              {/* Prev/Next Buttons */}
+              <button
+                className="absolute top-1/2 left-4 transform text-white text-6xl bg-black/60 rounded-full w-12 h-12 flex items-center justify-center"
+                onClick={showPrev}
+              >
+                <div
+                  style={{ display: "flex", position: "relative", top: "-7px" }}
+                >
+                  ‹
+                </div>
+              </button>
+              <button
+                className="absolute top-1/2 right-4 transform text-white text-6xl bg-black/60 rounded-full w-12 h-12 flex items-center justify-center"
+                onClick={showNext}
+              >
+                <div
+                  style={{ display: "flex", position: "relative", top: "-7px" }}
+                >
+                  ›
+                </div>
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    </PageLayout>
   );
 };
 

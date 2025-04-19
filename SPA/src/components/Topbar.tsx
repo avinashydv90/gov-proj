@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import logo1 from "../assets/adivasi-vikas-vibhag.png";
-import logo2 from "../assets/headerRightLogo.png";
+import logo2 from "../assets/shivrajyabhishek.png";
 import logo3 from "../assets/nationalemblem.png";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
@@ -13,7 +13,7 @@ const Topbar = () => {
     { label: "मुख्य पृष्ठ", path: "/" },
     { label: "आश्रमशाळा", path: "/ashramschool" },
     { label: "वसतीगृह", path: "./govhostel" },
-    { label: "विकास योजना", path: "/vikasyojana" },
+    { label: "विभागीय योजना", path: "/vikasyojana" },
     { label: "यशोगाथा", path: "/gallery" },
     { label: "डाउनलोड फॉर्म ", path: "/downloadForm" },
     { label: "लाभार्थी यादी", path: "/labharthiList" },
@@ -34,13 +34,12 @@ const Topbar = () => {
 
   return (
     <div className="fixed top-0 left-0 w-full z-50">
-      {/* Top Logo Bar (hidden on scroll) */}
       <div
         className={`transition-all duration-500 border-b border-gray-300 ${
           hideLogo ? "opacity-0 h-0 overflow-hidden" : "opacity-100 py-3"
         }`}
         style={{
-          backgroundColor: "rgba(245, 245, 220, 0.6)", // Beige with 0.6 opacity
+          backgroundColor: "rgba(245, 245, 220, 0.6)",
           backdropFilter: "blur(4px)",
         }}
       >
@@ -48,23 +47,23 @@ const Topbar = () => {
           <div className="flex gap-3 items-center">
             <img
               src={logo1}
-              alt="Logo 1"
+              alt="adivasi-vikas-vibhag"
               className="w-[72px] h-[72px] object-contain"
             />
             <img
               src={logo2}
-              alt="Logo 2"
+              alt="shivrajyabhishek"
               className="w-[72px] h-[72px] object-contain"
             />
             <img
               src={logo3}
-              alt="Logo 3"
+              alt="nationalemblem"
               className="w-[72px] h-[72px] object-contain"
             />
           </div>
-          <span className="text-[#5C4033] font-semibold text-xl mt-2 text-center">
+          <h1 className="text-[#5C4033] font-semibold text-xl mt-2 text-center">
             एकात्मिक आदिवासी विकास प्रकल्प, शहापुर
-          </span>
+          </h1>
         </div>
       </div>
 
