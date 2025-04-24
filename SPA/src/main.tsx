@@ -7,7 +7,6 @@ import Home from "./pages/Home.tsx";
 import Introduction from "./components/Introduction.tsx";
 import AshramSchools from "./components/AshramSchools.tsx";
 import GovHostels from "./components/GovHostels.tsx";
-import AidedAshramSchool from "./components/AidedAshramSchool.tsx";
 import ProjectOfficerContact from "./components/ProjectOfficerContact.tsx";
 import VikasYojana from "./components/VikasYojana.tsx";
 import Gallery from "./components/Gallery.tsx";
@@ -16,6 +15,7 @@ import LabharthiList from "./components/LabharthiList.tsx";
 import LoksevaHakka from "./components/LoksevaHakka.tsx";
 import ContactUs from "./components/ContactUs.tsx";
 import RightToInformation from "./components/RightToInformation.tsx";
+import { HelmetProvider } from "react-helmet-async";
 
 export const router = createBrowserRouter([
   {
@@ -39,11 +39,11 @@ export const router = createBrowserRouter([
         element: <GovHostels />,
         handle: { label: RouteNames.GovHostels },
       },
-      {
-        path: "/aidedAshram",
-        element: <AidedAshramSchool />,
-        handle: { label: RouteNames.AidedAshram },
-      },
+      // {
+      //   path: "/aidedAshram",
+      //   element: <AidedAshramSchool />,
+      //   handle: { label: RouteNames.AidedAshram },
+      // },
       {
         path: "/projectOfficerContact",
         element: <ProjectOfficerContact />,
@@ -102,6 +102,8 @@ export const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")!).render(
   // <StrictMode>
-  <RouterProvider router={router} />
+  <HelmetProvider>
+    <RouterProvider router={router} />
+  </HelmetProvider>
   // </StrictMode>
 );

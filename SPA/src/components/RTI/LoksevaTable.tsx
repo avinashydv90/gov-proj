@@ -2,6 +2,7 @@ import React from "react";
 import "./RTITable.css";
 import HeadingText from "../../shared-components/HeadingText";
 import { motion } from "framer-motion";
+import HelmetComponent from "../../shared-components/HelemetComponent";
 
 const LoksevaTable: React.FC = () => {
   const links = [
@@ -24,6 +25,11 @@ const LoksevaTable: React.FC = () => {
   ];
   return (
     <div className="rti-container space-y-6">
+      <HelmetComponent
+        title="महाराष्ट्र लोकसेवा हक्क अधिनियम २०१५"
+        description="या पृष्ठावर महाराष्ट्र लोकसेवा हक्क अधिनियम २०१५ अंतर्गत आवश्यक माहिती व सेवा पुरविण्याची यादी उपलब्ध आहे."
+        canonical="https://poitdp.shahapur-mh.in/loksevahakka"
+      />
       <HeadingText text="“महाराष्ट्र लोकसेवा हक्क अधिनियम २०१५”" />
       <p>
         “महाराष्ट्र लोकसेवा हक्क अधिनियम २०१५” च्या नियम क्रमांक ८ नुसार,
@@ -136,7 +142,7 @@ const LoksevaTable: React.FC = () => {
       <div>
         <HeadingText text="प्रकल्प अधिकारी, एकात्मिक आदिवासी विकास  प्रकल्प शहापूर  जि. ठाणे" />
         <p>
-          महारारष्ट्र लोकसेवा हक्क अधिनियम २०२१५ (सन २०१५च्या महा. अधिनियम हमी
+          महारारष्ट्र लोकसेवा हक्क अधिनियम २०१५ (सन २०१५च्या महा. अधिनियम हमी
           क्र.३१ ) मधील कलम ३ च्या उपकलम (१) अन्वये प्रदान करण्यात आलेल्या
           आदिवासी विकास विभागाच्या अधिसूचित सेवांचा तपशिल
         </p>

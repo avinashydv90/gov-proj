@@ -7,6 +7,7 @@ import EmrsList from "./Lists/ErmsList";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import ListSelector from "../shared-components/ListSelector";
+import HelmetComponent from "../shared-components/HelemetComponent";
 
 const categoryData = [
   { id: 1, title: "शासकीय", description: "Located in the forest region..." },
@@ -20,21 +21,28 @@ const AshramSchools: React.FC = () => {
     categoryData.length > 0 ? categoryData[0].id : null
   );
   const [selectedHostelId, setSelectedHostelId] = useState<number | null>(null);
-    // Data states
-    const [shaskiyaData, setShaskiyaData] = useState([]);
-    const [anudanitData, setAnudanitData] = useState([]);
-    const [namankitData, setNamankitData] = useState([]);
-    const [emrsData, setEmrsData] = useState([]);
-     // Fetch data on mount
+  // Data states
+  const [shaskiyaData, setShaskiyaData] = useState([]);
+  const [anudanitData, setAnudanitData] = useState([]);
+  const [namankitData, setNamankitData] = useState([]);
+  const [emrsData, setEmrsData] = useState([]);
+  // Fetch data on mount
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [shaskiyaRes, anudanitRes, namankitRes, emrsRes] = await Promise.all([
-          axios.get("https://api.poitdp.shahapur-mh.in/api/AshramSchool/ashram-school"),
-          axios.get("https://api.poitdp.shahapur-mh.in/api/AidedAshramSchool/aided-ashram-school"),
-          axios.get("https://api.poitdp.shahapur-mh.in/api/ReputedSchools/reputed-schools"),
-          axios.get("https://api.poitdp.shahapur-mh.in/api/EMRS/EMRS"),
-        ]);
+        const [shaskiyaRes, anudanitRes, namankitRes, emrsRes] =
+          await Promise.all([
+            axios.get(
+              "https://api.poitdp.shahapur-mh.in/api/AshramSchool/ashram-school"
+            ),
+            axios.get(
+              "https://api.poitdp.shahapur-mh.in/api/AidedAshramSchool/aided-ashram-school"
+            ),
+            axios.get(
+              "https://api.poitdp.shahapur-mh.in/api/ReputedSchools/reputed-schools"
+            ),
+            axios.get("https://api.poitdp.shahapur-mh.in/api/EMRS/EMRS"),
+          ]);
         setShaskiyaData(shaskiyaRes.data);
         setAnudanitData(anudanitRes.data);
         setNamankitData(namankitRes.data);
@@ -96,6 +104,12 @@ const AshramSchools: React.FC = () => {
 
   return (
     <PageLayout>
+      <HelmetComponent
+        title="Ashram Schools | Adivasi Vikas Prakalp Shahapur"
+        description="Explore the various types of Ashram Schools in Shahapur including Government, Aided, Reputed, and EMRS."
+        canonical="https://poitdp.shahapur-mh.in/ashramschools"
+      />
+
       <HeadingText text="आश्रमशाळा" />
 
       {/* Desktop View */}

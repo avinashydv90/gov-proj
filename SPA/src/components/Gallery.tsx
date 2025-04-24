@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import HeadingText from "../shared-components/HeadingText";
 import PageLayout from "../shared-components/PageLayout";
+import HelmetComponent from "../shared-components/HelemetComponent";
 
 interface GalleryItem {
   id: number;
@@ -75,6 +76,11 @@ const Gallery = () => {
 
   return (
     <PageLayout>
+      <HelmetComponent
+        title="Gallery | Adivasi Vikas Prakalp Shahapur"
+        description="Gallery page of Adivasi Vikas Prakalp Shahapur"
+        canonical="https://poitdp.shahapur-mh.in/gallery"
+      />
       <div className=" m-0 md:m-5 lg:m-5">
         <HeadingText text="यशोगाथा" />
 

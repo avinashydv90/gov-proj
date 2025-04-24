@@ -1,9 +1,15 @@
 //import HeadingText from "../shared-components/HeadingText";
+import HelmetComponent from "../shared-components/HelemetComponent";
 import PageLayout from "../shared-components/PageLayout";
 
 const Introduction = () => {
   return (
     <PageLayout>
+      <HelmetComponent
+        title="description"
+        description="शहापूर मधील आदिवासी विकास प्रकल्पाची माहिती, शैक्षणिक संस्था, योजना आणि व्याप्ती."
+        canonical="https://poitdp.shahapur-mh.in/introduction"
+      />
       <div className="container">
         {/* Header Section */}
         <header className="bg-primary text-white text-center py-4">

@@ -1,10 +1,16 @@
 import React from "react";
 import "./RTITable.css";
 import HeadingText from "../../shared-components/HeadingText";
+import HelmetComponent from "../../shared-components/HelemetComponent";
 
 const RTITable: React.FC = () => {
   return (
     <div className="rti-container">
+      <HelmetComponent
+        title="माहिती अधिकार तक्ता | एकात्मिक आदिवासी विकास प्रकल्प, शहापूर"
+        description="एकात्मिक आदिवासी विकास प्रकल्प, शहापूर अंतर्गत माहिती अधिकार अधिनियम २००५ नुसार अधिकारी वर्गाची माहिती."
+        canonical="https://poitdp.shahapur-mh.in/rti"
+      />
       <HeadingText text="माहिती अधिकार तक्ता" />
       <p>
         “माहितीचा अधिकार अधिनियम २००५” च्या माहिती अधिकाराच्या अधिनियमातील कलम

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import HeadingText from "../shared-components/HeadingText";
 import ListSelector from "../shared-components/ListSelector";
 import PageLayout from "../shared-components/PageLayout";
+import HelmetComponent from "../shared-components/HelemetComponent";
 interface ShaskiyaHostel {
   id: number;
   hostelName: string;
@@ -14,9 +15,6 @@ interface ShaskiyaHostel {
 }
 
 const GovHostels: React.FC = () => {
-  // const [selectedId, setSelectedId] = useState<number | null>(
-  //   Hostel.length > 0 ? Hostel[0].id : null
-  // );
   const [data, setData] = useState<ShaskiyaHostel[]>([]);
   const [selectedId, setSelectedId] = useState<number | null>(null);
 
@@ -57,6 +55,11 @@ const GovHostels: React.FC = () => {
 
   return (
     <PageLayout>
+      <HelmetComponent
+        title="शासकीय वसतिगृह | आदिवासी विकास"
+        description="शाहापूर तालुक्यातील सर्व शासकीय वसतिगृहांची माहिती"
+        canonical="https://poitdp.shahapur-mh.in/govhostel"
+      />
       <HeadingText text="आदिवासी विकास" />
 
       {/* Desktop Layout */}
