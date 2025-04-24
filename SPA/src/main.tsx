@@ -17,88 +17,99 @@ import ContactUs from "./components/ContactUs.tsx";
 import RightToInformation from "./components/RightToInformation.tsx";
 import { HelmetProvider } from "react-helmet-async";
 
-export const router = createBrowserRouter([
+export const router = createBrowserRouter(
+  [
+    {
+      path: "/",
+      element: <App />,
+      handle: { label: RouteNames.Home },
+      children: [
+        {
+          path: "/",
+          element: <Home />,
+          handle: { label: RouteNames.DashBoard },
+        },
+        {
+          path: "/introduction",
+          element: <Introduction />,
+          handle: { label: RouteNames.About },
+        },
+        {
+          path: "/ashramschool",
+          element: <AshramSchools />,
+          handle: { label: RouteNames.GovernmentAshramSchools },
+        },
+        {
+          path: "/govhostel",
+          element: <GovHostels />,
+          handle: { label: RouteNames.GovHostels },
+        },
+        // {
+        //   path: "/aidedAshram",
+        //   element: <AidedAshramSchool />,
+        //   handle: { label: RouteNames.AidedAshram },
+        // },
+        {
+          path: "/projectOfficerContact",
+          element: <ProjectOfficerContact />,
+          handle: { label: RouteNames.ProjectOfficerContact },
+        },
+        {
+          path: "/vikasyojana",
+          element: <VikasYojana />,
+          handle: { label: RouteNames.VikasYoujna },
+        },
+        {
+          path: "/gallery",
+          element: <Gallery />,
+          handle: { label: RouteNames.Gallery },
+        },
+        {
+          path: "/downloadForm",
+          element: <DownloadForm />,
+          handle: { label: RouteNames.DownloadForm },
+        },
+        {
+          path: "/labharthiList",
+          element: <LabharthiList />,
+          handle: { label: RouteNames.LabharthiList },
+        },
+        {
+          path: "/loksevahakka",
+          element: <LoksevaHakka />,
+          handle: { label: RouteNames.LokSevaHakka },
+        },
+        {
+          path: "/contactUs",
+          element: <ContactUs />,
+          handle: { label: RouteNames.ContactUs },
+        },
+        {
+          path: "/rti",
+          element: <RightToInformation />,
+          handle: { label: RouteNames.RightToInformation },
+        },
+        // {
+        //   path: "/innovation-challenge",
+        //   element: <InnovationChallenge />,
+        //   handle: { label: RouteNames.InnovationChallenge },
+        //   children: [
+        //     {
+        //       path: "scope-of-work",
+        //       element: <InnovationChallenge />,
+        //       handle: { label: RouteNames.ScopeOfWork },
+        //     },
+        //   ],
+        // },
+      ],
+    },
+  ],
   {
-    path: "/",
-    element: <App />,
-    handle: { label: RouteNames.Home },
-    children: [
-      { path: "/", element: <Home />, handle: { label: RouteNames.DashBoard } },
-      {
-        path: "/introduction",
-        element: <Introduction />,
-        handle: { label: RouteNames.About },
-      },
-      {
-        path: "/ashramschool",
-        element: <AshramSchools />,
-        handle: { label: RouteNames.GovernmentAshramSchools },
-      },
-      {
-        path: "/govhostel",
-        element: <GovHostels />,
-        handle: { label: RouteNames.GovHostels },
-      },
-      // {
-      //   path: "/aidedAshram",
-      //   element: <AidedAshramSchool />,
-      //   handle: { label: RouteNames.AidedAshram },
-      // },
-      {
-        path: "/projectOfficerContact",
-        element: <ProjectOfficerContact />,
-        handle: { label: RouteNames.ProjectOfficerContact },
-      },
-      {
-        path: "/vikasyojana",
-        element: <VikasYojana />,
-        handle: { label: RouteNames.VikasYoujna },
-      },
-      {
-        path: "/gallery",
-        element: <Gallery />,
-        handle: { label: RouteNames.Gallery },
-      },
-      {
-        path: "/downloadForm",
-        element: <DownloadForm />,
-        handle: { label: RouteNames.DownloadForm },
-      },
-      {
-        path: "/labharthiList",
-        element: <LabharthiList />,
-        handle: { label: RouteNames.LabharthiList },
-      },
-      {
-        path: "/loksevahakka",
-        element: <LoksevaHakka />,
-        handle: { label: RouteNames.LokSevaHakka },
-      },
-      {
-        path: "/contactUs",
-        element: <ContactUs />,
-        handle: { label: RouteNames.ContactUs },
-      },
-      {
-        path: "/rti",
-        element: <RightToInformation />,
-        handle: { label: RouteNames.RightToInformation },
-      },
-      // {
-      //   path: "/innovation-challenge",
-      //   element: <InnovationChallenge />,
-      //   handle: { label: RouteNames.InnovationChallenge },
-      //   children: [
-      //     {
-      //       path: "scope-of-work",
-      //       element: <InnovationChallenge />,
-      //       handle: { label: RouteNames.ScopeOfWork },
-      //     },
-      //   ],
-      // },
-    ],
-  },
-]);
+    future: {
+      v7_relativeSplatPath: true,
+    },
+  }
+);
 
 createRoot(document.getElementById("root")!).render(
   // <StrictMode>

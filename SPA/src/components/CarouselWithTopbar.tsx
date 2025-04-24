@@ -20,10 +20,6 @@ export default function CarouselWithTopbar() {
         { id: 2, imageUrl: "/images/CarouselImage/Davendra-Fadnavis.jpg" },
         { id: 3, imageUrl: "/images/CarouselImage/Devendra Fadnavis.jpg" },
         { id: 4, imageUrl: "/images/CarouselImage/KapilPatil.jpg" },
-        // {
-        //   id: 5,
-        //   imageUrl: "/images/CarouselImage/AdhivashiVikashVibhag2.jpeg",
-        // },
       ];
       setImages(data);
     };
@@ -40,7 +36,7 @@ export default function CarouselWithTopbar() {
             delay: 3000,
             disableOnInteraction: false,
           }}
-          loop={true}
+          loop={false}
           navigation={true}
           slidesPerView={1}
           className="w-full h-full"

@@ -1,4 +1,5 @@
 //import HeadingText from "../shared-components/HeadingText";
+import HeadingText from "../shared-components/HeadingText";
 import HelmetComponent from "../shared-components/HelemetComponent";
 import PageLayout from "../shared-components/PageLayout";
 
@@ -6,17 +7,12 @@ const Introduction = () => {
   return (
     <PageLayout>
       <HelmetComponent
-        title="description"
+        title="एकात्मिक आदिवासी विकास प्रकल्प - शहापूर"
         description="शहापूर मधील आदिवासी विकास प्रकल्पाची माहिती, शैक्षणिक संस्था, योजना आणि व्याप्ती."
         canonical="https://poitdp.shahapur-mh.in/introduction"
       />
       <div className="container">
-        {/* Header Section */}
-        <header className="bg-primary text-white text-center py-4">
-          <h1>एकात्मिक आदिवासी विकास प्रकल्प, शहापूरविषयी</h1>
-        </header>
-
-        {/* Main Content Section */}
+        <HeadingText text="एकात्मिक आदिवासी विकास प्रकल्प, शहापूरविषयी" />
         <main className="mt-4">
           <div className="max-w-4xl mx-auto px-4 py-6 text-gray-800 leading-relaxed">
             <p className="mb-4">
@@ -31,7 +27,7 @@ const Introduction = () => {
               उल्हासनगर, अंबरनाथ, भिवंडी या तालुक्यांचे क्षेत्र औद्योगिक दृष्टया
               विकसीत असून मुंबई शहराच्या आधुनिक संस्कृतीच्या प्रभावाखाली आहे.
             </p>
-            <p></p>
+
             <p className="mb-4">
               आदिवासींच्या कल्याणाच्या योजनांची परिणामकारक अंमलबजावणी करण्यासाठी
               सन १९७२ मध्ये समाजकल्याण विभागांतर्गत आदिवासी विकास संचलनालयाची
