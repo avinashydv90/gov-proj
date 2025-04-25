@@ -77,7 +77,7 @@ const Gallery = () => {
   return (
     <PageLayout>
       <HelmetComponent
-        title="गॅलरी | Adivasi Vikas Prakalp Shahapur"
+        title="यशोगाथा | Adivasi Vikas Prakalp Shahapur"
         description="आदिवासी विकास प्रकल्प शहापूर अंतर्गत विविध उपक्रम, कार्यक्रम आणि विकास कामांची गॅलरी येथे पहा."
         canonical="https://poitdp.shahapur-mh.in/gallery"
       />

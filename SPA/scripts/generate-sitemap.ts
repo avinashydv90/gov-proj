@@ -3,19 +3,17 @@ import { SitemapStream, streamToPromise } from "sitemap";
 
 const hostname = "https://poitdp.shahapur-mh.in";
 const links = [
-  { url: "/introduction", changefreq: "monthly" },
-  { url: "/ashramschool", changefreq: "monthly" },
-  { url: "/govhostel", changefreq: "monthly" },
-  { url: "/aidedAshram", changefreq: "monthly" },
-  { url: "/projectOfficerContact", changefreq: "monthly" },
-  { url: "/vikasyojana", changefreq: "monthly" },
-  { url: "/gallery", changefreq: "monthly" },
-  { url: "/downloadForm", changefreq: "monthly" },
-  { url: "/labharthiList", changefreq: "monthly" },
-  { url: "/loksevahakka", changefreq: "monthly" },
-  { url: "/contactUs", changefreq: "monthly" },
-  { url: "/rti", changefreq: "monthly" },
-  { url: "/", changefreq: "weekly", priority: 1.0 }, // Home route
+  { url: "/", changefreq: "weekly", priority: 1.0 },
+  { url: "/introduction", changefreq: "monthly", priority: 0.9 },
+  { url: "/ashramschool", changefreq: "monthly", priority: 0.8 },
+  { url: "/govhostel", changefreq: "monthly", priority: 0.7 },
+  { url: "/vikasyojana", changefreq: "monthly", priority: 0.7 },
+  { url: "/gallery", changefreq: "monthly", priority: 0.6 },
+  { url: "/downloadForm", changefreq: "monthly", priority: 0.6 },
+  { url: "/labharthiList", changefreq: "monthly", priority: 0.5 },
+  { url: "/loksevahakka", changefreq: "monthly", priority: 0.5 },
+  { url: "/contactUs", changefreq: "monthly", priority: 0.9 },
+  { url: "/rti", changefreq: "monthly", priority: 0.5 },
 ];
 
 async function generateSitemap() {
