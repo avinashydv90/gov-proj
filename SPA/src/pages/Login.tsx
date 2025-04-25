@@ -12,7 +12,8 @@ const Login: React.FC = () => {
       const response = await loginAPI(email, password);
       localStorage.setItem("token", response.token);
       localStorage.setItem("userName", JSON.stringify(response.userName));
-      window.location.href = "/";
+      //window.location.href = "/";
+
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       setError(error?.message || "Login failed. Please try again.");

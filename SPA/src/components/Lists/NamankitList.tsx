@@ -31,9 +31,9 @@ const NamankitList: React.FC<{
   if (selectedId && selected) {
     return (
       <div>
-        <h2 className="text-2xl font-bold text-[#5E3023] mb-2">
+        <h1 className="text-2xl font-bold text-[#5E3023] mb-2">
           {selected.schoolName}
-        </h2>
+        </h1>
         <p className="text-gray-700 mb-1">
           <strong>पत्ता :</strong> {selected.address}
         </p>
@@ -65,9 +65,9 @@ const NamankitList: React.FC<{
 
   return (
     <>
-      <h2 className="w-full text-xl font-bold text-white bg-[#5E3023] border border-[#8A4B38] rounded-xl px-4 py-3 mb-4 text-center">
+      <h1 className="w-full text-xl font-bold text-white bg-[#5E3023] border border-[#8A4B38] rounded-xl px-4 py-3 mb-4 text-center">
         नामांकित यादी
-      </h2>
+      </h1>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         {data.map((hostel) => (
           <button

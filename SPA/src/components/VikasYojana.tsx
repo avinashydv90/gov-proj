@@ -3,6 +3,7 @@ import HeadingText from "../shared-components/HeadingText";
 import ListSelector from "../shared-components/ListSelector";
 import PageLayout from "../shared-components/PageLayout";
 import { yojnas } from "../constants/yojnas";
+import HelmetComponent from "../shared-components/HelemetComponent";
 
 const VikasYojana: React.FC = () => {
   const [selectedId, setSelectedId] = useState<number | null>(
@@ -13,7 +14,7 @@ const VikasYojana: React.FC = () => {
 
   const renderDetails = (yojna: (typeof yojnas)[0]) => (
     <div className="p-4 bg-white rounded-b-xl border-t border-gray-200">
-      <h2 className="text-xl font-bold text-[#5E3023] mb-2">{yojna.title}</h2>
+      <h1 className="text-xl font-bold text-[#5E3023] mb-2">{yojna.title}</h1>
       <div
         dangerouslySetInnerHTML={{
           __html: yojna.description as string,
@@ -29,6 +30,11 @@ const VikasYojana: React.FC = () => {
 
   return (
     <PageLayout>
+      <HelmetComponent
+        title="विभागीय योजना | Adivasi Vikas Prakalp Shahapur"
+        description="विभागीय योजनांची संपूर्ण माहिती येथे पहा. आदिवासी विकास प्रकल्प शहापूर अंतर्गत राबविल्या जाणाऱ्या विभागीय योजनांची माहिती."
+        canonical="https://poitdp.shahapur-mh.in/vikasyojana"
+      />
       <HeadingText text="आदिवासी विकास" />
 
       {/* Desktop Layout */}

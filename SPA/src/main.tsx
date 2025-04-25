@@ -7,7 +7,6 @@ import Home from "./pages/Home.tsx";
 import Introduction from "./components/Introduction.tsx";
 import AshramSchools from "./components/AshramSchools.tsx";
 import GovHostels from "./components/GovHostels.tsx";
-import ProjectOfficerContact from "./components/ProjectOfficerContact.tsx";
 import VikasYojana from "./components/VikasYojana.tsx";
 import Gallery from "./components/Gallery.tsx";
 import DownloadForm from "./components/DownloadForm.tsx";
@@ -43,16 +42,6 @@ export const router = createBrowserRouter(
           path: "/govhostel",
           element: <GovHostels />,
           handle: { label: RouteNames.GovHostels },
-        },
-        // {
-        //   path: "/aidedAshram",
-        //   element: <AidedAshramSchool />,
-        //   handle: { label: RouteNames.AidedAshram },
-        // },
-        {
-          path: "/projectOfficerContact",
-          element: <ProjectOfficerContact />,
-          handle: { label: RouteNames.ProjectOfficerContact },
         },
         {
           path: "/vikasyojana",

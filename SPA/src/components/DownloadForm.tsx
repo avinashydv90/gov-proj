@@ -3,6 +3,7 @@ import PageLayout from "../shared-components/PageLayout";
 import HeadingText from "../shared-components/HeadingText";
 import ListSelector from "../shared-components/ListSelector";
 import PdfViewerWithDownload from "../shared-components/PdfViewerWithDownload";
+import HelmetComponent from "../shared-components/HelemetComponent";
 
 const FormTypeData = [
   {
@@ -40,6 +41,11 @@ const DownloadForm: React.FC = () => {
 
   return (
     <PageLayout>
+      <HelmetComponent
+        title="फॉर्म डाउनलोड | Adivasi Vikas Prakalp Shahapur"
+        description="विभागीय अर्ज, नमुने आणि फॉर्म्स डाउनलोड करा. आदिवासी विकास प्रकल्प शहापूर अंतर्गत आवश्यक फॉर्म्स एका ठिकाणी."
+        canonical="https://poitdp.shahapur-mh.in/downloadForm"
+      />
       <HeadingText text="फॉर्म प्रकार डाउनलोड करा" />
 
       {/* Desktop layout */}

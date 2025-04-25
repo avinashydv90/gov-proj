@@ -7,10 +7,11 @@ const Introduction = () => {
   return (
     <PageLayout>
       <HelmetComponent
-        title="एकात्मिक आदिवासी विकास प्रकल्प - शहापूर"
-        description="शहापूर मधील आदिवासी विकास प्रकल्पाची माहिती, शैक्षणिक संस्था, योजना आणि व्याप्ती."
+        title="परिचय | एकात्मिक आदिवासी विकास प्रकल्प शहापूर"
+        description="शहापूर मधील आदिवासी विकास प्रकल्पाची माहिती, शैक्षणिक संस्था, योजना आणि प्रकल्पाचा उद्देश येथे वाचा."
         canonical="https://poitdp.shahapur-mh.in/introduction"
       />
+
       <div className="container">
         <HeadingText text="एकात्मिक आदिवासी विकास प्रकल्प, शहापूरविषयी" />
         <main className="mt-4">
@@ -40,9 +41,9 @@ const Introduction = () => {
               नुसार या कार्यालयाची पुर्नरचना करण्यात आली.
             </p>
 
-            <h2 className="text-xl font-semibold mt-6 mb-2 text-[#5E3023]">
+            <h1 className="text-xl font-semibold mt-6 mb-2 text-[#5E3023]">
               व्याप्ती
-            </h2>
+            </h1>
             <p className="mb-4">
               प्रकल्प कार्यालय, शहापूर अंतर्गत शहापूर, मुरबाड, भिवंडी, कल्याण,
               उल्हासनगर, अंबरनाथ, व ठाणे हे 7 तालुके मोडतात. संपुर्ण शहापूर
@@ -50,9 +51,9 @@ const Introduction = () => {
               तालुक्यातील 73 गावे आदिवासी उपयोजना क्षेत्रात मोडतात.
             </p>
 
-            <h2 className="text-xl font-semibold mt-6 mb-2 text-[#5E3023]">
+            <h1 className="text-xl font-semibold mt-6 mb-2 text-[#5E3023]">
               शैक्षणिक संस्था
-            </h2>
+            </h1>
             <p className="mb-4">
               या प्रकल्पा अंतर्गत 23 शासकीय आश्रमशाळा, 13 अनुदानित आश्रमशाळा व
               12 शासकीय आदिवासी मुलां / मुलींचे वसतिगृह कार्यरत आहेत. त्यात
@@ -62,9 +63,9 @@ const Introduction = () => {
               राज्यस्तरावरुन विविध योजना राबवल्या जात आहेत.
             </p>
 
-            <h2 className="text-xl font-semibold mt-6 mb-2 text-[#5E3023]">
+            <h1 className="text-xl font-semibold mt-6 mb-2 text-[#5E3023]">
               कल्याणकारी योजना
-            </h2>
+            </h1>
             <p className="mb-2">
               आदिवासींच्या सर्वांगीण विकासाकरिता विविध प्रकारच्या योजना
               राबविल्या जातात:

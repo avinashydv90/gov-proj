@@ -26,7 +26,7 @@ const LoksevaTable: React.FC = () => {
   return (
     <div className="rti-container space-y-6">
       <HelmetComponent
-        title="महाराष्ट्र लोकसेवा हक्क अधिनियम २०१५"
+        title="महाराष्ट्र लोकसेवा हक्क अधिनियम २०१५ | आदिवासी विकास प्रकल्प शहापूर"
         description="या पृष्ठावर महाराष्ट्र लोकसेवा हक्क अधिनियम २०१५ अंतर्गत आवश्यक माहिती व सेवा पुरविण्याची यादी उपलब्ध आहे."
         canonical="https://poitdp.shahapur-mh.in/loksevahakka"
       />

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import HeadingText from "../shared-components/HeadingText";
 // import { PrakalpKaryalayAdhikari } from "../constants/PrakalpKaryalayAdhikari";
 import PageLayout from "../shared-components/PageLayout";
+import HelmetComponent from "../shared-components/HelemetComponent";
 
 const Vipimages = [
   "/images/ContactusImage/rajendrakumarHausabaiBhanudasHiwale.jpg",
@@ -43,11 +44,14 @@ const ContactUs = () => {
     fetchData();
   }, []);
 
-  
-
-
   return (
     <PageLayout>
+      <HelmetComponent
+        title="संपर्क करा | एकात्मिक आदिवासी विकास प्रकल्प शहापूर"
+        description="शहापूर प्रकल्प कार्यालयाशी संपर्क साधण्यासाठी अधिकाऱ्यांची यादी, फोन नंबर आणि ईमेल तपशील येथे पहा."
+        canonical="https://poitdp.shahapur-mh.in/contactUs"
+      />
+
       <div className="bg-white shadow-xl p-6 md:p-10 rounded-xl border border-gray-200">
         <HeadingText text="प्रकल्प कार्यालय अधिकारी संपर्क" />
         <ul className="mt-6 grid gap-6 max-h-[750px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 sm:grid-cols-1 md:grid-cols-2">
@@ -61,21 +65,13 @@ const ContactUs = () => {
               viewport={{ once: true }}
               style={{ borderLeft: `4px solid ${primaryColor}` }}
             >
-              {/* <img
-                src={Vipimages[index % Vipimages.length]}
+              <img
+                src={person.photo ?? Vipimages[index % Vipimages.length]}
                 alt={person.officerName}
                 onError={(e) =>
                   (e.currentTarget.src = "/images/ContactusImage/default.jpg")
                 }
                 className="w-20 h-20 rounded-lg object-cover shadow-sm border border-gray-300"
-              /> */}
-              <img
-              src={person.photo ?? Vipimages[index % Vipimages.length]}
-              alt={person.officerName}
-               onError={(e) =>
-              (e.currentTarget.src = "/images/ContactusImage/default.jpg")
-              }
-             className="w-20 h-20 rounded-lg object-cover shadow-sm border border-gray-300"
               />
               <div className="flex flex-col justify-center">
                 <span

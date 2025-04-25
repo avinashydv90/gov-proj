@@ -56,7 +56,7 @@ const GovHostels: React.FC = () => {
   return (
     <PageLayout>
       <HelmetComponent
-        title="शासकीय वसतिगृह | आदिवासी विकास"
+        title="शासकीय वसतिगृह | Adivasi Vikas Prakalp Shahapur"
         description="शाहापूर तालुक्यातील सर्व शासकीय वसतिगृहांची माहिती"
         canonical="https://poitdp.shahapur-mh.in/govhostel"
       />
