@@ -14,13 +14,6 @@ function App() {
       <Outlet />
 
       <Footer />
-
-      {/* <Header />
-      <Navbar />
-      <HeroSection />
-      <Services />
-      <Gallery />
-      <Footer /> */}
     </div>
   );
 }

@@ -44,7 +44,7 @@ const DownloadForm: React.FC = () => {
       <HelmetComponent
         title="फॉर्म डाउनलोड | Adivasi Vikas Prakalp Shahapur"
         description="विभागीय अर्ज, नमुने आणि फॉर्म्स डाउनलोड करा. आदिवासी विकास प्रकल्प शहापूर अंतर्गत आवश्यक फॉर्म्स एका ठिकाणी."
-        canonical="https://poitdp.shahapur-mh.in/downloadForm"
+        canonical="https://poitdp.shahapur-mh.in/download-form"
       />
       <HeadingText text="फॉर्म प्रकार डाउनलोड करा" />
 

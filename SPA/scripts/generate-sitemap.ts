@@ -6,13 +6,13 @@ const links = [
   { url: "/", changefreq: "weekly", priority: 1.0 },
   { url: "/introduction", changefreq: "monthly", priority: 0.9 },
   { url: "/ashramschool", changefreq: "monthly", priority: 0.8 },
-  { url: "/govhostel", changefreq: "monthly", priority: 0.7 },
+  { url: "/gov-hostel", changefreq: "monthly", priority: 0.7 },
   { url: "/vikasyojana", changefreq: "monthly", priority: 0.7 },
   { url: "/gallery", changefreq: "monthly", priority: 0.6 },
-  { url: "/downloadForm", changefreq: "monthly", priority: 0.6 },
-  { url: "/labharthiList", changefreq: "monthly", priority: 0.5 },
+  { url: "/download-form", changefreq: "monthly", priority: 0.6 },
+  { url: "/labharthi-list", changefreq: "monthly", priority: 0.5 },
   { url: "/loksevahakka", changefreq: "monthly", priority: 0.5 },
-  { url: "/contactUs", changefreq: "monthly", priority: 0.9 },
+  { url: "/contact-us", changefreq: "monthly", priority: 0.9 },
   { url: "/rti", changefreq: "monthly", priority: 0.5 },
 ];
 

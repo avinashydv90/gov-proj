@@ -22,7 +22,7 @@ const Footer = () => {
           </div>
           <div className="bg-white/10 px-4 py-2 rounded-lg shadow hover:shadow-md transition-all duration-200">
             ✉️{" "}
-            <a href="/contactUs" className="underline hover:text-gray-300">
+            <a href="/contact-us" className="underline hover:text-gray-300">
               संपर्क करा
             </a>
           </div>

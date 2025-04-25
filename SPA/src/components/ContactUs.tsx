@@ -49,7 +49,7 @@ const ContactUs = () => {
       <HelmetComponent
         title="संपर्क करा | एकात्मिक आदिवासी विकास प्रकल्प शहापूर"
         description="शहापूर प्रकल्प कार्यालयाशी संपर्क साधण्यासाठी अधिकाऱ्यांची यादी, फोन नंबर आणि ईमेल तपशील येथे पहा."
-        canonical="https://poitdp.shahapur-mh.in/contactUs"
+        canonical="https://poitdp.shahapur-mh.in/contact-us"
       />
 
       <div className="bg-white shadow-xl p-6 md:p-10 rounded-xl border border-gray-200">

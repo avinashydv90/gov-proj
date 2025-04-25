@@ -21,7 +21,12 @@ const GovHostels: React.FC = () => {
   useEffect(() => {
     fetch("https://api.poitdp.shahapur-mh.in/api/Hostel/hostel")
       .then((res) => res.json())
-      .then((json) => setData(json))
+      .then((json: ShaskiyaHostel[]) => {
+        setData(json);
+        if (json.length > 0) {
+          setSelectedId(json[0].id);
+        }
+      })
       .catch((err) => console.error("Error fetching data:", err));
   }, []);
 
@@ -58,9 +63,9 @@ const GovHostels: React.FC = () => {
       <HelmetComponent
         title="शासकीय वसतिगृह | Adivasi Vikas Prakalp Shahapur"
         description="शाहापूर तालुक्यातील सर्व शासकीय वसतिगृहांची माहिती"
-        canonical="https://poitdp.shahapur-mh.in/govhostel"
+        canonical="https://poitdp.shahapur-mh.in/gov-hostel"
       />
-      <HeadingText text="आदिवासी विकास" />
+      <HeadingText text="शासकीय वसतिगृह" />
 
       {/* Desktop Layout */}
       <div className="hidden md:flex mt-6 flex-col md:flex-row gap-4">
