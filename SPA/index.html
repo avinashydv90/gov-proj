@@ -1,6 +1,23 @@
 <!doctype html>
 <html lang="en">
-  <head>
+  <head>    
+    <script>      
+      if (location.hostname === "poitdp.shahapur-mh.in") {
+        const gaScript = document.createElement("script");
+        gaScript.setAttribute("async", "");
+        gaScript.src = "https://www.googletagmanager.com/gtag/js?id=G-YN3T2K6QHK";
+        document.head.appendChild(gaScript);
+
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+          dataLayer.push(arguments);
+        }
+        window.gtag = gtag;
+
+        gtag("js", new Date());
+        gtag("config", "G-YN3T2K6QHK");
+      }
+    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
@@ -27,7 +44,7 @@
   </head>
 
   <body>
-    <div id="root"></div>
+    <div id="root"></div>    
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

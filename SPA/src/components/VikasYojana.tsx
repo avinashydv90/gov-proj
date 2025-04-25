@@ -35,26 +35,26 @@ const VikasYojana: React.FC = () => {
         description="विभागीय योजनांची संपूर्ण माहिती येथे पहा. आदिवासी विकास प्रकल्प शहापूर अंतर्गत राबविल्या जाणाऱ्या विभागीय योजनांची माहिती."
         canonical="https://poitdp.shahapur-mh.in/vikasyojana"
       />
-      <HeadingText text="आदिवासी विकास" />
+      <HeadingText text="विभागीय योजना" />
 
       {/* Desktop Layout */}
       <div className="hidden md:flex mt-6 flex-col md:flex-row gap-4">
         <ListSelector
-          items={yojnas.map((y) => ({
-            id: y.id,
-            title: y.title,
-            description: y.description,
+          items={yojnas.map((h) => ({
+            id: h.id,
+            title: h.title,
+            description: h.description,
           }))}
           selectedId={selectedId}
           onSelect={setSelectedId}
-          title="शासकीय वसतिगृह"
+          title="योजना"
         />
 
         <div className="md:w-2/3 bg-white shadow-lg rounded-xl p-6 border border-gray-200">
           {selectedYojna ? (
             renderDetails(selectedYojna)
           ) : (
-            <p className="text-gray-500 italic">कृपया वसतिगृह निवडा.</p>
+            <p className="text-gray-500 italic">कृपया विभागीय योजना निवडा.</p>
           )}
         </div>
       </div>
