@@ -8,7 +8,7 @@ interface HeadingProps {
 const HeadingText: React.FC<HeadingProps> = (props) => {
   const { text, className } = props;
   return (
-    <motion.h2
+    <motion.h1
       className={`bg-primaryBrown text-white p-2 rounded-md text-lg font-semibold text-center mb-5 ${className}`}
       initial={{ opacity: 0, x: -50 }}
       whileInView={{ opacity: 1, x: 0 }}
@@ -16,7 +16,7 @@ const HeadingText: React.FC<HeadingProps> = (props) => {
       viewport={{ once: true }}
     >
       {text}
-    </motion.h2>
+    </motion.h1>
   );
 };
 

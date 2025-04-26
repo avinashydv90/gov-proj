@@ -39,7 +39,7 @@ export const router = createBrowserRouter(
           handle: { label: RouteNames.GovernmentAshramSchools },
         },
         {
-          path: "/govhostel",
+          path: "/gov-hostel",
           element: <GovHostels />,
           handle: { label: RouteNames.GovHostels },
         },
@@ -54,12 +54,12 @@ export const router = createBrowserRouter(
           handle: { label: RouteNames.Gallery },
         },
         {
-          path: "/downloadForm",
+          path: "/download-form",
           element: <DownloadForm />,
           handle: { label: RouteNames.DownloadForm },
         },
         {
-          path: "/labharthiList",
+          path: "/labharthi-list",
           element: <LabharthiList />,
           handle: { label: RouteNames.LabharthiList },
         },
@@ -69,7 +69,7 @@ export const router = createBrowserRouter(
           handle: { label: RouteNames.LokSevaHakka },
         },
         {
-          path: "/contactUs",
+          path: "/contact-us",
           element: <ContactUs />,
           handle: { label: RouteNames.ContactUs },
         },

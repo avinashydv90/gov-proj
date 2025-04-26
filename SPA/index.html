@@ -1,17 +1,50 @@
 <!doctype html>
 <html lang="en">
-  <head>
+  <head>    
+    <script>      
+      if (location.hostname === "poitdp.shahapur-mh.in") {
+        const gaScript = document.createElement("script");
+        gaScript.setAttribute("async", "");
+        gaScript.src = "https://www.googletagmanager.com/gtag/js?id=G-YN3T2K6QHK";
+        document.head.appendChild(gaScript);
+
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+          dataLayer.push(arguments);
+        }
+        window.gtag = gtag;
+
+        gtag("js", new Date());
+        gtag("config", "G-YN3T2K6QHK");
+      }
+    </script>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/Adivasi_Vikas_Prakalp_Shahapur.svg" />
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js"></script>
-    <meta name="description" content="Welcome to Adivasi Vikas Prakalp Shahapur">
-    <meta name="keywords" content="adivasi vikas shahapur,Adivasi Vikas Prakalp Shahapur,Adivasi,vikas,Adivasi vikas,Adivasi vikas shahapur,poitdp shahapur,poitdp shahapur mh,आदिवासी विकास प्रकल्प, शहापुर,">
-    <meta name="author" content="Adivasi Vikas Prakalp Shahapur">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>एकात्मिक आदिवासी विकास प्रकल्प, शहापुर| Adivasi Vikas Prakalp Shahapur</title>
+
+    <!-- Title -->
+    <title>एकात्मिक आदिवासी विकास प्रकल्प, शहापुर | Adivasi Vikas Prakalp Shahapur</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/Adivasi_Vikas_Prakalp_Shahapur.svg" />
+
+    <!-- Description -->
+    <meta name="description" content="Official website of Adivasi Vikas Prakalp Shahapur - Providing information and updates about Ashram schools, government hostels, tribal development schemes, and contact details." />
+
+    <!-- Keywords (Optional for legacy SEO) -->
+    <meta name="keywords" content="adivasi vikas shahapur,Adivasi Vikas Prakalp Shahapur,Adivasi,vikas,poitdp shahapur,poitdp shahapur mh,आदिवासी विकास प्रकल्प शहापुर, tribal development Maharashtra" />
+
+    <!-- Author -->
+    <meta name="author" content="Adivasi Vikas Prakalp Shahapur" />
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://poitdp.shahapur-mh.in" />
+
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js"></script>
   </head>
+
   <body>
-    <div id="root"></div>
+    <div id="root"></div>    
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import HeadingText from "./HeadingText";
 
 interface Item {
   id: number;
@@ -37,7 +38,7 @@ const ListSelector: React.FC<ListSelectorProps> = ({
         displaySize ? "h-[80vh] md:h-[90vh]" : ""
       }`}
     >
-      <h3 className="text-lg font-semibold mb-4 text-gray-800">{title}</h3>
+      <HeadingText text={title} />
 
       {/* Scrollable List Section */}
       <div
