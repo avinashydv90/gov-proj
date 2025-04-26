@@ -6,8 +6,8 @@ const Home = () => {
   return (
     <>
       <HelmetComponent
-        title="Home | Adivasi Vikas Prakalp Shahapur"
-        description="Home page of Adivasi Vikas Prakalp Shahapur"
+        title=" Adivasi Vikas Prakalp Shahapur| Official Website  | Adivasi Vikas Shahapur"
+        description="Welcome to the official website of Adivasi Vikas Prakalp Shahapur. Explore various tribal development programs, schemes, and services."
         canonical="https://poitdp.shahapur-mh.in/"
       />
       <CarouselWithTopbar />
