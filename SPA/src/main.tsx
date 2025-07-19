@@ -1,4 +1,4 @@
-import { createRoot } from "react-dom/client";
+
 import "./index.css";
 import App from "./App.tsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
@@ -14,7 +14,14 @@ import LabharthiList from "./components/LabharthiList.tsx";
 import LoksevaHakka from "./components/LoksevaHakka.tsx";
 import ContactUs from "./components/ContactUs.tsx";
 import RightToInformation from "./components/RightToInformation.tsx";
+import StudentAttendance from "./Student/StudentAttendence.tsx";
 import { HelmetProvider } from "react-helmet-async";
+import { createRoot } from "react-dom/client";
+import { Provider } from "react-redux";
+import { store } from "./app/store.ts";
+import SchoolRegistrationForm from "./components/SchoolRegistration.tsx";
+import SchoolList from "./Student/SchoolList.tsx";
+import StudentForm from "./components/StudentForm.tsx";
 
 export const router = createBrowserRouter(
   [
@@ -78,32 +85,47 @@ export const router = createBrowserRouter(
           element: <RightToInformation />,
           handle: { label: RouteNames.RightToInformation },
         },
-        // {
-        //   path: "/innovation-challenge",
-        //   element: <InnovationChallenge />,
-        //   handle: { label: RouteNames.InnovationChallenge },
-        //   children: [
-        //     {
-        //       path: "scope-of-work",
-        //       element: <InnovationChallenge />,
-        //       handle: { label: RouteNames.ScopeOfWork },
-        //     },
-        //   ],
-        // },
+        {
+           path: "/student-attendance",
+           element: <StudentAttendance />,
+           handle: { label: RouteNames.StudentAttendance },
+        },
+        {
+           path: "/school-registration",
+           element: <SchoolRegistrationForm />,
+           handle: { label: RouteNames.SchoolRegistration },
+        },
+        {
+          path: "/school-list",
+          element: <SchoolList />,
+          handle: { label: RouteNames.SchoolList },
+        },
+        {
+          path: "/edit-school/:id",
+          element: <SchoolRegistrationForm />,
+          handle: { label: RouteNames.EditSchool },
+        },
+         {
+          path: "/add-student",
+          element: <StudentForm />,
+          handle: { label: RouteNames.StudentRegistration },
+        },
+         {
+          path: "/edit-school/:id",
+          element: <StudentForm />,
+          handle: { label: RouteNames.EditStudent },
+        },
+
       ],
     },
   ],
-  {
-    future: {
-      v7_relativeSplatPath: true,
-    },
-  }
+  
 );
 
-createRoot(document.getElementById("root")!).render(
-  // <StrictMode>
-  <HelmetProvider>
-    <RouterProvider router={router} />
+createRoot(document.getElementById("root")!).render( 
+<HelmetProvider>
+   <Provider store={store}>
+     <RouterProvider router={router} />
+     </Provider>
   </HelmetProvider>
-  // </StrictMode>
-);
+ );

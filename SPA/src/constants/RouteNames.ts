@@ -16,4 +16,10 @@ export enum RouteNames {
   RightToInformation = "Right To Information",
   LokSevaHakka = "LokSeva Hakka",
   DownloadForm = "Download Form",
+  StudentAttendance = "Student Attendance",
+  SchoolRegistration = "School Registration",
+  SchoolList = "School List",
+  EditSchool = "Edit School",
+  StudentRegistration = "Student Registration",
+  EditStudent = "Edit Student",
 }

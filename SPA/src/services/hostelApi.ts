@@ -1,14 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-export interface ShaskiyaHostel {
-  id: number;
-  hostelName: string;
-  address: string;
-  city: string;
-  district: string;
-  wardenName: string;
-  contact: string;
-  hostelEmail: string;
-}
+import { ShaskiyaHostel } from "../components/types/hostel";
+
 export const hostelApi = createApi({
   reducerPath: "hostelApi",
   baseQuery: fetchBaseQuery({

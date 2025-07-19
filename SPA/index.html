@@ -1,50 +1,55 @@
 <!doctype html>
 <html lang="en">
-  <head>    
-    <script>      
-      if (location.hostname === "poitdp.shahapur-mh.in") {
-        const gaScript = document.createElement("script");
-        gaScript.setAttribute("async", "");
-        gaScript.src = "https://www.googletagmanager.com/gtag/js?id=G-YN3T2K6QHK";
-        document.head.appendChild(gaScript);
 
-        window.dataLayer = window.dataLayer || [];
-        function gtag() {
-          dataLayer.push(arguments);
-        }
-        window.gtag = gtag;
+<head>
+  <script>
+    if (location.hostname === "poitdp.shahapur-mh.in") {
+      const gaScript = document.createElement("script");
+      gaScript.setAttribute("async", "");
+      gaScript.src = "https://www.googletagmanager.com/gtag/js?id=G-YN3T2K6QHK";
+      document.head.appendChild(gaScript);
 
-        gtag("js", new Date());
-        gtag("config", "G-YN3T2K6QHK");
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
       }
-    </script>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      window.gtag = gtag;
 
-    <!-- Title -->
-    <title>एकात्मिक आदिवासी विकास प्रकल्प, शहापुर | Adivasi Vikas Prakalp Shahapur</title>
+      gtag("js", new Date());
+      gtag("config", "G-YN3T2K6QHK");
+    }
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="/Adivasi_Vikas_Prakalp_Shahapur.svg" />
+  <!-- Title -->
+  <title>एकात्मिक आदिवासी विकास प्रकल्प, शहापुर | Adivasi Vikas Prakalp Shahapur</title>
 
-    <!-- Description -->
-    <meta name="description" content="Official website of Adivasi Vikas Prakalp Shahapur - Providing information and updates about Ashram schools, government hostels, tribal development schemes, and contact details." />
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/Adivasi_Vikas_Prakalp_Shahapur.svg" />
 
-    <!-- Keywords (Optional for legacy SEO) -->
-    <meta name="keywords" content="adivasi vikas shahapur,Adivasi Vikas Prakalp Shahapur,Adivasi,vikas,poitdp shahapur,poitdp shahapur mh,आदिवासी विकास प्रकल्प शहापुर, tribal development Maharashtra" />
+  <!-- Description -->
+  <meta name="description"
+    content="Official website of Adivasi Vikas Prakalp Shahapur - Providing information and updates about Ashram schools, government hostels, tribal development schemes, and contact details." />
 
-    <!-- Author -->
-    <meta name="author" content="Adivasi Vikas Prakalp Shahapur" />
+  <!-- Keywords (Optional for legacy SEO) -->
+  <meta name="keywords"
+    content="adivasi vikas shahapur,Adivasi Vikas Prakalp Shahapur,Adivasi,vikas,poitdp shahapur,poitdp shahapur mh,आदिवासी विकास प्रकल्प शहापुर, tribal development Maharashtra" />
 
-    <!-- Canonical URL -->
-    <link rel="canonical" href="https://poitdp.shahapur-mh.in" />
+  <!-- Author -->
+  <meta name="author" content="Adivasi Vikas Prakalp Shahapur" />
 
-    <!-- Swiper JS -->
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js"></script>
-  </head>
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://poitdp.shahapur-mh.in" />
 
-  <body>
-    <div id="root"></div>    
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+  <!-- Swiper JS -->
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js"></script>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
+  <script src="./node_modules/preline/dist/preline.js"></script>
+</body>
+
 </html>

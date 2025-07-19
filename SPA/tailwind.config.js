@@ -1,9 +1,17 @@
+
+
 module.exports = {
   content: [
-    "./src/**/*.{js,jsx,ts,tsx}", // Add all your React files
+    "./src/**/*.{js,jsx,ts,tsx}",
+    "node_modules/preline/dist/*.js"// Add all your React files
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        primaryBrown: "#5E3023",
+      },
+    },
   },
-  plugins: [],
+  plugins: [require('@tailwindcss/forms'),
+  require('preline/plugin'),],
 }

@@ -1,0 +1,48 @@
+.student-attendence-container {
+    /* font-family: 'Segoe UI', sans-serif; */
+    background-color: #f9f9f9;
+    padding: 24px;
+    color: #333;
+    border-radius: 8px;
+}
+
+
+
+.student-attendence-container table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #fff;
+}
+
+.student-attendence-container th,
+.student-attendence-container td {
+    border: 1px solid #aaa;
+    padding: 12px;
+    text-align: left;
+    vertical-align: top;
+}
+
+.student-attendence-container th {
+    background-color: #e0d4ce;
+    color: #5E3023;
+}
+
+.student-attendence-container tr:nth-child(even) {
+    background-color: #f5f0ee;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+th,
+td {
+    border: 1px solid #ddd;
+    padding: 0.5rem;
+    vertical-align: top;
+}
+
+thead {
+    background-color: #f0f0f0;
+}
