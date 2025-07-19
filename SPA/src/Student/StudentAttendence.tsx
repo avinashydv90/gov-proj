@@ -1,4 +1,3 @@
-
 // import React, { useState } from 'react';
 // import PageLayout from '../shared-components/PageLayout';
 // import ReactDatePicker, { registerLocale } from 'react-datepicker';
@@ -43,18 +42,18 @@
 
 //    // Fetch all standards
 //   const { data: allStandards = [] } = useGetAllStandardsQuery();
-  
+
 //   // Filter standards based on selected school
 //   const standards = allStandards.filter(std => std.schoolId === school);
-  
+
 //   // Fetch divisions for selected standard
-//   const { data: divisions = [], isSuccess: divisionsLoaded } = 
+//   const { data: divisions = [], isSuccess: divisionsLoaded } =
 //     useGetDivisionsByStandardIdQuery(standard ? parseInt(standard) : skipToken);
-  
+
 //   // Fetch students for selected division
-//   const { data: students = [] } = 
+//   const { data: students = [] } =
 //     useGetStudentByDivisionIdQuery(division ? parseInt(division) : skipToken);
-  
+
 //   const [submitAttendance] = useAddAttendanceMutation();
 
 //   const handleCheckboxChange = (studentId: number) => {
@@ -102,7 +101,7 @@
 //   return (
 //     <PageLayout>
 //       <div className="student-attendence-container px-6 py-4 max-w-6xl mx-auto">
-       
+
 //         <h2 className="text-xl font-bold mb-4 text-center text-[#5C4033]">विद्यार्थी हजेरी</h2>
 
 //         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 mt-4">
@@ -251,32 +250,35 @@
 
 // export default StudentAttendance;
 
-import React, { useState, useMemo } from 'react';
-import PageLayout from '../shared-components/PageLayout';
-import ReactDatePicker, { registerLocale } from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import { hi } from 'date-fns/locale';
-import '../Student/StudentAttendence.css';
-import { skipToken } from '@reduxjs/toolkit/query';
-import { useGetAllSchoolsQuery } from '../services/schoolApi';
-import { useGetAllStandardsQuery } from '../services/standardApi';
-import { useGetDivisionsByStandardIdQuery } from '../services/divisionApi';
-import { useGetStudentByDivisionIdQuery } from '../services/studentApi';
-import { useAddAttendanceMutation } from '../services/studentAttendenceApi';
-import { CreateStudentAttendance } from '../components/types/studentAttendence';
-import { School } from '../components/types/School';
-import { Standard } from '../components/types/standard';
-import { Division } from '../components/types/division';
-import { Student } from '../components/types/student';
-
+import React, { useState, useMemo } from "react";
+import PageLayout from "../shared-components/PageLayout";
+import ReactDatePicker, { registerLocale } from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { hi } from "date-fns/locale";
+import "../Student/StudentAttendence.css";
+import { skipToken } from "@reduxjs/toolkit/query";
+import { useGetAllSchoolsQuery } from "../services/schoolApi";
+import { useGetAllStandardsQuery } from "../services/standardApi_old";
+import { useGetDivisionsByStandardIdQuery } from "../services/divisionApi";
+import { useGetStudentByDivisionIdQuery } from "../services/studentApi";
+import { useAddAttendanceMutation } from "../services/studentAttendenceApi";
+import { CreateStudentAttendance } from "../components/types/studentAttendence";
+import { School } from "../components/types/School";
+import { Standard } from "../components/types/standard";
+import { Division } from "../components/types/division";
+import { Student } from "../components/types/student";
 
 // Register the locale
-registerLocale('hi', hi);
+registerLocale("hi", hi);
 
 // Helper function to convert numbers to Marathi digits
 const toMarathiDigits = (num: number): string => {
-  const marathiDigits = ['०', '१', '२', '३', '४', '५', '६', '७', '८', '९'];
-  return num.toString().split('').map(d => marathiDigits[parseInt(d)]).join('');
+  const marathiDigits = ["०", "१", "२", "३", "४", "५", "६", "७", "८", "९"];
+  return num
+    .toString()
+    .split("")
+    .map((d) => marathiDigits[parseInt(d)])
+    .join("");
 };
 
 // Helper function to get ordinal in Marathi
@@ -285,33 +287,36 @@ const getOrdinal = (n: number): string => `${toMarathiDigits(n)} वी`;
 const StudentAttendance: React.FC = () => {
   // State with proper typing
   const [attendance, setAttendance] = useState<Record<number, boolean>>({});
-  const [standard, setStandard] = useState<string>('');
-  const [division, setDivision] = useState<string>('');
-  const [school, setSchool] = useState<string>('');
+  const [standard, setStandard] = useState<string>("");
+  const [division, setDivision] = useState<string>("");
+  const [school, setSchool] = useState<string>("");
   const [date, setDate] = useState<Date | null>(null);
 
   // API queries
-  const { data: schools = [], isLoading: schoolsLoading } = useGetAllSchoolsQuery();
-  const { data: allStandards = [], isLoading: standardsLoading } = useGetAllStandardsQuery();
-  
+  const { data: schools = [], isLoading: schoolsLoading } =
+    useGetAllSchoolsQuery();
+  const { data: allStandards = [], isLoading: standardsLoading } =
+    useGetAllStandardsQuery();
+
   // Filter standards based on selected school using useMemo
   const standards = useMemo(() => {
     if (!school) return [];
-    return allStandards.filter(std => std.schoolId.toString() === school);
+    return allStandards.filter((std) => std.schoolId.toString() === school);
   }, [school, allStandards]);
 
   // Fetch divisions for selected standard
-  const { data: divisions = [], isSuccess: divisionsLoaded } = 
+  const { data: divisions = [], isSuccess: divisionsLoaded } =
     useGetDivisionsByStandardIdQuery(standard ? parseInt(standard) : skipToken);
-  
+
   // Fetch students for selected division
-  const { data: students = [], isLoading: studentsLoading } = 
+  const { data: students = [], isLoading: studentsLoading } =
     useGetStudentByDivisionIdQuery(division ? parseInt(division) : skipToken);
-  
-  const [submitAttendance, { isLoading: isSubmitting }] = useAddAttendanceMutation();
+
+  const [submitAttendance, { isLoading: isSubmitting }] =
+    useAddAttendanceMutation();
 
   const handleCheckboxChange = (studentId: number) => {
-    setAttendance(prev => ({
+    setAttendance((prev) => ({
       ...prev,
       [studentId]: !prev[studentId],
     }));
@@ -319,16 +324,16 @@ const StudentAttendance: React.FC = () => {
 
   const handleSubmit = async () => {
     if (!date || !standard || !division || !school) {
-      alert('कृपया सर्व फील्ड भरावेत.');
+      alert("कृपया सर्व फील्ड भरावेत.");
       return;
     }
 
     if (students.length === 0) {
-      alert('हजेरी साठी विद्यार्थी उपलब्ध नाहीत.');
+      alert("हजेरी साठी विद्यार्थी उपलब्ध नाहीत.");
       return;
     }
 
-    const payload: CreateStudentAttendance[] = students.map(student => ({
+    const payload: CreateStudentAttendance[] = students.map((student) => ({
       studentId: student.id,
       divisionId: parseInt(division),
       date: date.toISOString(),
@@ -338,27 +343,31 @@ const StudentAttendance: React.FC = () => {
     try {
       const response = await submitAttendance(payload).unwrap();
       if (response.success) {
-        alert(response.message || 'हजेरी यशस्वीपणे सबमिट झाली!');
+        alert(response.message || "हजेरी यशस्वीपणे सबमिट झाली!");
         setAttendance({});
       } else {
-        alert(response.message || 'हजेरी सबमिट करताना त्रुटी आली.');
+        alert(response.message || "हजेरी सबमिट करताना त्रुटी आली.");
       }
     } catch (error) {
-      console.error('Attendance submission error:', error);
-      alert('हजेरी सबमिट करताना त्रुटी आली.');
+      console.error("Attendance submission error:", error);
+      alert("हजेरी सबमिट करताना त्रुटी आली.");
     }
   };
-
 
   return (
     <PageLayout>
       <div className="student-attendence-container px-6 py-4 max-w-6xl mx-auto">
-        <h2 className="text-xl font-bold mb-4 text-center text-[#5C4033]">विद्यार्थी हजेरी</h2>
+        <h2 className="text-xl font-bold mb-4 text-center text-[#5C4033]">
+          विद्यार्थी हजेरी
+        </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 mt-4">
           {/* School Selection */}
           <div className="flex flex-col">
-            <label htmlFor="school" className="text-md font-bold text-gray-700 mb-1">
+            <label
+              htmlFor="school"
+              className="text-md font-bold text-gray-700 mb-1"
+            >
               शाळा :
             </label>
             <select
@@ -366,8 +375,8 @@ const StudentAttendance: React.FC = () => {
               value={school}
               onChange={(e) => {
                 setSchool(e.target.value);
-                setStandard('');
-                setDivision('');
+                setStandard("");
+                setDivision("");
               }}
               className="px-3 py-2 border text-gray-420 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
               disabled={schoolsLoading}
@@ -383,7 +392,10 @@ const StudentAttendance: React.FC = () => {
 
           {/* Standard Selection */}
           <div className="flex flex-col">
-            <label htmlFor="standard" className="text-md font-bold text-gray-700 mb-1">
+            <label
+              htmlFor="standard"
+              className="text-md font-bold text-gray-700 mb-1"
+            >
               इयत्ता:
             </label>
             <select
@@ -391,7 +403,7 @@ const StudentAttendance: React.FC = () => {
               value={standard}
               onChange={(e) => {
                 setStandard(e.target.value);
-                setDivision('');
+                setDivision("");
               }}
               disabled={!school || standardsLoading}
               className="px-3 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
@@ -411,7 +423,10 @@ const StudentAttendance: React.FC = () => {
 
           {/* Division Selection */}
           <div className="flex flex-col">
-            <label htmlFor="division" className="text-md font-bold text-gray-700 mb-1">
+            <label
+              htmlFor="division"
+              className="text-md font-bold text-gray-700 mb-1"
+            >
               वर्ग :
             </label>
             <select
@@ -420,7 +435,7 @@ const StudentAttendance: React.FC = () => {
               onChange={(e) => setDivision(e.target.value)}
               disabled={!standard || !divisionsLoaded}
               className={`px-3 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 ${
-                !standard ? 'bg-gray-100 cursor-not-allowed' : ''
+                !standard ? "bg-gray-100 cursor-not-allowed" : ""
               }`}
             >
               <option value="">वर्ग निवडा</option>
@@ -434,7 +449,10 @@ const StudentAttendance: React.FC = () => {
 
           {/* Date Picker */}
           <div className="flex flex-col">
-            <label htmlFor="attendance-date" className="text-md font-bold text-gray-700 mb-1">
+            <label
+              htmlFor="attendance-date"
+              className="text-md font-bold text-gray-700 mb-1"
+            >
               दिनांक :
             </label>
             <ReactDatePicker
@@ -458,15 +476,23 @@ const StudentAttendance: React.FC = () => {
             <table className="min-w-full divide-y divide-gray-200 border rounded-md shadow-sm">
               <thead>
                 <tr>
-                  <th className="px-4 py-2 text-center text-lg font-bold text-gray-700">रोल नंबर</th>
-                  <th className="px-4 py-2 text-center text-lg font-bold text-gray-700">विद्यार्थीचे नाव</th>
-                  <th className="px-4 py-2 text-center text-lg font-bold text-gray-700">हजर</th>
+                  <th className="px-4 py-2 text-center text-lg font-bold text-gray-700">
+                    रोल नंबर
+                  </th>
+                  <th className="px-4 py-2 text-center text-lg font-bold text-gray-700">
+                    विद्यार्थीचे नाव
+                  </th>
+                  <th className="px-4 py-2 text-center text-lg font-bold text-gray-700">
+                    हजर
+                  </th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {students.map((student: Student) => (
                   <tr key={student.id}>
-                    <td className="px-4 py-2 text-center">{toMarathiDigits(student.id || student.id)}</td>
+                    <td className="px-4 py-2 text-center">
+                      {toMarathiDigits(student.id || student.id)}
+                    </td>
                     <td className="px-4 py-2">{student.name}</td>
                     <td className="px-4 py-2 text-center">
                       <input
@@ -493,10 +519,12 @@ const StudentAttendance: React.FC = () => {
             onClick={handleSubmit}
             disabled={students.length === 0 || !date || isSubmitting}
             className={`bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md text-base transition-colors ${
-              students.length === 0 || !date || isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+              students.length === 0 || !date || isSubmitting
+                ? "opacity-50 cursor-not-allowed"
+                : ""
             }`}
           >
-            {isSubmitting ? 'सबमिट होत आहे...' : 'हजेरी सबमिट करा'}
+            {isSubmitting ? "सबमिट होत आहे..." : "हजेरी सबमिट करा"}
           </button>
         </div>
       </div>

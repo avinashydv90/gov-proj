@@ -1,21 +1,23 @@
 export interface School {
-    id: string;
-    schoolName: string;
-    establishDate: string;
-    schoolType: "Aided" | "Non-Aided"; // exact match from backend
-    address: string;
+  id: string;
+  name: string;
+  establishDate: string;
+  type: "अनुदानित" | "बिनअनुदानित"; // exact match from backend
+  address: string;
 }
 
 export interface SchoolRegistrationRequest {
-    id?: string; // Optional for new registrations, required for updates
-    schoolName: string;
-    establishDate: string;
-    schoolType: "Aided" | "Non-Aided";
-    address: string;
+  id?: string; // Optional for new registrations, required for updates
+  name: string;
+  establishDate: string;
+  type: "अनुदानित" | "बिनअनुदानित";
+  address: string;
 }
 
 export interface SchoolRegistrationResponse {
-    id: string;
-    schoolName: string;
-    message: string;
+  id: string;
+  name: string;
+  type: string;
+  address: string;
+  establishDate: string;
 }

@@ -1,71 +1,80 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import {
-    School,
-    SchoolRegistrationRequest,
-    SchoolRegistrationResponse,
-} from '../components/types/School';
+  School,
+  SchoolRegistrationRequest,
+  SchoolRegistrationResponse,
+} from "../components/types/School";
 
-const baseUrl = 'https://localhost:7031/api/';
+const baseUrl = "https://localhost:7031/api/";
 
 export const schoolApi = createApi({
-    reducerPath: 'schoolApi',
-    baseQuery: fetchBaseQuery({ baseUrl }),
-    tagTypes: ['School'],
-    endpoints: (builder) => ({
-        // CREATE
-        registerSchool: builder.mutation<SchoolRegistrationResponse, SchoolRegistrationRequest>({
-            query: (schoolData) => ({
-                url: 'School/register',
-                method: 'POST',
-                body: schoolData,
-            }),
-            invalidatesTags: ['School'],
-        }),
-
-        // READ ALL
-        getAllSchools: builder.query<School[], void>({
-            query: () => 'School',
-            providesTags: ['School'],
-        }),
-
-        // READ ONE
-        getSchoolById: builder.query<School, string>({
-            query: (id) => `School/${id}`,
-            providesTags: (_, __, id) => [{ type: 'School', id }],
-        }),
-
-        // UPDATE
-        updateSchool: builder.mutation<School, { id: string; data: SchoolRegistrationRequest }>({
-            query: ({ id, data }) => ({
-                url: `School/${id}`,
-                method: 'PUT',
-                body: data,
-            }),
-            invalidatesTags: [{ type: 'School', id: 'LIST' }],
-        }),
-
-        // DELETE
-        deleteSchool: builder.mutation<{ message: string }, string>({
-            query: (id) => ({
-                url: `School/${id}`,
-                method: 'DELETE',
-            }),
-            invalidatesTags: (_, __, id) => [{ type: 'School', id }],
-        }),
+  reducerPath: "schoolApi",
+  baseQuery: fetchBaseQuery({
+    baseUrl: baseUrl,
+    prepareHeaders: (headers) => {
+      const token = localStorage.getItem("token");
+      if (token) headers.set("Authorization", `Bearer ${token}`);
+      return headers;
+    },
+  }),
+  tagTypes: ["School"],
+  endpoints: (builder) => ({
+    // CREATE
+    registerSchool: builder.mutation<
+      SchoolRegistrationResponse,
+      SchoolRegistrationRequest
+    >({
+      query: (schoolData) => ({
+        url: "School",
+        method: "POST",
+        body: schoolData,
+      }),
+      invalidatesTags: ["School"],
     }),
+
+    // READ ALL
+    getAllSchools: builder.query<School[], void>({
+      query: () => "School",
+      providesTags: ["School"],
+    }),
+
+    // READ ONE
+    getSchoolById: builder.query<School, string>({
+      query: (id) => `School/${id}`,
+      providesTags: (_, __, id) => [{ type: "School", id }],
+    }),
+
+    // UPDATE
+    updateSchool: builder.mutation<
+      School,
+      { id: string; data: SchoolRegistrationRequest }
+    >({
+      query: ({ id, data }) => ({
+        url: `School/${id}`,
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: [{ type: "School", id: "LIST" }],
+    }),
+
+    // DELETE
+    deleteSchool: builder.mutation<{ message: string }, string>({
+      query: (id) => ({
+        url: `School/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: (_, __, id) => [{ type: "School", id }],
+    }),
+  }),
 });
 
 export const {
-    useRegisterSchoolMutation,
-    useGetAllSchoolsQuery,
-    useGetSchoolByIdQuery,
-    useUpdateSchoolMutation,
-    useDeleteSchoolMutation,
+  useRegisterSchoolMutation,
+  useGetAllSchoolsQuery,
+  useGetSchoolByIdQuery,
+  useUpdateSchoolMutation,
+  useDeleteSchoolMutation,
 } = schoolApi;
-
-
-
-
 
 // export const schoolApi = createApi({
 //     reducerPath: "schoolApi",
@@ -81,7 +90,6 @@ export const {
 //         }),
 //     }),
 // });
-
 
 //export const { useRegisterSchoolMutation } = schoolApi;
 

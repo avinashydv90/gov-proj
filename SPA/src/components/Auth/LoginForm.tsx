@@ -1,12 +1,15 @@
 import "./index.css";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import LeftImg from "../../assets/logo.jpg";
 import PageLayout from "../../shared-components/PageLayout";
 import { useLoginMutation } from "../../services/authApi";
-import { Link, useNavigate } from "react-router-dom";
-import { toast, Toaster } from "react-hot-toast";
-import Topbar from "../Topbar";
+import { useNavigate } from "react-router-dom";
 import Footer from "../Footer";
+import { toast, Toaster } from "react-hot-toast";
+
+import logo1 from "../../assets/adivasi-vikas-vibhag.png";
+import logo2 from "../../assets/shivrajyabhishek.png";
+import logo3 from "../../assets/nationalemblem.png";
 
 interface ErrorResponse {
   status?: number;
@@ -18,17 +21,26 @@ interface ErrorResponse {
 const LoginForm: React.FC = () => {
   const [login, { isLoading }] = useLoginMutation();
   const [email, setEmail] = useState("");
-  const [role, setRole] = useState("");
+  // const [role, setRole] = useState("");
   const [password, setPassword] = useState("");
-  const [showDropdown, setShowDropdown] = useState(false);
+  // const [showDropdown, setShowDropdown] = useState(false);
   const navigate = useNavigate();
+  const [hideLogo, setHideLogo] = useState(false);
 
-  const toggleDropdown = () => setShowDropdown(!showDropdown);
+  useEffect(() => {
+    const handleScroll = () => {
+      setHideLogo(window.scrollY > 50);
+    };
 
-  const handleRoleSelect = (selectedRole: string) => {
-    setRole(selectedRole);
-    setShowDropdown(false);
-  };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+  // const toggleDropdown = () => setShowDropdown(!showDropdown);
+
+  // const handleRoleSelect = (selectedRole: string) => {
+  //   setRole(selectedRole);
+  //   setShowDropdown(false);
+  // };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,12 +49,11 @@ const LoginForm: React.FC = () => {
       return;
     }
     try {
-      const data = await login({ email, password, role }).unwrap();
+      const data = await login({ email, password }).unwrap();
       localStorage.setItem("token", data.token);
-      localStorage.setItem("userName", data.userName);
-      localStorage.setItem("role", role);
-      toast.success("लॉगिन यशस्वी!");
-      navigate("/");
+      localStorage.setItem("userName", data.email);
+      localStorage.setItem("role", data.role);
+      navigate("/admin/school-list");
     } catch (error) {
       const err = error as Partial<ErrorResponse>;
       if (err?.status === 401) {
@@ -59,50 +70,81 @@ const LoginForm: React.FC = () => {
     }
   };
 
-  const roles = ["User", "Admin", "SuperAdmin"];
+  // const roles = ["User", "Admin", "SuperAdmin"];
 
   return (
     <PageLayout>
-      <Topbar />
       <Toaster position="top-right" />
-
-      <div className="hidden md:flex mt-6 flex-col md:flex-row gap-4">
-        {/* Left Side: Logo */}
-        <div className="md:w-1/3 lg:w-1/2 bg-white  rounded-xl p-6 flex justify-center items-center">
-          <img
-            src={LeftImg}
-            alt="Logo"
-            className="w-full min-w-[16rem] max-w-[20rem] md:max-w-[24rem] lg:max-w-[28rem] h-auto rounded-xl"
-          />
-        </div>
-
-        {/* Right Side: Login Form */}
-        <div className="md:w-2/3 lg:w-1/2 bg-white  rounded-xl p-6">
-          <form onSubmit={handleSubmit} className="w-full max-w-md mx-auto">
-            <h2 className="text-2xl font-semibold mb-4 text-center">लॉगिन</h2>
-
-            {/* Username */}
-            <div className="mb-4">
-              <label
-                htmlFor="userName"
-                className="block text-sm font-semibold text-gray-700 mb-1"
-              >
-                वापरकर्तानाव
-              </label>
-              <input
-                type="text"
-                id="userName"
-                name="userName"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                autoFocus
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#5E3023]"
-                placeholder="Enter Username"
+      <div className="fixed top-0 left-0 w-full z-50">
+        <div
+          className={`transition-all duration-500 border-b border-gray-300 ${
+            hideLogo ? "opacity-0 h-0 overflow-hidden" : "opacity-100 py-3"
+          }`}
+          style={{
+            backgroundColor: "rgba(245, 245, 220, 0.6)",
+            backdropFilter: "blur(4px)",
+          }}
+        >
+          <div className="flex flex-col items-center">
+            <div className="flex gap-3 items-center">
+              <img
+                src={logo1}
+                alt="adivasi-vikas-vibhag"
+                className="w-[72px] h-[72px] object-contain"
+              />
+              <img
+                src={logo2}
+                alt="shivrajyabhishek"
+                className="w-[72px] h-[72px] object-contain"
+              />
+              <img
+                src={logo3}
+                alt="nationalemblem"
+                className="w-[72px] h-[72px] object-contain"
               />
             </div>
+            <h1 className="text-[#5C4033] font-semibold text-xl mt-2 text-center">
+              एकात्मिक आदिवासी विकास प्रकल्प, शहापुर
+            </h1>
+          </div>
+        </div>
+        <div className="hidden md:flex mt-6 flex-col md:flex-row gap-4">
+          {/* Left Side: Logo */}
+          <div className="md:w-1/3 lg:w-1/2 bg-white  rounded-xl p-6 flex justify-center items-center">
+            <img
+              src={LeftImg}
+              alt="Logo"
+              className="w-full min-w-[16rem] max-w-[20rem] md:max-w-[24rem] lg:max-w-[28rem] h-auto rounded-xl"
+            />
+          </div>
 
-            {/* Role */}
-            <div className="mb-4">
+          {/* Right Side: Login Form */}
+          <div className="md:w-2/3 lg:w-1/2 bg-white  rounded-xl p-6">
+            <form onSubmit={handleSubmit} className="w-full max-w-md mx-auto">
+              <h2 className="text-2xl font-semibold mb-4 text-center">लॉगिन</h2>
+
+              {/* Username */}
+              <div className="mb-4">
+                <label
+                  htmlFor="userName"
+                  className="block text-sm font-semibold text-gray-700 mb-1"
+                >
+                  वापरकर्तानाव
+                </label>
+                <input
+                  type="text"
+                  id="userName"
+                  name="userName"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  autoFocus
+                  className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#5E3023]"
+                  placeholder="Enter Username"
+                />
+              </div>
+
+              {/* Role */}
+              {/* <div className="mb-4">
               <label
                 htmlFor="role"
                 className="block text-sm font-semibold text-gray-700 mb-1"
@@ -151,50 +193,51 @@ const LoginForm: React.FC = () => {
                   </div>
                 )}
               </div>
-            </div>
+            </div> */}
 
-            {/* Password */}
-            <div className="mb-4">
-              <label
-                htmlFor="password"
-                className="block text-sm font-semibold text-gray-700 mb-1"
+              {/* Password */}
+              <div className="mb-4">
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-semibold text-gray-700 mb-1"
+                >
+                  संकेतशब्द
+                </label>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#5E3023]"
+                  placeholder="Enter password"
+                />
+              </div>
+
+              {/* Submit Button */}
+              <button
+                type="submit"
+                disabled={isLoading}
+                className={`w-full text-center px-4 py-3 text-white font-semibold rounded-xl transition-colors duration-200 ${
+                  isLoading ? "opacity-50 cursor-not-allowed" : ""
+                }`}
+                style={{ backgroundColor: "#5E3023" }}
               >
-                संकेतशब्द
-              </label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#5E3023]"
-                placeholder="Enter password"
-              />
-            </div>
+                {isLoading ? "लॉगिन होत आहे..." : "लॉगिन करा"}
+              </button>
 
-            {/* Submit Button */}
-            <button
-              type="submit"
-              disabled={isLoading}
-              className={`w-full text-center px-4 py-3 text-white font-semibold rounded-xl transition-colors duration-200 ${
-                isLoading ? "opacity-50 cursor-not-allowed" : ""
-              }`}
-              style={{ backgroundColor: "#5E3023" }}
-            >
-              {isLoading ? "लॉगिन होत आहे..." : "लॉगिन करा"}
-            </button>
-
-            {/* Register Link */}
-            <p className="text-sm mt-4 font-semibold text-center">
-              अजून खाते नाहीये?{" "}
-              <Link to="/register" className="text-red-500 hover:underline">
-                नोंदणी करा
-              </Link>
-            </p>
-          </form>
+              {/* Register Link */}
+              {/* <p className="text-sm mt-4 font-semibold text-center">
+                अजून खाते नाहीये?{" "}
+                <Link to="/register" className="text-red-500 hover:underline">
+                  नोंदणी करा
+                </Link>
+              </p> */}
+            </form>
+          </div>
         </div>
+        <Footer />
       </div>
-      <Footer />
     </PageLayout>
   );
 };

@@ -1,5 +1,5 @@
 export interface Standard {
-    id: number;
-    std: string;
-    schoolId: string; // GUID
+  id?: number;
+  std: string;
+  schoolId: string; // GUID
 }

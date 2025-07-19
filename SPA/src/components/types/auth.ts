@@ -1,19 +1,19 @@
 export interface AuthResponse {
-    token: string;
-    userName: string;
+  token: string;
+  email: string;
+  role: string;
 }
 
 export interface LoginRequest {
-    email: string;
-    password: string;
-    role: string;
+  email: string;
+  password: string;
 }
 
 export interface RegisterRequest {
-    userName: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-    role: string;
-    password: string;
+  userName: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: string;
+  password: string;
 }
