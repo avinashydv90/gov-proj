@@ -22,10 +22,15 @@ export const divisionApi = createApi({
         }),
 
         // GET by standardId
+        // 
+        // }),
+
         getDivisionsByStandardId: builder.query<Division[], number>({
-            query: (standardId) => `Division?standardId=${standardId}`,
-            providesTags: ['Division'],
-        }),
+            query: (standardId) => `Division/standard/${standardId}`,
+            providesTags: (result, error, standardId) => [
+              { type: 'Division', id: `standard-${standardId}` },
+            ],
+          }),
 
         // POST - Add new division
         addDivision: builder.mutation<Division, Omit<Division, 'id'>>({

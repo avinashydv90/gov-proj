@@ -21,7 +21,7 @@ export const studentApi = createApi({
         }),
         // GET /Student?divisionId={divisionId}
         getStudentByDivisionId: builder.query<Student[], number>({
-            query: (divisionId) => `Student?divisionId=${divisionId}`,
+            query: (divisionId) => `Student/division/${divisionId}`,
             providesTags: ['Student'],
         }),
 

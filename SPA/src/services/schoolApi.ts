@@ -15,7 +15,7 @@ export const schoolApi = createApi({
         // CREATE
         registerSchool: builder.mutation<SchoolRegistrationResponse, SchoolRegistrationRequest>({
             query: (schoolData) => ({
-                url: 'School/register',
+                url: 'School',
                 method: 'POST',
                 body: schoolData,
             }),

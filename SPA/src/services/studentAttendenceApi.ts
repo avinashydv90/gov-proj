@@ -24,16 +24,24 @@ export const studentAttendanceApi = createApi({
             query: (id) => `StudentAttendence/${id}`,
             providesTags: ['Attendance'],
         }),
-
-        // Add attendance (POST)
-        addAttendance: builder.mutation<AttendancePostResponse, CreateStudentAttendance[]>({
+        addAttendance: builder.mutation<AttendancePostResponse, CreateStudentAttendance>({
             query: (body) => ({
-                url: 'StudentAttendence',
-                method: 'POST',
-                body,
+              url: 'StudentAttendence',
+              method: 'POST',
+              body,
             }),
             invalidatesTags: ['Attendance'],
-        }),
+          }),
+
+        // Add attendance (POST)
+        // addAttendance: builder.mutation<AttendancePostResponse, CreateStudentAttendance[]>({
+        //     query: (body) => ({
+        //         url: 'StudentAttendence',
+        //         method: 'POST',
+        //         body,
+        //     }),
+        //     invalidatesTags: ['Attendance'],
+        // }),
         // ✅ PUT: Update an attendance record
         updateStudentAttendance: builder.mutation<void, StudentAttendance>({
             query: (attendance) => ({

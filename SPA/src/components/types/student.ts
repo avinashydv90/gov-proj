@@ -3,7 +3,7 @@ export interface Student {
     name: string;
     dateOfBirth: string; // ISO string
     address: string;
-    division: string;  // Changed from divisionId
+    divisionId: number;  // Changed from divisionId
     standard: number;  // Changed from standardId
 }
 

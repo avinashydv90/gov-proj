@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import {
   useRegisterSchoolMutation,
@@ -23,7 +22,8 @@ const SchoolRegistrationForm: React.FC = () => {
     schoolType: "Aided",
   });
 
-  const [registerSchool, { isLoading: isRegistering }] = useRegisterSchoolMutation();
+  const [registerSchool, { isLoading: isRegistering }] =
+    useRegisterSchoolMutation();
   const [updateSchool, { isLoading: isUpdating }] = useUpdateSchoolMutation();
 
   const {
@@ -47,61 +47,107 @@ const SchoolRegistrationForm: React.FC = () => {
     }
   }, [isEditMode, isSchoolLoaded, existingSchool]);
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
   ) => {
     const { name, value, type } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: type === "checkbox" ? (e.target as HTMLInputElement).checked : value,
+      [name]:
+        type === "checkbox" ? (e.target as HTMLInputElement).checked : value,
     }));
   };
 
+  // const handleSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   try {
+  //     const action = isEditMode && id
+  //       ? updateSchool({ id, data: formData }).unwrap()
+  //       : registerSchool(formData).unwrap();
+  //     await action;
 
-const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  try {
-    const action = isEditMode && id
-      ? updateSchool({ id, data: formData }).unwrap()
-      : registerSchool(formData).unwrap();
-    await action;
-    
-    const message = isEditMode
-      ? 'शाळेची माहिती यशस्वीरित्या अपडेट झाली.'
-      : 'शाळा यशस्वीपणे नोंदवली.';
-    toast.success(message);
-     // Refresh the school list after registration or update
-    
-    if (!isEditMode) {
-      setFormData({ schoolName: '', establishDate: '', address: '', schoolType: 'Aided' });
+  //     const message = isEditMode
+  //       ? 'शाळेची माहिती यशस्वीरित्या अपडेट झाली.'
+  //       : 'शाळा यशस्वीपणे नोंदवली.';
+  //     toast.success(message);
+  //      // Refresh the school list after registration or update
+
+  //     if (!isEditMode) {
+  //       setFormData({ schoolName: '', establishDate: '', address: '', schoolType: 'Aided' });
+  //     }
+
+  //     window.location.href = '/school-list';
+
+  //   } catch (err) {
+  //     console.error('अपडेट अयशस्वी:', err);
+  //     toast.error('अपडेट अयशस्वी');
+  //   }
+  // };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      let action;
+
+      if (isEditMode) {
+        if (!id) {
+          toast.error("शाळेची ओळख पटली नाही (ID नाही).");
+          return;
+        }
+        action = updateSchool({ id, data: formData }).unwrap();
+      } else {
+        action = registerSchool(formData).unwrap();
+      }
+
+      await action;
+
+      const message = isEditMode
+        ? "शाळेची माहिती यशस्वीरित्या अपडेट झाली."
+        : "शाळा यशस्वीपणे नोंदवली.";
+      toast.success(message);
+
+      if (!isEditMode) {
+        setFormData({
+          schoolName: "",
+          establishDate: "",
+          address: "",
+          schoolType: "Aided",
+        });
+      }
+
+      window.location.href = "/school-list";
+    } catch (err) {
+      console.error("अपडेट अयशस्वी:", err);
+      toast.error("अपडेट अयशस्वी");
     }
-    
-    window.location.href = '/school-list';
+  };
 
-  } catch (err) {
-    console.error('अपडेट अयशस्वी:', err);
-    toast.error('अपडेट अयशस्वी');
-  }
-};
-
-    if (isEditMode && isSchoolLoading) {
+  if (isEditMode && isSchoolLoading) {
     return (
       <PageLayout>
         <div className="text-center py-8">लोड करत आहे...</div>
       </PageLayout>
     );
   }
-    if (isEditMode && isSchoolError) {
+  if (isEditMode && isSchoolError) {
     return (
       <PageLayout>
-        <div className="text-center py-8 text-red-600">शाळेची माहिती मिळवण्यात त्रुटी.</div>
+        <div className="text-center py-8 text-red-600">
+          शाळेची माहिती मिळवण्यात त्रुटी.
+        </div>
       </PageLayout>
     );
   }
 
   return (
-   <PageLayout>
+    <PageLayout>
       <div className="py-3 px-4 inline-flex items-center gap-x-2 text-xl  font-semibold rounded-lg border border-transparent text-[#5E3023] focus:outline-hidden focus:bg-blue-100 focus:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:bg-blue-800/30 dark:hover:text-blue-400 dark:focus:bg-blue-800/30 dark:focus:text-blue-400">
-        <ButtonList buttons={[{ label: "शाळा यादी", onClick: () => navigate("/school-list") }]} />
+        <ButtonList
+          buttons={[
+            { label: "शाळा यादी", onClick: () => navigate("/school-list") },
+          ]}
+        />
       </div>
 
       <div className="h-screen w-full flex items-center justify-center bg-gray-50 px-4 py-6">
@@ -115,7 +161,10 @@ const handleSubmit = async (e: React.FormEvent) => {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label htmlFor="schoolName" className="block text-sm font-bold text-[#5C4033]">
+              <label
+                htmlFor="schoolName"
+                className="block text-sm font-bold text-[#5C4033]"
+              >
                 शाळेचे नाव *
               </label>
               <input
@@ -130,7 +179,10 @@ const handleSubmit = async (e: React.FormEvent) => {
             </div>
 
             <div>
-              <label htmlFor="establishDate" className="block text-sm font-bold text-[#5C4033]">
+              <label
+                htmlFor="establishDate"
+                className="block text-sm font-bold text-[#5C4033]"
+              >
                 स्थापना दिनांक *
               </label>
               <input
@@ -139,14 +191,17 @@ const handleSubmit = async (e: React.FormEvent) => {
                 name="establishDate"
                 value={formData.establishDate}
                 onChange={handleChange}
-                max={new Date().toISOString().split('T')[0]}// today’s date in YYYY-MM-DD
+                max={new Date().toISOString().split("T")[0]} // today’s date in YYYY-MM-DD
                 required
                 className="mt-1 block w-full rounded-md border text-sm font-semibold border-[#5C4033] shadow-sm focus:border-[#4a3328] focus:ring-[#4a3328] p-2 bg-white/90"
               />
             </div>
 
             <div>
-              <label htmlFor="address" className="block text-sm font-bold text-[#5C4033]">
+              <label
+                htmlFor="address"
+                className="block text-sm font-bold text-[#5C4033]"
+              >
                 पत्ता *
               </label>
               <textarea
@@ -161,7 +216,10 @@ const handleSubmit = async (e: React.FormEvent) => {
             </div>
 
             <div>
-              <label htmlFor="schoolType" className="block text-sm font-bold text-[#5C4033]">
+              <label
+                htmlFor="schoolType"
+                className="block text-sm font-bold text-[#5C4033]"
+              >
                 शाळेचा प्रकार *
               </label>
               <select
@@ -188,7 +246,11 @@ const handleSubmit = async (e: React.FormEvent) => {
                 className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-lg
                   font-semibold text-white bg-[#5C4033] hover:bg-[#4a3328] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#4a3328] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
-                {(isRegistering || isUpdating) ? "प्रक्रिया सुरू आहे..." : isEditMode ? "अपडेट करा" : "शाळा नोंदणी करा"}
+                {isRegistering || isUpdating
+                  ? "प्रक्रिया सुरू आहे..."
+                  : isEditMode
+                  ? "अपडेट करा"
+                  : "शाळा नोंदणी करा"}
               </button>
             </div>
           </form>
@@ -199,15 +261,6 @@ const handleSubmit = async (e: React.FormEvent) => {
 };
 
 export default SchoolRegistrationForm;
-
-
-
-
-
-
-
-
-
 
 //   const handleSubmit = async (e: React.FormEvent) => {
 //     e.preventDefault();
