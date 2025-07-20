@@ -1,4 +1,4 @@
-//https://localhost:7031/api/StudentAttendence
+//https://localhost:7031/api/StudentAttendance
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import {
   AttendancePostResponse,
@@ -10,12 +10,19 @@ const baseUrl = "https://localhost:7031/api/";
 
 export const studentAttendanceApi = createApi({
   reducerPath: "studentAttendanceApi",
-  baseQuery: fetchBaseQuery({ baseUrl }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: baseUrl,
+    prepareHeaders: (headers) => {
+      const token = localStorage.getItem("token");
+      if (token) headers.set("Authorization", `Bearer ${token}`);
+      return headers;
+    },
+  }),
   tagTypes: ["Attendance"],
   endpoints: (builder) => ({
     // Fetch attendance (GET)
     getAttendanceByStudentId: builder.query<StudentAttendance[], number>({
-      query: (studentId) => `StudentAttendence/student/${studentId}`,
+      query: (studentId) => `StudentAttendance/student/${studentId}`,
       providesTags: ["Attendance"],
     }),
     getAttendanceByDivisionAndDate: builder.query<
@@ -23,11 +30,11 @@ export const studentAttendanceApi = createApi({
       { divisionId: number; date: string }
     >({
       query: ({ divisionId, date }) =>
-        `StudentAttendence?divisionId=${divisionId}&date=${date}`,
+        `StudentAttendance?divisionId=${divisionId}&date=${date}`,
       providesTags: ["Attendance"],
     }),
-    getStudentAttendenceById: builder.query<StudentAttendance[], number>({
-      query: (id) => `StudentAttendence/${id}`,
+    getStudentAttendanceById: builder.query<StudentAttendance[], number>({
+      query: (id) => `StudentAttendance/${id}`,
       providesTags: ["Attendance"],
     }),
 
@@ -37,7 +44,7 @@ export const studentAttendanceApi = createApi({
       CreateStudentAttendance
     >({
       query: (body) => ({
-        url: "StudentAttendence",
+        url: "StudentAttendance",
         method: "POST",
         body,
       }),
@@ -46,7 +53,7 @@ export const studentAttendanceApi = createApi({
     // ✅ PUT: Update an attendance record
     updateStudentAttendance: builder.mutation<void, StudentAttendance>({
       query: (attendance) => ({
-        url: `StudentAttendence/${attendance.id}`,
+        url: `StudentAttendance/${attendance.id}`,
         method: "PUT",
         body: attendance,
       }),
@@ -55,7 +62,7 @@ export const studentAttendanceApi = createApi({
     // ✅ DELETE: Delete an attendance record by ID
     deleteStudentAttendance: builder.mutation<void, number>({
       query: (id) => ({
-        url: `StudentAttendence/${id}`,
+        url: `StudentAttendance/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["Attendance"],
@@ -66,7 +73,7 @@ export const studentAttendanceApi = createApi({
 export const {
   useGetAttendanceByStudentIdQuery,
   useGetAttendanceByDivisionAndDateQuery,
-  useGetStudentAttendenceByIdQuery,
+  useGetStudentAttendanceByIdQuery,
   useAddAttendanceMutation,
   useDeleteStudentAttendanceMutation,
   useUpdateStudentAttendanceMutation,

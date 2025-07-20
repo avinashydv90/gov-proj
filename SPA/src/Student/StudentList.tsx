@@ -72,9 +72,9 @@ const StudentList: React.FC = () => {
             type="button"
             className="flex py-2 px-4 border border-transparent rounded-md shadow-sm text-lg
                   font-semibold text-white bg-[#5C4033] hover:bg-[#4a3328] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#4a3328] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            onClick={() => navigate("/admin/school-registration")}
+            onClick={() => navigate("/admin/add-student")}
           >
-            नवीन शाळा नोंदवा
+            नवीन विद्यार्थी नोंदवा
           </button>
         </div>
         <div className="overflow-x-auto w-full">
@@ -94,12 +94,12 @@ const StudentList: React.FC = () => {
                   <th className="px-6 py-3 text-left text-md font-semibold text-gray-600 uppercase">
                     Address
                   </th>
-                  <th className="px-6 py-3 text-left text-md font-semibold text-gray-600 uppercase">
+                  {/* <th className="px-6 py-3 text-left text-md font-semibold text-gray-600 uppercase">
                     Standard
-                  </th>
-                  <th className="px-6 py-3 text-left text-md font-semibold text-gray-600 uppercase">
+                  </th> */}
+                  {/* <th className="px-6 py-3 text-left text-md font-semibold text-gray-600 uppercase">
                     Division
-                  </th>
+                  </th> */}
                   <th className="px-6 py-3 text-center text-md font-semibold text-gray-600 uppercase">
                     Action
                   </th>
@@ -111,28 +111,30 @@ const StudentList: React.FC = () => {
                     <td className="px-6 py-4 text-sm font-semibold text-gray-800">
                       {student.id}
                     </td>
-                    <td className="px-6 py-4 text-sm font-semibold text-gray-800">{`${student.name}`}</td>
+                    <td className="px-6 py-4 text-sm font-semibold text-gray-800">
+                      {student.firstName} {student.lastName}
+                    </td>
                     <td className="px-6 py-4 text-sm font-semibold text-gray-800">
                       {new Date(student.dateOfBirth).toLocaleDateString()}
                     </td>
                     <td className="px-6 py-4 text-sm font-semibold text-gray-800">
                       {student.address}
                     </td>
-                    <td className="px-6 py-4 text-sm font-semibold text-gray-800">
-                      {student.standard}
-                    </td>
-                    <td className="px-6 py-4 text-sm font-semibold text-gray-800">
-                      {student.division}
-                    </td>
+                    {/* <td className="px-6 py-4 text-sm font-semibold text-gray-800">
+                      {student.}
+                    </td> */}
+                    {/* <td className="px-6 py-4 text-sm font-semibold text-gray-800">
+                      {student.divisionId}
+                    </td> */}
                     <td className="px-6 py-4 text-sm font-semibold">
                       <div className="flex justify-center items-center space-x-2">
                         <ButtonList
                           buttons={[
-                            {
-                              label: "Update",
-                              onClick: () =>
-                                navigate(`/edit-student/${student.id}`),
-                            },
+                            // {
+                            //   label: "Update",
+                            //   onClick: () =>
+                            //     navigate(`/edit-student/${student.id}`),
+                            // },
                             {
                               label: "Delete",
                               onClick: () => handleDelete(student.id),

@@ -5,10 +5,13 @@ import {
   useGetStudentByIdQuery,
 } from "../services/studentApi";
 import PageLayout from "../shared-components/PageLayout";
-import ButtonList from "./ButtonList";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Student } from "./types/student";
+import { useGetAllSchoolsQuery } from "../services/schoolApi";
+import { useGetAllStandardsQuery } from "../services/standardApi_old";
+import { useGetAllDivisionsQuery } from "../services/divisionApi";
+// import { useGetDivisionsByStandardIdQuery } from "../services/divisionApi";
 
 const StudentForm: React.FC = () => {
   const navigate = useNavigate();
@@ -16,15 +19,28 @@ const StudentForm: React.FC = () => {
   const isEditMode = !!id;
 
   const [formData, setFormData] = useState<Omit<Student, "id">>({
-    name: "",
+    firstName: "",
+    lastName: "",
     dateOfBirth: "",
+    gender: "",
     address: "",
-    division: "",    
-  standard: 0,  
+    standardId: "",
+    divisionId: "",
+    schoolId: "",
+    parentName: "",
+    parentContact: "",
+    rollNumber: 0,
   });
 
   const [addStudent, { isLoading: isRegistering }] = useAddStudentMutation();
   const [updateStudent, { isLoading: isUpdating }] = useUpdateStudentMutation();
+  const { data: schools = [] } = useGetAllSchoolsQuery();
+
+  const { data: divisions = [], refetch: divisionRefetch } =
+    useGetAllDivisionsQuery();
+
+  const { data: standards = [], refetch: standardReftech } =
+    useGetAllStandardsQuery();
 
   const {
     data: existingStudent,
@@ -36,37 +52,63 @@ const StudentForm: React.FC = () => {
   useEffect(() => {
     if (isEditMode && isSuccess && existingStudent) {
       setFormData({
-        name: existingStudent.name,
+        firstName: existingStudent.firstName,
+        lastName: existingStudent.lastName,
         dateOfBirth: existingStudent.dateOfBirth.split("T")[0],
+        gender: existingStudent.gender,
         address: existingStudent.address,
-        division: existingStudent.division,
-        standard: existingStudent.standard,
+        divisionId: existingStudent.divisionId,
+        schoolId: existingStudent.schoolId,
+        parentName: existingStudent.parentName,
+        parentContact: existingStudent.parentContact,
+        rollNumber: existingStudent.rollNumber,
+        standardId: "",
       });
     }
   }, [isEditMode, isSuccess, existingStudent]);
 
-const handleChange = (
-  e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-) => {
-  const { name, value } = e.target;
-  setFormData((prev) => ({
-    ...prev,
-    [name]: name === "standard" ? Number(value) : value,
-  }));
-};
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
+    const { name, value } = e.target;
+    standardReftech();
+    divisionRefetch();
+    setFormData((prev) => ({
+      ...prev,
+      [name]: ["rollNo"].includes(name) ? Number(value) : value,
+    }));
+  };
+
+  // const handleSchoolChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  //   const { value } = e.target;
+  // };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       if (isEditMode && id) {
-        await updateStudent({ id: Number(id), ...formData }).unwrap();
+        await updateStudent({ id: Number(id), data: formData }).unwrap();
         toast.success("विद्यार्थ्याची माहिती यशस्वीरित्या अपडेट झाली.");
       } else {
         await addStudent(formData).unwrap();
         toast.success("विद्यार्थी यशस्वीरित्या नोंदवला गेला.");
-        setFormData({ name: "", dateOfBirth: "", address: "", division:"", standard: 0 });
+        setFormData({
+          firstName: "",
+          lastName: "",
+          dateOfBirth: "",
+          gender: "",
+          address: "",
+          divisionId: "",
+          schoolId: "",
+          parentName: "",
+          parentContact: "",
+          rollNumber: 0,
+          standardId: "",
+        });
       }
-      navigate("/student-list");
+      navigate("/admin/student-list");
     } catch (err) {
       console.error("अपडेट अयशस्वी:", err);
       toast.error("अपडेट अयशस्वी");
@@ -84,31 +126,53 @@ const handleChange = (
   if (isEditMode && isStudentError) {
     return (
       <PageLayout>
-        <div className="text-center py-8 text-red-600">विद्यार्थ्याची माहिती मिळवण्यात त्रुटी.</div>
+        <div className="text-center py-8 text-red-600">
+          विद्यार्थ्याची माहिती मिळवण्यात त्रुटी.
+        </div>
       </PageLayout>
     );
   }
 
   return (
     <PageLayout>
-      <div className="py-3 px-4 inline-flex items-center gap-x-2 text-xl font-semibold text-[#5E3023]">
-        <ButtonList buttons={[{ label: "विद्यार्थी यादी", onClick: () => navigate("/student-list") }]} />
-      </div>
-
-      <div className="h-screen w-full flex items-center justify-center bg-gray-50 px-4 py-6">
+      <div className=" w-full flex items-center justify-center bg-gray-50 px-4 py-6">
         <div className="w-full max-w-6xl bg-white rounded-lg shadow-lg p-8 border border-gray-200 overflow-auto h-[80vh]">
           <h2 className="text-2xl font-bold mb-6 text-center text-[#5C4033]">
-            {isEditMode ? "विद्यार्थी माहिती संपादित करा" : "विद्यार्थी नोंदणी फॉर्म"}
+            {isEditMode
+              ? "विद्यार्थी माहिती संपादित करा"
+              : "विद्यार्थी नोंदणी फॉर्म"}
           </h2>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label htmlFor="name" className="block text-sm font-bold text-[#5C4033]">पूर्ण नाव *</label>
+              <label
+                htmlFor="firstName"
+                className="block text-sm font-bold text-[#5C4033]"
+              >
+                पहिले नाव *
+              </label>
               <input
                 type="text"
-                id="name"
-                name="name"
-                value={formData.name}
+                id="firstName"
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleChange}
+                required
+                className="mt-1 block w-full rounded-md border text-sm font-semibold border-[#5C4033] p-2"
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="lastName"
+                className="block text-sm font-bold text-[#5C4033]"
+              >
+                आड नाव *
+              </label>
+              <input
+                type="text"
+                id="lastName"
+                name="lastName"
+                value={formData.lastName}
                 onChange={handleChange}
                 required
                 className="mt-1 block w-full rounded-md border text-sm font-semibold border-[#5C4033] p-2"
@@ -116,7 +180,12 @@ const handleChange = (
             </div>
 
             <div>
-              <label htmlFor="dateOfBirth" className="block text-sm font-bold text-[#5C4033]">जन्मतारीख *</label>
+              <label
+                htmlFor="dateOfBirth"
+                className="block text-sm font-bold text-[#5C4033]"
+              >
+                जन्म तारीख *
+              </label>
               <input
                 type="date"
                 id="dateOfBirth"
@@ -128,27 +197,18 @@ const handleChange = (
                 className="mt-1 block w-full rounded-md border text-sm font-semibold border-[#5C4033] p-2"
               />
             </div>
-
             <div>
-              <label htmlFor="standardId" className="block text-sm font-bold text-[#5C4033]">इयत्ता *</label>
-              <input
-                type="number"
-                id="standard"
-                name="standard"
-                value={formData.standard}
-                onChange={handleChange}
-                required
-                className="mt-1 block w-full rounded-md border text-sm font-semibold border-[#5C4033] p-2"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="divisionId" className="block text-sm font-bold text-[#5C4033]">विभाग *</label>
+              <label
+                htmlFor="rollNumber"
+                className="block text-sm font-bold text-[#5C4033]"
+              >
+                विद्यार्थी क्रमांक *
+              </label>
               <input
                 type="text"
-                id="division"
-                name="division"
-                value={formData.division}
+                id="rollNumber"
+                name="rollNumber"
+                value={formData.rollNumber}
                 onChange={handleChange}
                 required
                 className="mt-1 block w-full rounded-md border text-sm font-semibold border-[#5C4033] p-2"
@@ -156,7 +216,33 @@ const handleChange = (
             </div>
 
             <div>
-              <label htmlFor="address" className="block text-sm font-bold text-[#5C4033]">पत्ता *</label>
+              <label
+                htmlFor="gender"
+                className="block text-sm font-bold text-[#5C4033]"
+              >
+                लिंग *
+              </label>
+              <select
+                id="gender"
+                name="gender"
+                value={formData.gender}
+                onChange={handleChange}
+                required
+                className="mt-1 block w-full rounded-md border text-sm font-semibold border-[#5C4033] p-2"
+              >
+                <option value="">लिंग निवडा</option>
+                <option value="male">पुरुष</option>
+                <option value="female">स्त्री</option>
+              </select>
+            </div>
+
+            <div>
+              <label
+                htmlFor="address"
+                className="block text-sm font-bold text-[#5C4033]"
+              >
+                पत्ता *
+              </label>
               <textarea
                 id="address"
                 name="address"
@@ -167,6 +253,131 @@ const handleChange = (
                 className="mt-1 block w-full rounded-md border text-sm font-semibold border-[#5C4033] p-2"
               />
             </div>
+
+            <div>
+              <label
+                htmlFor="parentName"
+                className="block text-sm font-bold text-[#5C4033]"
+              >
+                वडिलांचे नाव *
+              </label>
+              <textarea
+                id="parentName"
+                name="parentName"
+                value={formData.parentName}
+                onChange={handleChange}
+                rows={3}
+                required
+                className="mt-1 block w-full rounded-md border text-sm font-semibold border-[#5C4033] p-2"
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="parentContact"
+                className="block text-sm font-bold text-[#5C4033]"
+              >
+                संपर्क *
+              </label>
+              <textarea
+                id="parentContact"
+                name="parentContact"
+                value={formData.parentContact ?? ""}
+                onChange={handleChange}
+                rows={3}
+                required
+                className="mt-1 block w-full rounded-md border text-sm font-semibold border-[#5C4033] p-2"
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="schoolId"
+                className="block text-sm font-bold text-[#5C4033]"
+              >
+                शाळा क्रमांक *
+              </label>
+              <select
+                id="schoolId"
+                name="schoolId"
+                value={formData.schoolId}
+                onChange={handleChange}
+                required
+                className="mt-1 block w-full rounded-md border text-sm font-semibold border-[#5C4033] p-2"
+              >
+                <option value="">शाळा निवडा</option>
+                {schools.map((school) => (
+                  <option key={school.id} value={school.id}>
+                    {school.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label
+                htmlFor="standardId"
+                className="block text-sm font-bold text-[#5C4033]"
+              >
+                Standard
+              </label>
+              <select
+                id="standardId"
+                name="standardId"
+                value={formData.standardId}
+                onChange={handleChange}
+                required
+                className="mt-1 block w-full rounded-md border text-sm font-semibold border-[#5C4033] p-2"
+              >
+                <option value="">इयत्ता निवडा</option>
+                {standards.map((standard) => (
+                  <option key={standard.id} value={standard.id}>
+                    {standard.std}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label
+                htmlFor="divisionId"
+                className="block text-sm font-bold text-[#5C4033]"
+              >
+                विभाग *
+              </label>
+              <select
+                id="divisionId"
+                name="divisionId"
+                value={formData.divisionId}
+                onChange={handleChange}
+                required
+                className="mt-1 block w-full rounded-md border text-sm font-semibold border-[#5C4033] p-2"
+              >
+                <option value="">विभाग निवडा</option>
+                {divisions.map((division) => (
+                  <option key={division.id} value={division.id}>
+                    {division.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* <div>
+              <label
+                htmlFor="schoolId"
+                className="block text-sm font-bold text-[#5C4033]"
+              >
+                शाळा क्रमांक *
+              </label>
+              <input
+                type="text"
+                id="schoolId"
+                name="schoolId"
+                value={formData.schoolId}
+                onChange={handleChange}
+                required
+                className="mt-1 block w-full rounded-md border text-sm font-semibold border-[#5C4033] p-2"
+              />
+            </div> */}
 
             <div className="pt-4">
               <button

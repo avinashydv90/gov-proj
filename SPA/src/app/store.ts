@@ -1,6 +1,5 @@
 // src/store/store.ts
 import { configureStore } from "@reduxjs/toolkit";
-import { studentAttendanceApi } from "../services/studentAttendenceApi";
 import { standardApi } from "../services/standardApi_old";
 import { divisionApi } from "../services/divisionApi";
 import { studentApi } from "../services/studentApi";
@@ -8,6 +7,7 @@ import { authApi } from "../services/authApi";
 import { hostelApi } from "../services/hostelApi";
 import { schoolApi } from "../services/schoolApi";
 import { staffApi } from "../services/staffApi";
+import { studentAttendanceApi } from "../services/AttendanceApi";
 
 const isDev = process.env.NODE_ENV === "development";
 

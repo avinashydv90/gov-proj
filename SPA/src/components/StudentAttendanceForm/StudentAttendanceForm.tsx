@@ -142,7 +142,9 @@ const StudentAttendanceForm: React.FC = () => {
                     <td className="border px-4 py-2 text-center">
                       {student.id}
                     </td>
-                    <td className="border px-4 py-2">{student.name}</td>
+                    <td className="border px-4 py-2">
+                      {student.firstName} {student.lastName}
+                    </td>
                     <td className="border px-4 py-2 text-center">
                       <input
                         type="checkbox"
