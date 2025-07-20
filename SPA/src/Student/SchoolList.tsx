@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PageLayout from "../shared-components/PageLayout";
 import ButtonList from "../components/ButtonList";
 import {
@@ -35,6 +35,10 @@ const SchoolList: React.FC = () => {
       }
     }
   };
+
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
 
   if (isLoading) {
     return (

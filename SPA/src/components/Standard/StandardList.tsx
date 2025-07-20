@@ -129,7 +129,7 @@
 
 // export default StandardList;
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import {
@@ -151,6 +151,10 @@ const StandardList: React.FC = () => {
     refetch,
   } = useGetAllStandardsQuery();
   const { data: schools = [] } = useGetAllSchoolsQuery();
+
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
 
   const [deleteStandard, { isLoading: isDeleting }] =
     useDeleteStandardMutation();
@@ -265,7 +269,7 @@ const StandardList: React.FC = () => {
                                 {
                                   label: "Update",
                                   onClick: () =>
-                                    navigate(`/edit-standard/${std.id}`),
+                                    navigate(`/admin/edit-standard/${std.id}`),
                                 },
                                 {
                                   label: "Delete",

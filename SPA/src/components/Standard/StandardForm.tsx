@@ -3,13 +3,12 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Standard } from "../types/standard";
 import {
-  useCreateStandardMutation,
+  useAddStandardMutation,
   useGetStandardByIdQuery,
   useUpdateStandardMutation,
-} from "../../services/standardApi";
+} from "../../services/standardApi_old";
 import { useGetAllSchoolsQuery } from "../../services/schoolApi";
 import PageLayout from "../../shared-components/PageLayout";
-import ButtonList from "../ButtonList";
 
 const StandardForm: React.FC = () => {
   const navigate = useNavigate();
@@ -21,7 +20,7 @@ const StandardForm: React.FC = () => {
     schoolId: "",
   });
 
-  const [addStandard, { isLoading: isAdding }] = useCreateStandardMutation();
+  const [addStandard, { isLoading: isAdding }] = useAddStandardMutation();
   const [updateStandard, { isLoading: isUpdating }] =
     useUpdateStandardMutation();
   const { data: schools = [] } = useGetAllSchoolsQuery();
@@ -31,9 +30,14 @@ const StandardForm: React.FC = () => {
     isLoading: isStandardLoading,
     isError: isStandardError,
     isSuccess: isStandardSuccess,
+    // refetch: refetchStandard,
   } = useGetStandardByIdQuery(Number(standardId), { skip: !isEditMode });
 
   useEffect(() => {
+    // if (isEditMode) {
+    //   refetchStandard();
+    // }
+
     if (isEditMode && isStandardSuccess && existingStandard) {
       setFormData({
         std: existingStandard.std || "",
@@ -55,7 +59,7 @@ const StandardForm: React.FC = () => {
       if (isEditMode && standardId) {
         await updateStandard({
           id: Number(standardId),
-          data: formData,
+          ...formData,
         }).unwrap();
         toast.success("इयत्ता यशस्वीरित्या अपडेट झाली.");
       } else {
@@ -63,7 +67,7 @@ const StandardForm: React.FC = () => {
         toast.success("इयत्ता यशस्वीरित्या नोंदवली गेली.");
         setFormData({ std: "", schoolId: "" });
       }
-      navigate("/standard-list");
+      navigate("/admin/standard-list");
     } catch (err) {
       console.error("त्रुटी:", err);
       toast.error("प्रक्रिया अयशस्वी");
@@ -90,15 +94,7 @@ const StandardForm: React.FC = () => {
 
   return (
     <PageLayout>
-      <div className="py-3 px-4 inline-flex items-center gap-x-2 text-xl font-semibold text-[#5E3023]">
-        <ButtonList
-          buttons={[
-            { label: "इयत्ता यादी", onClick: () => navigate("/standard-list") },
-          ]}
-        />
-      </div>
-
-      <div className="h-screen w-full flex items-center justify-center bg-gray-50 px-4 py-6">
+      <div className="w-full flex items-center justify-center bg-gray-50 px-4 py-6">
         <div className="w-full max-w-4xl bg-white rounded-lg shadow-lg p-8 border border-gray-200 overflow-auto h-[60vh]">
           <h2 className="text-2xl font-bold mb-6 text-center text-[#5C4033]">
             {isEditMode ? "इयत्ता संपादित करा" : "इयत्ता नोंदणी फॉर्म"}
