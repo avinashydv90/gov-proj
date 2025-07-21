@@ -4,7 +4,7 @@ interface AuthResponse {
   token: string;
   userName: string;
 }
-const apiUrl = "https://localhost:7031/api/Auth";
+const apiUrl = " https://api.poitdp.shahapur-mh.in/api/Auth";
 
 export const loginAPI = async (
   email: string,

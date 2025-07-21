@@ -5,7 +5,7 @@ import {
   StudentAttendance,
 } from "../components/types/studentAttendence";
 
-const baseUrl = "https://localhost:7031/api/";
+const baseUrl = " https://api.poitdp.shahapur-mh.in/api/";
 
 export const studentAttendanceApi = createApi({
   reducerPath: "studentAttendanceApi",

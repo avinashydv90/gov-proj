@@ -231,8 +231,8 @@ const StudentForm: React.FC = () => {
                 className="mt-1 block w-full rounded-md border text-sm font-semibold border-[#5C4033] p-2"
               >
                 <option value="">लिंग निवडा</option>
-                <option value="male">पुरुष</option>
-                <option value="female">स्त्री</option>
+                <option value="male">मुलगा</option>
+                <option value="female">मुलगी</option>
               </select>
             </div>
 

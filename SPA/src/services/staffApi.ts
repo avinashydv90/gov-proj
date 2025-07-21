@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { Staff } from "../components/types/staff";
 
-const baseUrl = "https://localhost:7031/api/";
+const baseUrl = " https://api.poitdp.shahapur-mh.in/api/";
 
 export const staffApi = createApi({
   reducerPath: "staffApi",

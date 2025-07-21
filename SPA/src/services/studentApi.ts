@@ -1,7 +1,7 @@
 // import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 // import { Student } from "../components/types/student";
 
-// const baseUrl = "https://localhost:7031/api/";
+// const baseUrl = " https://api.poitdp.shahapur-mh.in/api/";
 
 // export const studentApi = createApi({
 //   reducerPath: "studentApi",
@@ -89,7 +89,7 @@ import {
 export const studentApi = createApi({
   reducerPath: "studentApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://localhost:7031/api/",
+    baseUrl: " https://api.poitdp.shahapur-mh.in/api/",
     prepareHeaders: (headers) => {
       const token = localStorage.getItem("token");
       if (token) headers.set("Authorization", `Bearer ${token}`);

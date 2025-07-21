@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { Standard } from "../components/types/standard";
 // import { Standard } from '../components/types/Standard';
 
-const baseUrl = "https://localhost:7031/api/";
+const baseUrl = " https://api.poitdp.shahapur-mh.in/api/";
 
 export const standardApi = createApi({
   reducerPath: "standardApi",

@@ -10,7 +10,7 @@ import {
 export const authApi = createApi({
   reducerPath: "authApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://localhost:7031/api/Auth",
+    baseUrl: " https://api.poitdp.shahapur-mh.in/api/Auth",
     // prepareHeaders: (headers) => {
     //   const token = localStorage.getItem("token");
     //   if (token) headers.set("Authorization", `Bearer ${token}`);

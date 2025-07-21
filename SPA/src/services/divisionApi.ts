@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { Division } from "../components/types/division";
 
-const baseUrl = "https://localhost:7031/api/";
+const baseUrl = " https://api.poitdp.shahapur-mh.in/api/";
 
 export const divisionApi = createApi({
   reducerPath: "divisionApi",

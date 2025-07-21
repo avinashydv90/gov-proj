@@ -1,6 +1,10 @@
 import "./index.css";
 import App from "./App.tsx";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from "react-router-dom";
 import { RouteNames } from "./constants/RouteNames.ts";
 import Home from "./pages/Home.tsx";
 import Introduction from "./components/Introduction.tsx";
@@ -126,37 +130,65 @@ export const router = createBrowserRouter([
       },
       {
         path: "standard-list",
-        element: <StandardList />,
+        element: (
+          <ProtectedRoute allowedRoles={["SuperAdmin"]}>
+            <StandardList />
+          </ProtectedRoute>
+        ),
         handle: { label: RouteNames.StandardList },
       },
       {
         path: "add-standard",
-        element: <StandardForm />,
+        element: (
+          <ProtectedRoute allowedRoles={["SuperAdmin"]}>
+            <StandardForm />
+          </ProtectedRoute>
+        ),
         handle: { label: RouteNames.AddStandard },
       },
       {
         path: "edit-standard/:standardId",
-        element: <StandardForm />,
+        element: (
+          <ProtectedRoute allowedRoles={["SuperAdmin"]}>
+            <StandardForm />
+          </ProtectedRoute>
+        ),
         handle: { label: RouteNames.EditStandard },
       },
       {
         path: "add-student",
-        element: <StudentForm />,
+        element: (
+          <ProtectedRoute allowedRoles={["SuperAdmin"]}>
+            <StudentForm />
+          </ProtectedRoute>
+        ),
         handle: { label: RouteNames.StudentRegistration },
       },
       {
         path: "student-list",
-        element: <StudentList />,
+        element: (
+          <ProtectedRoute allowedRoles={["SuperAdmin"]}>
+            <StudentList />
+          </ProtectedRoute>
+        ),
         handle: { label: RouteNames.StudentRegistration },
       },
       {
         path: "edit-school/:id",
-        element: <StudentForm />,
+        element: (
+          <ProtectedRoute allowedRoles={["SuperAdmin"]}>
+            <StudentForm />
+          </ProtectedRoute>
+        ),
         handle: { label: RouteNames.EditStudent },
       },
       {
         path: "add-attandance",
-        element: <StudentAttendanceForm />,
+        element: (
+          <ProtectedRoute allowedRoles={["SuperAdmin"]}>
+            <StudentAttendanceForm />
+          </ProtectedRoute>
+        ),
         handle: { label: RouteNames.AddStandard },
       },
     ],
@@ -168,6 +200,10 @@ export const router = createBrowserRouter([
   {
     path: "/logout",
     element: <Logout />,
+  },
+  {
+    path: "*",
+    element: <Navigate to="/admin/school-list" replace />,
   },
 ]);
 

@@ -1,4 +1,4 @@
-//https://localhost:7031/api/StudentAttendance
+// https://api.poitdp.shahapur-mh.in/api/StudentAttendance
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import {
   AttendancePostResponse,
@@ -6,7 +6,7 @@ import {
   StudentAttendance,
 } from "../components/types/studentAttendence";
 
-const baseUrl = "https://localhost:7031/api/";
+const baseUrl = " https://api.poitdp.shahapur-mh.in/api/";
 
 export const studentAttendanceApi = createApi({
   reducerPath: "studentAttendanceApi",

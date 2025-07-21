@@ -5,7 +5,7 @@ import {
   SchoolRegistrationResponse,
 } from "../components/types/School";
 
-const baseUrl = "https://localhost:7031/api/";
+const baseUrl = " https://api.poitdp.shahapur-mh.in/api/";
 
 export const schoolApi = createApi({
   reducerPath: "schoolApi",
