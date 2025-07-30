@@ -3,16 +3,14 @@ import logo1 from "../assets/adivasi-vikas-vibhag.png";
 import logo2 from "../assets/shivrajyabhishek.png";
 import logo3 from "../assets/nationalemblem.png";
 import { FaBars, FaTimes } from "react-icons/fa";
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { NavLink  } from "react-router-dom";
 
 const Topbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [hideLogo, setHideLogo] = useState(false);
-  const navigate = useNavigate();
-  const location = useLocation();
 
-    // Check user role
-  const userRole = localStorage.getItem("role");
+
+
 
   const menuItems = [
     { label: "मुख्य पृष्ठ", path: "/" },
@@ -37,11 +35,8 @@ const Topbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleRegisterClick = () => {
-    navigate("/school-registration"); // Navigate to school registration page
-  };
-  const isOnSchoolRegistrationPage =
-    location.pathname === "/school-registration";
+
+
 
   return (
     <div className="fixed top-0 left-0 w-full z-50">
@@ -99,22 +94,7 @@ const Topbar = () => {
 
           {/* Mobile Menu Toggle */}
            {/* School Registration Button (Visible only to superadmin) */}
-          {!isOnSchoolRegistrationPage && (
-            <button
-              onClick={handleRegisterClick}
-              className="absolute right-16 md:right-4 top-1/2 transform -translate-y-1/2 bg-[#5C4033] text-white px-4 py-1 rounded-md text-sm font-semibold hover:bg-[#4a3328] transition-colors shadow-sm border border-[#4a3328]"
-            >
-              शाळा नोंदणी
-            </button>
-          )}
-          {userRole === "superadmin" && !isOnSchoolRegistrationPage && (
-            <button
-              onClick={handleRegisterClick}
-              className="absolute right-16 md:right-4 top-1/2 transform -translate-y-1/2 bg-[#5C4033] text-white px-4 py-1 rounded-md text-sm font-semibold hover:bg-[#4a3328] transition-colors shadow-sm border border-[#4a3328]"
-            >
-              शाळा नोंदणी
-            </button>
-          )}
+
 
           <button
             className="md:hidden ml-auto text-2xl text-gray-800"

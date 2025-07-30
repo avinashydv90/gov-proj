@@ -19,6 +19,7 @@ const TopbarAdminApp = () => {
       path: "/admin/school-list",
       userRole: "SuperAdmin",
     },
+     { label: "शाळेचा प्रकार", path: "/admin/schooltype-list" },
     { label: "इयत्ता आणि विभाग", path: "/admin/standard-list" },
     { label: "विद्यार्थी", path: "/admin/student-list" },
     { label: "हजेरी", path: "/admin/add-attandance" },

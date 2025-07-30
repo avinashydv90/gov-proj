@@ -1,8 +1,9 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import {
+
   School,
-  SchoolRegistrationRequest,
-  SchoolRegistrationResponse,
+  SchoolRegistrationRequest
+
 } from "../components/types/School";
 
 const baseUrl = "https://localhost:7031/api/";
@@ -20,8 +21,7 @@ export const schoolApi = createApi({
   tagTypes: ["School"],
   endpoints: (builder) => ({
     // CREATE
-    registerSchool: builder.mutation<
-      SchoolRegistrationResponse,
+    registerSchool: builder.mutation<School,
       SchoolRegistrationRequest
     >({
       query: (schoolData) => ({
@@ -54,7 +54,7 @@ export const schoolApi = createApi({
         method: "PUT",
         body: data,
       }),
-      invalidatesTags: [{ type: "School", id: "LIST" }],
+      invalidatesTags: ["School"],
     }),
 
     // DELETE
@@ -63,7 +63,7 @@ export const schoolApi = createApi({
         url: `School/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: (_, __, id) => [{ type: "School", id }],
+      invalidatesTags: ["School"],
     }),
   }),
 });
@@ -76,74 +76,3 @@ export const {
   useDeleteSchoolMutation,
 } = schoolApi;
 
-// export const schoolApi = createApi({
-//     reducerPath: "schoolApi",
-//     baseQuery: fetchBaseQuery({ baseUrl }),
-//     endpoints: (builder) => ({
-//         //create a new school registration
-//         registerSchool: builder.mutation<SchoolRegistrationResponse, SchoolRegistrationRequest>({
-//             query: (schoolData) => ({
-//                 url: "schools/register",
-//                 method: "POST",
-//                 body: schoolData,
-//             }),
-//         }),
-//     }),
-// });
-
-//export const { useRegisterSchoolMutation } = schoolApi;
-
-// export const schoolApi = createApi({
-//     reducerPath: 'schoolApi',
-//     baseQuery: fetchBaseQuery({ baseUrl }),
-//     tagTypes: ['School'],
-//     endpoints: (builder) => ({
-//         // GET all schools
-//         getAllSchools: builder.query<School[], void>({
-//             query: () => 'School',
-//             providesTags: ['School'],
-//         }),
-
-//         // GET school by ID
-//         getSchoolById: builder.query<School, string>({
-//             query: (id) => `School/${id}`,
-//             providesTags: ['School'],
-//         }),
-
-//         // POST - Add new school
-//         addSchool: builder.mutation<School, Omit<School, 'id'>>({
-//             query: (school) => ({
-//                 url: 'School',
-//                 method: 'POST',
-//                 body: school,
-//             }),
-//             invalidatesTags: ['School'],
-//         }),
-
-//         // PUT - Update school
-//         updateSchool: builder.mutation<School, School>({
-//             query: (school) => ({
-//                 url: `School/${school.id}`,
-//                 method: 'PUT',
-//                 body: school,
-//             }),
-//             invalidatesTags: ['School'],
-//         }),
-
-//         // DELETE - Remove school
-//         deleteSchool: builder.mutation<void, string>({
-//             query: (id) => ({
-//                 url: `School/${id}`,
-//                 method: 'DELETE',
-//             }),
-//             invalidatesTags: ['School'],
-//         }),
-//     }),
-// });
-// export const {
-//     useGetAllSchoolsQuery,
-//     useGetSchoolByIdQuery,
-//     useAddSchoolMutation,
-//     useUpdateSchoolMutation,
-//     useDeleteSchoolMutation,
-// } = schoolApi;

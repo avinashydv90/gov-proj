@@ -132,14 +132,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import {
-  useDeleteStandardMutation,
-  useGetAllStandardsQuery,
-} from "../../services/standardApi_old";
+
 import { useGetAllSchoolsQuery } from "../../services/schoolApi";
 import PageLayout from "../../shared-components/PageLayout";
 import ButtonList from "../ButtonList";
 import StandardDivisionPanel from "./StandardDivisionPanel";
+import { useDeleteStandardMutation, useGetAllStandardsQuery } from "../../services/standardApi";
 
 const StandardList: React.FC = () => {
   const navigate = useNavigate();
@@ -210,7 +208,7 @@ const StandardList: React.FC = () => {
   return (
     <PageLayout>
       <div className="flex flex-col min-h-screen bg-gray-50 py-10 px-4">
-        <h2 className="text-xl font-bold mb-4 text-center text-[#5C4033]">
+        <h2 className="text-2xl font-bold mb-4 text-center text-[#5C4033]">
           इयत्ता यादी
         </h2>
         <div className="flex justify-end mb-4">
@@ -228,6 +226,7 @@ const StandardList: React.FC = () => {
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-100">
                 <tr>
+                  
                   <th className="px-6 py-3 text-left text-md font-semibold text-gray-600 uppercase">
                     Standard
                   </th>

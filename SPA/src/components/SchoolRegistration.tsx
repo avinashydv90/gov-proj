@@ -6,29 +6,45 @@ import {
 } from "../services/schoolApi";
 import PageLayout from "../shared-components/PageLayout";
 import { SchoolRegistrationRequest } from "./types/School";
-// import ButtonList from "./ButtonList";
 import { useNavigate, useParams } from "react-router-dom";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
+import { SchoolType } from "./types/schoolType";
+import { useGetAllSchoolTypesQuery } from "../services/newSchoolTypeApi";
+import "react-toastify/dist/ReactToastify.css";
+import InputField from "./InputField";
 
 const SchoolRegistrationForm: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>(); // for edit
   const isEditMode = !!id;
 
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
   const [formData, setFormData] = useState<SchoolRegistrationRequest>({
+    schoolCode: "",
+    clusterCode: "",
     name: "",
-    establishDate: "",
     address: "",
-    type: "अनुदानित",
+    city: "",
+    district: "",
+    pinCode: "",
+    state: "",
+    email: "",
+    phoneNumber: "",
+    lowerStandard: 1,
+    higherStandard: 12,
+    establishMentDate: "",
+    schoolTypeId: 0,
   });
 
   const [registerSchool, { isLoading: isRegistering }] =
     useRegisterSchoolMutation();
+  const { data: schoolTypes, isLoading: isSchoolTypesLoading } =
+    useGetAllSchoolTypesQuery();
   const [updateSchool, { isLoading: isUpdating }] = useUpdateSchoolMutation();
 
   const {
     data: existingSchool,
-    isSuccess: isSchoolLoaded,
     isLoading: isSchoolLoading,
     isError: isSchoolError,
   } = useGetSchoolByIdQuery(id!, {
@@ -36,16 +52,29 @@ const SchoolRegistrationForm: React.FC = () => {
   });
 
   useEffect(() => {
-    if (isEditMode && isSchoolLoaded && existingSchool) {
+    console.log("Fetched School Data:", existingSchool);
+    console.log("Setting formData...");
+    if (isEditMode && existingSchool) {
       setFormData({
         id: existingSchool.id, // include id for update
+        schoolCode: existingSchool.schoolCode,
+        clusterCode: existingSchool.clusterCode,
         name: existingSchool.name,
-        establishDate: existingSchool.establishDate.split("T")[0], // format ISO date to yyyy-mm-dd
         address: existingSchool.address,
-        type: existingSchool.type,
+        city: existingSchool.city,
+        district: existingSchool.district,
+        pinCode: existingSchool.pinCode,
+        state: existingSchool.state,
+        email: existingSchool.email,
+        phoneNumber: existingSchool.phoneNumber,
+        lowerStandard: existingSchool.lowerStandard,
+        higherStandard: existingSchool.higherStandard,
+        establishMentDate: existingSchool.establishMentDate.split("T")[0], // format ISO date to yyyy-mm-dd
+        schoolTypeId: existingSchool.schoolTypeId,
       });
     }
-  }, [isEditMode, isSchoolLoaded, existingSchool]);
+  }, [isEditMode, existingSchool]);
+
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
@@ -57,15 +86,130 @@ const SchoolRegistrationForm: React.FC = () => {
       [name]:
         type === "checkbox" ? (e.target as HTMLInputElement).checked : value,
     }));
+    setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
+  };
+
+  const validateForm = (): boolean => {
+    const newErrors: { [key: string]: string } = {};
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const schoolCodeRegex = /^2\d{10}$/;
+    const clusterCodeRegex = /^2\d{9}$/;
+    const pinCodeRegex = /^[1-9][0-9]{5}$/;
+    const phoneNumberRegex = /^\d{10,11}$/;
+    const onlyLettersRegex = /^[A-Za-z\u0900-\u097F\s]+$/;
+
+    if (formData.name.length > 100) {
+      newErrors.name = "शाळेचे नाव 100 अक्षरांपेक्षा कमी असावे.";
+
+      return false;
+    } else if (!onlyLettersRegex.test(formData.name.trim())) {
+      newErrors.name =
+        "शाळेचे नाव फक्त अक्षरांत असावे. संख्या किंवा विशेष चिन्हे वापरू नका.";
+      toast.error(newErrors.name);
+      return false;
+    }
+
+    if (!schoolCodeRegex.test(formData.schoolCode.trim())) {
+      newErrors.schoolCode = "वैध शाळेचा कोड प्रविष्ट करा ";
+      toast.error(newErrors.schoolCode);
+
+      return false;
+    }
+    if (!clusterCodeRegex.test(formData.clusterCode.trim())) {
+      newErrors.clusterCode = "वैध क्लस्टर कोड प्रविष्ट करा ";
+      toast.error(newErrors.clusterCode);
+      return false;
+    }
+
+    if (!formData.address.trim()) {
+      newErrors.address = "कृपया पत्ता भरा.";
+      toast.error(newErrors.address);
+      return false;
+    }
+    if (!formData.city.trim()) {
+      newErrors.city = "कृपया शहर भरा.";
+
+      return false;
+    } else if (!onlyLettersRegex.test(formData.city.trim())) {
+      newErrors.city =
+        "शहर फक्त अक्षरांत असावे. संख्या किंवा विशेष चिन्हे वापरू नका.";
+      toast.error(newErrors.city);
+    }
+    if (!formData.district.trim()) {
+      newErrors.district = "कृपया जिल्हा भरा.";
+
+      return false;
+    } else if (!onlyLettersRegex.test(formData.district.trim())) {
+      newErrors.district =
+        "जिल्हा फक्त अक्षरांत असावा. संख्या किंवा विशेष चिन्हे वापरू नका.";
+      toast.error(newErrors.district);
+      return false;
+    }
+    if (!pinCodeRegex.test(formData.pinCode.trim())) {
+      newErrors.pinCode = "कृपया पिनकोड भरा.";
+      toast.error(newErrors.pinCode);
+      return false;
+    }
+    if (!formData.state.trim()) {
+      newErrors.state = "कृपया राज्य भरा.";
+
+      return false;
+    } else if (!onlyLettersRegex.test(formData.state.trim())) {
+      newErrors.state =
+        "राज्य फक्त अक्षरांत असावे. संख्या किंवा विशेष चिन्हे वापरू नका.";
+      toast.error(newErrors.state);
+      return false;
+    }
+    if (formData.email && !emailRegex.test(formData.email.trim())) {
+      newErrors.email = "कृपया वैध ईमेल पत्ता भरा.";
+      toast.error(newErrors.email);
+      return false;
+    }
+    if (
+      formData.phoneNumber &&
+      !phoneNumberRegex.test(formData.phoneNumber.trim())
+    ) {
+      newErrors.phoneNumber = "कृपया वैध फोन क्रमांक भरा.";
+      toast.error(newErrors.phoneNumber);
+      return false;
+    }
+    if (formData.higherStandard < formData.lowerStandard) {
+      newErrors.higherStandard =
+        "वरची इयत्ता खालच्या इयत्तेपेक्षा मोठी किंवा समान असावी.";
+
+      return false;
+    } else if (formData.higherStandard > 12) {
+      newErrors.higherStandard = "वरची इयत्ता १२ पेक्षा जास्त नसावी.";
+      toast.error(newErrors.higherStandard);
+      return false;
+    }
+    if (!formData.schoolTypeId || formData.schoolTypeId === 0) {
+      newErrors.schoolTypeId = "कृपया शाळेचा प्रकार निवडा.";
+      toast.error(newErrors.schoolTypeId);
+      return false;
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      const firstErrorField = Object.keys(newErrors)[0];
+      const el = document.getElementById(firstErrorField);
+      el?.scrollIntoView({ behavior: "smooth", block: "center" });
+
+      // Show all error messages
+      Object.values(newErrors).forEach((msg) => toast.error(msg));
+      return false;
+    }
+
+    return true;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!validateForm()) return;
     try {
       const action =
         isEditMode && id
-          ? updateSchool({ id, data: formData }).unwrap()
-          : registerSchool(formData).unwrap();
+          ? updateSchool({ id, data: formData })
+          : registerSchool(formData);
       await action;
 
       const message = isEditMode
@@ -74,14 +218,24 @@ const SchoolRegistrationForm: React.FC = () => {
       toast.success(message);
       // Refresh the school list after registration or update
 
-      navigate("/admin/school-list");
+      navigate("/admin/school-list", { state: { updated: true } });
 
       if (!isEditMode) {
         setFormData({
+          schoolCode: "",
+          clusterCode: "",
           name: "",
-          establishDate: "",
           address: "",
-          type: "अनुदानित",
+          city: "",
+          district: "",
+          pinCode: "",
+          state: "",
+          email: "",
+          phoneNumber: "",
+          lowerStandard: 1,
+          higherStandard: 10,
+          establishMentDate: "",
+          schoolTypeId: 0,
         });
       }
     } catch (err) {
@@ -90,7 +244,7 @@ const SchoolRegistrationForm: React.FC = () => {
     }
   };
 
-  if (isEditMode && isSchoolLoading) {
+  if (isEditMode && (isSchoolLoading || !existingSchool)) {
     return (
       <PageLayout>
         <div className="text-center py-8">लोड करत आहे...</div>
@@ -110,97 +264,215 @@ const SchoolRegistrationForm: React.FC = () => {
   return (
     <PageLayout>
       <div className="w-full flex items-center justify-center bg-gray-50 px-4 py-6">
-        <div className="w-full max-w-6xl bg-white rounded-lg shadow-lg p-8 border border-gray-200 overflow-auto">
-          <h2 className="text-2xl font-bold mb-6 text-center text-[#5C4033]">
+        <div className="w-full max-w-6xl bg-white rounded-lg shadow-lg p-8 border border-gray-200 overflow-auto ">
+          <h2 className="text-2xl font-bold mb-8 text-center text-[#5C4033]">
             {isEditMode ? "शाळा माहिती संपादित करा" : "शाळा नोंदणी फॉर्म"}
           </h2>
-
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label
-                htmlFor="name"
-                className="block text-sm font-bold text-[#5C4033]"
-              >
-                शाळेचे नाव *
-              </label>
-              <input
-                type="text"
-                id="name"
+            <div className="grid grid-cols-3 gap-4">
+              <InputField
+                label="शाळेचा कोड"
+                name="schoolCode"
+                value={formData.schoolCode}
+                onChange={handleChange}
+                maxLength={11}
+                required
+                error={errors.schoolCode}
+              />
+              <InputField
+                label="क्लस्टर कोड"
+                name="clusterCode"
+                value={formData.clusterCode}
+                onChange={handleChange}
+                maxLength={10}
+                required
+                error={errors.clusterCode}
+              />
+              <InputField
+                label="शाळेचे नाव"
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
+                maxLength={250}
                 required
-                className="mt-1 block w-full rounded-md border text-sm font-semibold border-[#5C4033] shadow-sm focus:border-[#4a3328] focus:ring-[#4a3328] p-2 bg-white/90"
+                error={errors.name}
               />
             </div>
 
-            <div>
-              <label
-                htmlFor="establishDate"
-                className="block text-sm font-bold text-[#5C4033]"
-              >
-                स्थापना दिनांक *
-              </label>
-              <input
-                type="date"
-                id="establishDate"
-                name="establishDate"
-                value={formData.establishDate}
+            <div className="grid grid-cols-3 gap-4">
+              {/* Keep textarea as-is */}
+              <div>
+                <label
+                  htmlFor="address"
+                  className="block text-md font-bold text-[#5C4033]"
+                >
+                  पत्ता * :
+                </label>
+                <textarea
+                  id="address"
+                  name="address"
+                  value={formData.address}
+                  onChange={handleChange}
+                  required
+                  rows={2}
+                  maxLength={500}
+                  className={`mt-1 block w-full rounded-md border text-sm font-semibold shadow-sm p-2 bg-white/90
+          ${
+            errors.address
+              ? "border-red-500 focus:border-red-600 focus:ring-red-600"
+              : "border-[#5C4033] focus:border-[#4a3328] focus:ring-[#4a3328]"
+          }`}
+                />
+                {errors.address && (
+                  <p className="text-sm text-red-600 mt-1">{errors.address}</p>
+                )}
+              </div>
+
+              <InputField
+                label="शहर "
+                name="city"
+                value={formData.city}
                 onChange={handleChange}
-                max={new Date().toISOString().split("T")[0]} // today’s date in YYYY-MM-DD
+                maxLength={50}
                 required
-                className="mt-1 block w-full rounded-md border text-sm font-semibold border-[#5C4033] shadow-sm focus:border-[#4a3328] focus:ring-[#4a3328] p-2 bg-white/90"
+                error={errors.city}
+              />
+              <InputField
+                label="जिल्हा "
+                name="district"
+                value={formData.district}
+                onChange={handleChange}
+                maxLength={50}
+                required
+                error={errors.district}
               />
             </div>
 
-            <div>
-              <label
-                htmlFor="address"
-                className="block text-sm font-bold text-[#5C4033]"
-              >
-                पत्ता *
-              </label>
-              <textarea
-                id="address"
-                name="address"
-                value={formData.address}
+            <div className="grid grid-cols-3 gap-4">
+              <InputField
+                label="पिनकोड "
+                name="pinCode"
+                value={formData.pinCode}
                 onChange={handleChange}
+                maxLength={6}
                 required
-                rows={3}
-                className="mt-1 block w-full rounded-md border text-sm font-semibold border-[#5C4033] shadow-sm focus:border-[#4a3328] focus:ring-[#4a3328] p-2 bg-white/90"
+                error={errors.pinCode}
+              />
+              <InputField
+                label="राज्य "
+                name="state"
+                value={formData.state}
+                onChange={handleChange}
+                maxLength={50}
+                required
+                error={errors.state}
+              />
+              <InputField
+                label="शाळेचा ई-मेल "
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                maxLength={100}
+                error={errors.email}
               />
             </div>
 
-            <div>
-              <label
-                htmlFor="type"
-                className="block text-sm font-bold text-[#5C4033]"
-              >
-                शाळेचा प्रकार *
-              </label>
-              <select
-                id="type"
-                name="type"
-                value={formData.type}
+            <div className="grid grid-cols-5 gap-4">
+              <InputField
+                label="फोन क्रमांक "
+                name="phoneNumber"
+                value={formData.phoneNumber}
                 onChange={handleChange}
+                maxLength={11}
+                error={errors.phoneNumber}
+              />
+
+              {/* Keep date input as-is */}
+              <div>
+                <label
+                  htmlFor="establishMentDate"
+                  className="block text-md font-bold text-[#5C4033]"
+                >
+                  स्थापना दिनांक :
+                </label>
+                <input
+                  type="date"
+                  id="establishMentDate"
+                  name="establishMentDate"
+                  value={formData.establishMentDate}
+                  onChange={handleChange}
+                  max={new Date().toISOString().split("T")[0]}
+                  required
+                  className={`mt-1 block w-full rounded-md border text-sm font-semibold shadow-sm p-2 bg-white/90
+        ${
+          errors.establishMentDate
+            ? "border-red-500 focus:border-red-600 focus:ring-red-600"
+            : "border-[#5C4033] focus:border-[#4a3328] focus:ring-[#4a3328]"
+        }`}
+                />
+                {errors.establishMentDate && (
+                  <p className="text-sm text-red-600 mt-1">
+                    {errors.establishMentDate}
+                  </p>
+                )}
+              </div>
+
+              <InputField
+                label="सर्वात खालची इयत्ता "
+                name="lowerStandard"
+                value={formData.lowerStandard}
+                onChange={handleChange}
+                maxLength={2}
                 required
-                className="mt-1 block w-full rounded-md text-sm font-semibold border border-[#5C4033] shadow-sm focus:border-[#4a3328] focus:ring-[#4a3328] p-2 bg-white/90"
-              >
-                <option className="text-sm font-semibold" value="अनुदानित">
-                  अनुदानित
-                </option>
-                <option className="text-sm font-semibold" value="बिनअनुदानित">
-                  बिनअनुदानित
-                </option>
-              </select>
+                error={errors.lowerStandard}
+              />
+              <InputField
+                label="सर्वात वरची इयत्ता "
+                name="higherStandard"
+                value={formData.higherStandard}
+                onChange={handleChange}
+                maxLength={2}
+                required
+                error={errors.higherStandard}
+              />
+
+              {/* Keep select dropdown as-is */}
+              <div>
+                <label
+                  htmlFor="schoolTypeId"
+                  className="block text-md font-bold text-[#5C4033]"
+                >
+                  शाळेचा प्रकार * :
+                </label>
+                <select
+                  id="schoolTypeId"
+                  name="schoolTypeId"
+                  value={formData.schoolTypeId}
+                  onChange={handleChange}
+                  required
+                  className="mt-1 block rounded-md text-sm font-semibold border border-[#5C4033] shadow-sm focus:border-[#4a3328] focus:ring-[#4a3328] p-2 bg-white/90"
+                >
+                  <option value={0}>-- शाळेचा प्रकार निवडा --</option>
+                  {isSchoolTypesLoading ? (
+                    <option disabled>लोड करत आहे...</option>
+                  ) : (
+                    schoolTypes?.map((type: SchoolType) => (
+                      <option key={type.id} value={type.id}>
+                        {type.type}
+                      </option>
+                    ))
+                  )}
+                </select>
+              </div>
             </div>
 
-            <div className="pt-4">
+            <div className="pt-4 flex justify-center">
               <button
                 type="submit"
                 disabled={isRegistering || isUpdating}
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-lg
-                  font-semibold text-white bg-[#5C4033] hover:bg-[#4a3328] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#4a3328] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="px-4 py-2 text-lg font-semibold text-white bg-[#5C4033] hover:bg-[#4a3328] 
+      rounded-md shadow-sm disabled:opacity-50 disabled:cursor-not-allowed 
+      transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#4a3328]"
               >
                 {isRegistering || isUpdating
                   ? "प्रक्रिया सुरू आहे..."
@@ -210,6 +482,8 @@ const SchoolRegistrationForm: React.FC = () => {
               </button>
             </div>
           </form>
+
+          <ToastContainer position="top-right" autoClose={3000} />
         </div>
       </div>
     </PageLayout>
@@ -217,26 +491,3 @@ const SchoolRegistrationForm: React.FC = () => {
 };
 
 export default SchoolRegistrationForm;
-
-//   const handleSubmit = async (e: React.FormEvent) => {
-//     e.preventDefault();
-//     try {
-//       if (isEditMode && id) {
-//         await updateSchool({ id, data: formData }).unwrap();
-//         toast.success("शाळेची माहिती यशस्वीरित्या अपडेट केली.");
-//       } else {
-//         await registerSchool(formData).unwrap();
-//         toast.success("शाळा यशस्वीरित्या नोंदवली.");
-//         setFormData({
-//           schoolName: "",
-//           establishDate: "",
-//           address: "",
-//           schoolType: "Aided",
-//         });
-//       }
-//       navigate("/school-list");
-//     } catch (err) {
-//       console.error("नोंदणी अयशस्वी:", err);
-//       toast.error("नोंदणी अयशस्वी");
-//     }
-//   };

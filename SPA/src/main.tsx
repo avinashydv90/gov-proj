@@ -28,6 +28,8 @@ import StandardForm from "./components/Standard/StandardForm.tsx";
 import StudentForm from "./components/StudentForm.tsx";
 import StudentList from "./Student/StudentList.tsx";
 import StudentAttendanceForm from "./components/StudentAttendanceForm/StudentAttendanceForm.tsx";
+import SchoolTypeForm from "./components/SchoolTypeForm.tsx";
+import { SchoolTypeList } from "./components/SchoolTypeList.tsx";
 
 export const router = createBrowserRouter([
   {
@@ -159,6 +161,21 @@ export const router = createBrowserRouter([
         element: <StudentAttendanceForm />,
         handle: { label: RouteNames.AddStandard },
       },
+      {
+        path: "add-schooltype",
+        element: <SchoolTypeForm />,
+        handle: { label: RouteNames.AddSchoolType },
+      },
+       {
+        path: "edit-schooltype/:id",
+        element: <SchoolTypeForm />,
+        handle: { label: RouteNames.EditSchoolType },
+      },
+       {
+        path: "schooltype-list",
+        element: <SchoolTypeList />,
+        handle: { label: RouteNames.SchoolTypeList },
+      }
     ],
   },
   {

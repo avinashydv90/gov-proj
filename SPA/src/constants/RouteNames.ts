@@ -27,4 +27,7 @@ export enum RouteNames {
   AddStandard = "Add Standard",
   EditStandard = "Edit Standard",
   StudentDetails = "Student Details",
+  SchoolTypeList = "SchoolType List",
+  AddSchoolType = "Add SchoolType",
+  EditSchoolType = "Edit SchoolType",
 }

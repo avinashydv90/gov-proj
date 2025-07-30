@@ -1,23 +1,47 @@
+
+
 export interface School {
   id: string;
+  schoolCode: string;
+  clusterCode: string;
   name: string;
-  establishDate: string;
-  type: "अनुदानित" | "बिनअनुदानित"; // exact match from backend
   address: string;
+  city: string;
+  district: string;
+  pinCode: string;
+  state: string;
+  email: string;
+  phoneNumber: string;
+  lowerStandard: number;
+  higherStandard: number;
+  establishMentDate: string;
+  schoolTypeId: number;
+  schoolType?: { id: number; type: string };
+  createdBy: string;
+  createdDate: string;
+  updatedBy: string;
+  updatedDate: string;// exact match from backend
+
 }
 
 export interface SchoolRegistrationRequest {
-  id?: string; // Optional for new registrations, required for updates
+  id?: string;
+  schoolCode: string;
+  clusterCode: string;
   name: string;
-  establishDate: string;
-  type: "अनुदानित" | "बिनअनुदानित";
   address: string;
+  city: string;
+  district: string;
+  pinCode: string;
+  state: string;
+  email: string;
+  phoneNumber: string;
+  lowerStandard: number;
+  higherStandard: number;
+  establishMentDate: string;
+  schoolTypeId: number;
+
+  //type: "अनुदानित" | "बिनअनुदानित";
 }
 
-export interface SchoolRegistrationResponse {
-  id: string;
-  name: string;
-  type: string;
-  address: string;
-  establishDate: string;
-}
+

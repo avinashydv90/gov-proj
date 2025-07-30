@@ -1,13 +1,14 @@
-// src/store/store.ts
 import { configureStore } from "@reduxjs/toolkit";
 import { studentAttendanceApi } from "../services/studentAttendenceApi";
-import { standardApi } from "../services/standardApi_old";
+import { standardApi } from "../services/standardApi";
 import { divisionApi } from "../services/divisionApi";
 import { studentApi } from "../services/studentApi";
 import { authApi } from "../services/authApi";
 import { hostelApi } from "../services/hostelApi";
 import { schoolApi } from "../services/schoolApi";
 import { staffApi } from "../services/staffApi";
+import { newSchoolTypeApi } from "../services/newSchoolTypeApi";
+
 
 const isDev = process.env.NODE_ENV === "development";
 
@@ -21,6 +22,8 @@ export const store = configureStore({
     [hostelApi.reducerPath]: hostelApi.reducer,
     [schoolApi.reducerPath]: schoolApi.reducer,
     [staffApi.reducerPath]: staffApi.reducer,
+    [newSchoolTypeApi.reducerPath]: newSchoolTypeApi.reducer,
+
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -31,6 +34,7 @@ export const store = configureStore({
       authApi.middleware,
       hostelApi.middleware,
       schoolApi.middleware,
+      newSchoolTypeApi.middleware,
       staffApi.middleware
     ),
 

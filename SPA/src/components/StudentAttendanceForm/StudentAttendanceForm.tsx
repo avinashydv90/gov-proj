@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import PageLayout from "../../shared-components/PageLayout";
-import { useGetAllStandardsQuery } from "../../services/standardApi_old";
+// import { useGetAllStandardsQuery } from "../../services/standardApi_old";
 import { useGetDivisionsByStandardIdQuery } from "../../services/divisionApi";
 
 import { toast } from "react-toastify";
 import { useGetStudentByDivisionIdQuery } from "../../services/studentApi";
 import { useAddAttendanceMutation } from "../../services/studentAttendenceApi";
+import { useGetAllStandardsQuery } from "../../services/standardApi";
 
 const StudentAttendanceForm: React.FC = () => {
   const [selectedStandard, setSelectedStandard] = useState<number>(0);
@@ -62,12 +63,12 @@ const StudentAttendanceForm: React.FC = () => {
 
   return (
     <PageLayout>
-      <div className="p-6 max-w-4xl mx-auto">
+      <div className="p-9 max-w-4xl mx-auto">
         <h2 className="text-2xl font-bold text-[#5C4033] mb-4 text-center">
           विद्यार्थ्यांची उपस्थिती नोंदणी फॉर्म
         </h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6 p-3">
           <div>
             <label className="block font-semibold text-[#5C4033]">
               इयत्ता *

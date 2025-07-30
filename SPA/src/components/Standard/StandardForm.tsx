@@ -22,8 +22,7 @@ const StandardForm: React.FC = () => {
   });
 
   const [addStandard, { isLoading: isAdding }] = useCreateStandardMutation();
-  const [updateStandard, { isLoading: isUpdating }] =
-    useUpdateStandardMutation();
+  const [updateStandard, { isLoading: isUpdating }] =  useUpdateStandardMutation();
   const { data: schools = [] } = useGetAllSchoolsQuery();
 
   const {
@@ -50,6 +49,7 @@ const StandardForm: React.FC = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
+
     e.preventDefault();
     try {
       if (isEditMode && standardId) {
@@ -63,7 +63,7 @@ const StandardForm: React.FC = () => {
         toast.success("इयत्ता यशस्वीरित्या नोंदवली गेली.");
         setFormData({ std: "", schoolId: "" });
       }
-      navigate("/standard-list");
+      navigate("/admin/standard-list");
     } catch (err) {
       console.error("त्रुटी:", err);
       toast.error("प्रक्रिया अयशस्वी");
@@ -98,7 +98,7 @@ const StandardForm: React.FC = () => {
         />
       </div>
 
-      <div className="h-screen w-full flex items-center justify-center bg-gray-50 px-4 py-6">
+      <div className=" w-full flex items-center justify-center bg-gray-50 px-4 py-6">
         <div className="w-full max-w-4xl bg-white rounded-lg shadow-lg p-8 border border-gray-200 overflow-auto h-[60vh]">
           <h2 className="text-2xl font-bold mb-6 text-center text-[#5C4033]">
             {isEditMode ? "इयत्ता संपादित करा" : "इयत्ता नोंदणी फॉर्म"}
