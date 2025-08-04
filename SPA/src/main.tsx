@@ -30,6 +30,16 @@ import StudentList from "./Student/StudentList.tsx";
 import StudentAttendanceForm from "./components/StudentAttendanceForm/StudentAttendanceForm.tsx";
 import SchoolTypeForm from "./components/SchoolTypeForm.tsx";
 import { SchoolTypeList } from "./components/SchoolTypeList.tsx";
+import { EmployeeTypeList } from "./components/Staff/EmployeeTypeList.tsx";
+import EmployeeTypeForm from "./components/Staff/EmployeeTypeForm.tsx";
+import StaffList from "./components/Staff/StaffList.tsx";
+
+import StaffTypeForm from "./components/Staff/StaffTypeForm.tsx";
+
+import CasteTypeForm from "./components/Staff/CasteTypeForm.tsx";
+import StaffForm from "./components/Staff/StaffForm.tsx";
+import { CasteTypeList } from "./components/Staff/CasteTypeList.tsx";
+import { StaffTypeList } from "./components/Staff/StaffTypeList.tsx";
 
 export const router = createBrowserRouter([
   {
@@ -175,6 +185,61 @@ export const router = createBrowserRouter([
         path: "schooltype-list",
         element: <SchoolTypeList />,
         handle: { label: RouteNames.SchoolTypeList },
+      },
+       {
+        path: "employeetype-list",
+        element: <EmployeeTypeList />,
+        handle: { label: RouteNames.EmployeeTypeList },
+      }, {
+        path: "add-employeetype",
+        element: <EmployeeTypeForm />,
+        handle: { label: RouteNames.AddEmployeeType },
+      },{
+        path: "edit-employeetype/:id",
+        element: <EmployeeTypeForm />,
+        handle: { label: RouteNames.EditEmployeeType },
+      },
+       {
+        path: "stafftype-list",
+        element: <StaffTypeList />,
+        handle: { label: RouteNames.StaffTypeList },
+      },
+      {
+        path: "add-stafftype",
+        element: <StaffTypeForm />,
+        handle: { label: RouteNames.AddStaffType },
+      },
+       {
+        path: "edit-stafftype/:id",
+        element: <StaffTypeForm />,
+        handle: { label: RouteNames.EditStaffType },
+      }, {
+        path: "staff-list",
+        element: <StaffList />,
+        handle: { label: RouteNames.StaffList },
+      },
+      {
+        path: "add-staff",
+        element: <StaffForm />,
+        handle: { label: RouteNames.AddStaff },
+      },
+       {
+        path: "edit-staff/:id",
+        element: <StaffTypeForm />,
+        handle: { label: RouteNames.EditStaff },
+      }, {
+        path: "castetype-list",
+        element: <CasteTypeList />,
+        handle: { label: RouteNames.CasteTypeList },
+      },{
+        path: "add-castetype",
+        element: <CasteTypeForm />,
+        handle: { label: RouteNames.AddCasteType },
+      },
+       {
+        path: "edit-castetype/:id",
+        element: <CasteTypeForm />,
+        handle: { label: RouteNames.EditCasteType },
       }
     ],
   },

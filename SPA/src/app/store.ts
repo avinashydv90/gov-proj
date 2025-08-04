@@ -6,8 +6,11 @@ import { studentApi } from "../services/studentApi";
 import { authApi } from "../services/authApi";
 import { hostelApi } from "../services/hostelApi";
 import { schoolApi } from "../services/schoolApi";
-import { staffApi } from "../services/staffApi";
+import { staffApi } from "../services/StaffService/staffApi";
 import { newSchoolTypeApi } from "../services/newSchoolTypeApi";
+import { casteTypeApi } from "../services/StaffService/casteTypeApi";
+import { staffTypeApi } from "../services/StaffService/staffTypeApi";
+import { employeeTypeApi } from "../services/StaffService/employeeTypeApi";
 
 
 const isDev = process.env.NODE_ENV === "development";
@@ -23,6 +26,10 @@ export const store = configureStore({
     [schoolApi.reducerPath]: schoolApi.reducer,
     [staffApi.reducerPath]: staffApi.reducer,
     [newSchoolTypeApi.reducerPath]: newSchoolTypeApi.reducer,
+    [casteTypeApi.reducerPath]: casteTypeApi.reducer,
+    [staffTypeApi.reducerPath]: staffTypeApi.reducer,
+    [employeeTypeApi.reducerPath]: employeeTypeApi.reducer,
+
 
   },
   middleware: (getDefaultMiddleware) =>
@@ -35,7 +42,10 @@ export const store = configureStore({
       hostelApi.middleware,
       schoolApi.middleware,
       newSchoolTypeApi.middleware,
-      staffApi.middleware
+      staffApi.middleware,
+      casteTypeApi.middleware,
+      staffTypeApi.middleware,
+      employeeTypeApi.middleware
     ),
 
   devTools: isDev,

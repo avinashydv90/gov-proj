@@ -1,6 +1,6 @@
 // src/services/schoolTypeApi.ts
 import { createApi } from '@reduxjs/toolkit/query/react';
-import dynamicBaseQuery from './customBaseQuery';
+import dynamicBaseQuery from './StaffService/customBaseQuery';
 import { SchoolType, SchoolTypeRequest, SchoolTypeResponse } from '../components/types/schoolType';
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://localhost:7031/api";
