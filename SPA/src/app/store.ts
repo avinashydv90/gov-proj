@@ -11,6 +11,7 @@ import { newSchoolTypeApi } from "../services/newSchoolTypeApi";
 import { casteTypeApi } from "../services/StaffService/casteTypeApi";
 import { staffTypeApi } from "../services/StaffService/staffTypeApi";
 import { employeeTypeApi } from "../services/StaffService/employeeTypeApi";
+import { religionTypeApi } from "../services/StaffService/religionTypeApi";
 
 
 const isDev = process.env.NODE_ENV === "development";
@@ -29,6 +30,7 @@ export const store = configureStore({
     [casteTypeApi.reducerPath]: casteTypeApi.reducer,
     [staffTypeApi.reducerPath]: staffTypeApi.reducer,
     [employeeTypeApi.reducerPath]: employeeTypeApi.reducer,
+    [religionTypeApi.reducerPath]: religionTypeApi.reducer,
 
 
   },
@@ -45,7 +47,8 @@ export const store = configureStore({
       staffApi.middleware,
       casteTypeApi.middleware,
       staffTypeApi.middleware,
-      employeeTypeApi.middleware
+      employeeTypeApi.middleware,
+      religionTypeApi.middleware
     ),
 
   devTools: isDev,

@@ -121,25 +121,26 @@ const LoginForm: React.FC = () => {
           {/* Right Side: Login Form */}
           <div className="md:w-2/3 lg:w-1/2 bg-white  rounded-xl p-6">
             <form onSubmit={handleSubmit} className="w-full max-w-md mx-auto">
-              <h2 className="text-2xl font-semibold mb-4 text-center">लॉगिन</h2>
+              <h2 className="text-xl font-semibold mb-4 text-center text-[#5C4033]">स्वागत आहे</h2>
 
               {/* Username */}
               <div className="mb-4">
                 <label
-                  htmlFor="userName"
-                  className="block text-sm font-semibold text-gray-700 mb-1"
+                  htmlFor="email"
+                  className="block text-sm font-semibold  text-[#5C4033] mb-1"
                 >
-                  वापरकर्तानाव
+                  ई-मेल :
                 </label>
                 <input
                   type="text"
-                  id="userName"
-                  name="userName"
+                  id="email"
+                  name="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   autoFocus
                   className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#5E3023]"
-                  placeholder="Enter Username"
+                  placeholder="Enter Email"
+                  autoComplete="email"
                 />
               </div>
 
@@ -199,9 +200,9 @@ const LoginForm: React.FC = () => {
               <div className="mb-4">
                 <label
                   htmlFor="password"
-                  className="block text-sm font-semibold text-gray-700 mb-1"
+                  className="block text-sm font-semibold text-[#5C4033] mb-1"
                 >
-                  संकेतशब्द
+                  संकेतशब्द :
                 </label>
                 <input
                   type="password"
@@ -211,6 +212,7 @@ const LoginForm: React.FC = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#5E3023]"
                   placeholder="Enter password"
+                  autoComplete="current-password"
                 />
               </div>
 

@@ -1,36 +1,30 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
 
 import { IStaff, IStaffRequest } from "../../components/types/IStaff";
+import dynamicBaseQuery from "./customBaseQuery";
 
 
 export const staffApi = createApi({
   reducerPath: "staffApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:7031/api",
-    prepareHeaders: (headers) => {
-      const token = localStorage.getItem("token");
-      if (token)
-        headers.set("Authorization", `Bearer ${token}`);
-      return headers;
-    }
-  }),
+  baseQuery: dynamicBaseQuery("https://localhost:7031/api/"),
+
   tagTypes: ["Staff"],
   endpoints: (builder) => ({
     getAllStaff: builder.query<IStaff[], void>({
-      query: () => "/Staff",
+      query: () => "Staff",
       providesTags: ["Staff"]
     }),
     getStaffById: builder.query<IStaff, string>({
-      query: (id) => `/Staff/${id}`,
+      query: (id) => `Staff/${id}`,
       providesTags: ['Staff']
     }),
     getStaffBySchoolId: builder.query<IStaff[], string>({
-      query: (id) => `/Staff/school/${id}`,
+      query: (id) => `Staff/school/${id}`,
       providesTags: ['Staff']
     }),
     createStaff: builder.mutation<void, IStaffRequest>({
       query: (newStaff) => ({
-        url: '/Staff',
+        url: 'Staff',
         method: 'POST',
         body: newStaff
       }),
@@ -38,7 +32,7 @@ export const staffApi = createApi({
     }),
     updateStaff: builder.mutation<void, IStaff>({
       query: (staff) => ({
-        url: `/Staff/${staff.id}`,
+        url: `Staff/${staff.id}`,
         method: 'PUT',
         body: staff
       }),
@@ -46,7 +40,7 @@ export const staffApi = createApi({
     }),
     deleteStaff: builder.mutation<void, string>({
       query: (id) => ({
-        url: `/Staff/${id}`,
+        url: `Staff/${id}`,
         method: 'DELETE'
       }),
       invalidatesTags: ['Staff']

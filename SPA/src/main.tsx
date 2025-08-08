@@ -33,13 +33,13 @@ import { SchoolTypeList } from "./components/SchoolTypeList.tsx";
 import { EmployeeTypeList } from "./components/Staff/EmployeeTypeList.tsx";
 import EmployeeTypeForm from "./components/Staff/EmployeeTypeForm.tsx";
 import StaffList from "./components/Staff/StaffList.tsx";
-
 import StaffTypeForm from "./components/Staff/StaffTypeForm.tsx";
-
 import CasteTypeForm from "./components/Staff/CasteTypeForm.tsx";
 import StaffForm from "./components/Staff/StaffForm.tsx";
 import { CasteTypeList } from "./components/Staff/CasteTypeList.tsx";
 import { StaffTypeList } from "./components/Staff/StaffTypeList.tsx";
+import ReligionTypeForm from "./components/Staff/ReligionTypeForm.tsx";
+import { ReligionTypeList } from "./components/Staff/ReligionTypeList.tsx";
 
 export const router = createBrowserRouter([
   {
@@ -225,7 +225,7 @@ export const router = createBrowserRouter([
       },
        {
         path: "edit-staff/:id",
-        element: <StaffTypeForm />,
+        element: <StaffForm />,
         handle: { label: RouteNames.EditStaff },
       }, {
         path: "castetype-list",
@@ -240,6 +240,20 @@ export const router = createBrowserRouter([
         path: "edit-castetype/:id",
         element: <CasteTypeForm />,
         handle: { label: RouteNames.EditCasteType },
+      },
+      {
+        path: "religiontype-list",
+        element: <ReligionTypeList />,
+        handle: { label: RouteNames.ReligionTypeList },
+      },{
+        path: "add-religiontype",
+        element: <ReligionTypeForm />,
+        handle: { label: RouteNames.AddReligionType },
+      },
+       {
+        path: "edit-religiontype/:id",
+        element: <ReligionTypeForm />,
+        handle: { label: RouteNames.EditReligionType },
       }
     ],
   },

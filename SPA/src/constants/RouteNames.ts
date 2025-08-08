@@ -42,4 +42,7 @@ export enum RouteNames {
   StaffList = "Staff List",
   AddStaff = "Add Staff",
   EditStaff = "Edit Staff",
+  AddReligionType = "Add Religion Type",
+  ReligionTypeList = "Religion Type List",
+  EditReligionType = "Edit Religion Type",
 }
