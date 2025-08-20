@@ -2,11 +2,11 @@ export interface SchoolType {
     id: string;
     type: string;
 }
-export interface SchoolTypeRequest {
+export interface CreateSchoolTypeRequest {
     id?: string;
     type: string;
 }
-export interface SchoolTypeResponse {
+export interface UpdateSchoolTypeRequest {
     id: string;
     type: string;
 

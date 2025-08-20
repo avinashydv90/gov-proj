@@ -10,6 +10,9 @@ module.exports = {
       colors: {
         primaryBrown: "#5E3023",
       },
+      fontFamily: {
+        'noto-serif-devanagari': ['Noto Serif Devanagari', 'serif'],
+      },
     },
   },
   plugins: [require('@tailwindcss/forms'),

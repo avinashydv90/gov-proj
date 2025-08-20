@@ -2,10 +2,10 @@
 import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import {  useNavigate, useParams } from 'react-router-dom';
-import { useCreateSchoolTypeMutation, useGetSchoolTypeByIdQuery, useUpdateSchoolTypeMutation } from '../services/newSchoolTypeApi';
-import { SchoolTypeRequest } from './types/schoolType';
+import { useCreateSchoolTypeMutation, useGetSchoolTypeByIdQuery, useUpdateSchoolTypeMutation } from '../../services/newSchoolTypeApi';
+import { CreateSchoolTypeRequest } from '../types/schoolType';
 import { toast, ToastContainer } from 'react-toastify';
-import PageLayout from '../shared-components/PageLayout';
+import PageLayout from '../../shared-components/PageLayout';
 import 'react-toastify/dist/ReactToastify.css';
 
 
@@ -20,9 +20,9 @@ const SchoolTypeForm: React.FC = () => {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<SchoolTypeRequest>();
+  } = useForm<CreateSchoolTypeRequest>();
 
-  const { data: schoolTypeData, isLoading: isLoadingSchoolType ,refetch } = useGetSchoolTypeByIdQuery(id!, {
+  const { data: schoolTypeData, isLoading: isLoadingSchoolType  } = useGetSchoolTypeByIdQuery(id!, {
     skip: !isEditMode,
   });
 
@@ -34,30 +34,27 @@ const SchoolTypeForm: React.FC = () => {
     if (schoolTypeData && isEditMode) {
       reset({ type: schoolTypeData.type });
     }
-  }, [schoolTypeData, isEditMode, reset,refetch]);
+  }, [schoolTypeData, isEditMode, reset]);
 
-  const onSubmit = async (data1: SchoolTypeRequest) => {
+  const onSubmit = async (formData: CreateSchoolTypeRequest) => {
     try {
       if (isEditMode && id) {
-        const data: SchoolTypeRequest = {
-      ...data1,
-      id, // add id from params
-    };
-        await updateSchoolType({ id, data });
+        
+        await updateSchoolType({ ...formData, id });
 
-        await refetch();
+        //await refetch();
         toast.success('School type updated successfully');
         navigate("/admin/schooltype-list")
        
       } else {
-        await addSchoolType(data1);
+        await addSchoolType(formData);
         toast.success('School type created successfully');
         navigate("/admin/schooltype-list")
         
       }
      
     } catch (err: any) {
- // RTK Query typically throws FetchBaseQueryError or SerializedError when unwrapping
+
     if (err?.status === 'PARSING_ERROR') {
       console.error("Parsing error:", err);
       toast.error("Server returned invalid response. Check backend logs.");
@@ -86,7 +83,7 @@ const SchoolTypeForm: React.FC = () => {
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div>
-              <label htmlFor="type" className="block text-md font-bold text-[#5C4033] mb-1">
+              <label htmlFor="type" className="block text-lg font-bold text-[#5C4033] mb-1">
                 शाळेचा प्रकाराचे नाव *
               </label>
               <input
@@ -97,7 +94,7 @@ const SchoolTypeForm: React.FC = () => {
                 required
                 maxLength={50}
                 disabled={isAdding || isUpdating}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm 
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm text-lg font-sm
                   focus:border-[#5C4033] focus:ring focus:ring-[#5C4033] focus:ring-opacity-50
                   p-2 border text-gray-700"
               />
@@ -108,8 +105,8 @@ const SchoolTypeForm: React.FC = () => {
               <button
                 type="button"
                 onClick={() => navigate("/admin/schooltype-list")}
-                className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-md 
-                  font-bold text-gray-700 bg-white hover:bg-gray-50 focus:outline-none 
+                className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-lg 
+                  font-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none 
                   focus:ring-2 focus:ring-offset-2 focus:ring-[#5C4033]"
                 disabled={isAdding || isUpdating}
               >
@@ -119,7 +116,7 @@ const SchoolTypeForm: React.FC = () => {
                 type="submit"
                 disabled={isAdding || isUpdating}
                 className="px-4 py-2 border border-transparent rounded-md shadow-sm 
-                  text-md font-bold text-white bg-[#5C4033] hover:bg-[#4a3328] 
+                  text-lg font-sm text-white bg-[#5C4033] hover:bg-[#4a3328] 
                   focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#4a3328]
                   disabled:opacity-50 disabled:cursor-not-allowed"
               >

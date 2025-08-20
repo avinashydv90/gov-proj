@@ -1,73 +1,69 @@
 //https://localhost:7031/api/StudentAttendence
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import {
-  AttendancePostResponse,
-  CreateStudentAttendance,
-  StudentAttendance,
-} from "../components/types/studentAttendence";
+
+import { createApi } from "@reduxjs/toolkit/query/react";
+import dynamicBaseQuery from "./StaffService/customBaseQuery";
+import { StudentAttendance, StudentAttendanceReportDto } from "../components/types/studentAttendence";
+
 
 const baseUrl = "https://localhost:7031/api/";
 
 export const studentAttendanceApi = createApi({
   reducerPath: "studentAttendanceApi",
-  baseQuery: fetchBaseQuery({ baseUrl }),
-  tagTypes: ["Attendance"],
-  endpoints: (builder) => ({
-    // Fetch attendance (GET)
-    getAttendanceByStudentId: builder.query<StudentAttendance[], number>({
-      query: (studentId) => `StudentAttendence/student/${studentId}`,
-      providesTags: ["Attendance"],
-    }),
-    getAttendanceByDivisionAndDate: builder.query<
-      StudentAttendance[],
-      { divisionId: number; date: string }
-    >({
-      query: ({ divisionId, date }) =>
-        `StudentAttendence?divisionId=${divisionId}&date=${date}`,
-      providesTags: ["Attendance"],
-    }),
-    getStudentAttendenceById: builder.query<StudentAttendance[], number>({
-      query: (id) => `StudentAttendence/${id}`,
-      providesTags: ["Attendance"],
-    }),
+  baseQuery: dynamicBaseQuery(baseUrl),
+  tagTypes: ["StudentAttendance"],
 
-    // Add attendance (POST)
-    addAttendance: builder.mutation<
-      AttendancePostResponse,
-      CreateStudentAttendance
+  endpoints: (builder) => ({
+    // GET /api/StudentAttendance/{divisionId}/{date}
+    getAttendance: builder.query<StudentAttendance[], { divisionId: string; date: string }>({
+      query: ({ divisionId, date }) => `StudentAttendance/${divisionId}/${date}`,
+      providesTags: ["StudentAttendance"],
+    }),
+    // ✅ GET /api/StudentAttendance/attendance/standard/{standardId}/division/{divisionId}?date=...
+    getAttendanceByStandardDivisionAndDate: builder.query<
+      StudentAttendance[],
+      { standardId: string; divisionId: string; date: string }
     >({
-      query: (body) => ({
-        url: "StudentAttendence",
+      query: ({ standardId, divisionId, date }) =>
+        `StudentAttendance/standard/${standardId}/division/${divisionId}/date/${date}`,
+      providesTags: ["StudentAttendance"],
+    }),
+    // POST /api/StudentAttendance
+    saveAttendance: builder.mutation<void, StudentAttendance[]>({
+      query: (attendanceList) => ({
+        url: "StudentAttendance",
         method: "POST",
-        body,
+        body: attendanceList,
       }),
-      invalidatesTags: ["Attendance"],
+      invalidatesTags: ["StudentAttendance"], // refresh the cache
     }),
-    // ✅ PUT: Update an attendance record
-    updateStudentAttendance: builder.mutation<void, StudentAttendance>({
-      query: (attendance) => ({
-        url: `StudentAttendence/${attendance.id}`,
-        method: "PUT",
-        body: attendance,
+    downloadAttendancePdf: builder.mutation<Blob, StudentAttendanceReportDto[]>({
+      query: (student) => ({
+        url: "StudentAttendance/download-pdf",
+        method: "POST",
+        body: student, // 👈 Must match expected DTO shape
+        responseHandler: async (response) => {
+          if (!response.ok) {
+            const text = await response.text();
+            throw new Error(`Failed: ${response.status} - ${text}`);
+          }
+
+          const blob = await response.blob();
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = "attendance-report.pdf";
+          a.click();
+          window.URL.revokeObjectURL(url);
+        },
       }),
-      invalidatesTags: ["Attendance"],
-    }),
-    // ✅ DELETE: Delete an attendance record by ID
-    deleteStudentAttendance: builder.mutation<void, number>({
-      query: (id) => ({
-        url: `StudentAttendence/${id}`,
-        method: "DELETE",
-      }),
-      invalidatesTags: ["Attendance"],
+
     }),
   }),
-});
 
+});
 export const {
-  useGetAttendanceByStudentIdQuery,
-  useGetAttendanceByDivisionAndDateQuery,
-  useGetStudentAttendenceByIdQuery,
-  useAddAttendanceMutation,
-  useDeleteStudentAttendanceMutation,
-  useUpdateStudentAttendanceMutation,
+  useGetAttendanceQuery,
+  useGetAttendanceByStandardDivisionAndDateQuery,
+  useDownloadAttendancePdfMutation,
+  useSaveAttendanceMutation
 } = studentAttendanceApi;

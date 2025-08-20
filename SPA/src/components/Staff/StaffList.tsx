@@ -9,7 +9,12 @@ import { useGetAllEmployeeTypeQuery } from "../../services/StaffService/employee
 import { useGetAllCasteTypesQuery } from "../../services/StaffService/casteTypeApi";
 import { useGetAllReligionTypesQuery } from "../../services/StaffService/religionTypeApi";
 import { useGetAllStaffTypesQuery } from "../../services/StaffService/staffTypeApi";
-import { getNameById  } from "./utility";
+import { getNameById  } from "../types/utility";
+import Tooltip from "@mui/material/Tooltip";
+import IconButton from "@mui/material/IconButton";
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 
 // interface Jwtpayload{
 //   sub: string;
@@ -32,7 +37,7 @@ export const StaffList: React.FC = () => {
 
   //   }
   // }
-  const schoolId = "a3105b14-0e7d-49cf-abe2-c4f0022b4fc4";
+  const schoolId ="f12ee097-5132-454f-9161-07564a3e9f88";
   const { data: staffs, isLoading } = useGetStaffBySchoolIdQuery(
     schoolId ?? skipToken
   );
@@ -42,11 +47,6 @@ export const StaffList: React.FC = () => {
   const { data: casteTypeData } = useGetAllCasteTypesQuery();
   const { data: religionTypeData } = useGetAllReligionTypesQuery();
 
-  console.log("Schools data:", schoolsData);
-  console.log("Staff Type data:", staffTypeData);
-  console.log("Employee Type data:", employeeTypeData);
-  console.log("Caste Type data:", casteTypeData);
-  console.log("Religion Type data:", religionTypeData);
 
   const [deleteStaff] = useDeleteStaffMutation();
 
@@ -80,30 +80,43 @@ export const StaffList: React.FC = () => {
   }
 
 
-console.log("Staffs data:", staffs);
+//console.log("Staffs data:", staffs);
   return (
     <PageLayout>
    <div className="flex flex-col min-h-screen bg-gray-50 py-6 px-2 sm:px-4 md:px-6">
       <h2 className="text-2xl font-bold mb-4 text-center text-[#5C4033]">कर्मचारी यादी</h2>
       <ToastContainer position="top-right" autoClose={3000} />
       <div className="flex justify-end mb-4">
-         <button
-            type="button"
-            className="flex py-2 px-4 border border-transparent rounded-md shadow-sm text-md font-bold text-white bg-[#5C4033] hover:bg-[#4a3328] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#4a3328] transition-colors"
+         <AddCircleIcon
             onClick={() => navigate("/admin/add-staff")}
-         >
-         नवीन कर्मचारी
-         </button>
+            className="text-[#5C4033] cursor-pointer"
+            fontSize="large"
+          />
       </div>
       <div className="overflow-auto rounded-md shadow-sm border bg-white">
          <table className="min-w-full divide-y divide-gray-200 table-auto">
             <thead className="bg-gray-100 sticky top-0 z-10">
                <tr>
                   {[
-                  "क्रमांक", "Name", "Gender", "Qualification", "Subject", 
-                  "Minimum - Maximum Standard", "Date of Birth", "Joining Date", 
-                  "Religion", "Caste", "Religion Type", "Caste Type", 
-                  "Employee Type", "Staff Type", "School", "Actions"
+                 "क्रमांक", 
+  "नाव", 
+  "लिंग", 
+  "पात्रता", 
+  "विषय", 
+  "किमान - कमाल वर्ग", 
+  "जन्मतारीख", 
+  "नोकरी सुरू झाल्याची तारीख", 
+  "धर्म", 
+  "जात", 
+  "धर्म प्रकार", 
+  "जात प्रकार", 
+  "कर्मचारी प्रकार", 
+  "स्टाफ प्रकार", 
+  "शाळा",
+  "ईमेल",           // नवीन कॉलम
+  "संपर्क क्रमांक",   // नवीन कॉलम
+  "पत्ता",           // नवीन कॉलम
+  "क्रिया"           // Actions
                   ].map((header) => (
                   <th
                      key={header}
@@ -141,23 +154,28 @@ console.log("Staffs data:", staffs);
                   <td className="px-2 py-2">{getNameById(staff.employeeTypeId ,employeeTypeData)}</td>
                   <td className="px-2 py-2">{getNameById(staff.staffTypeId ,staffTypeData)}</td>
                   <td className="px-2 py-2">{getNameById(staff.schoolId ,schoolsData)}</td>
+                   <td className="px-2 py-2">{staff.email ?? "-"}</td>
+    <td className="px-2 py-2">{staff.contact ?? "-"}</td>
+    <td className="px-2 py-2" style={{whiteSpace: "normal", maxWidth: "200px"}}>
+      {staff.address ?? "-"}
+    </td>
                   {/* 
                   <td className="px-2 py-2">{staff.userId ?? "-"}</td>
                   */}
                   <td className="px-2 py-2">
                      <div className="flex justify-center space-x-2">
-                        <button
-                           onClick={() => navigate(`/admin/edit-staff/${staff.id}`)}
-                        className="bg-[#5C4033] hover:bg-[#4a3328] text-white py-1 px-3 rounded font-bold"
-                        >
-                        संपादन
-                        </button>
-                        <button
-                           onClick={() => handleDelete(staff.id)}
-                        className="bg-[#5C4033] hover:bg-[#4a3328] text-white py-1 px-3 rounded font-bold"
-                        >
-                        हटवा
-                        </button>
+                       <Tooltip title="Edit">
+                         <IconButton onClick={() =>
+                           navigate(`/admin/edit-staff/${staff.id}`)
+                         }>
+                           <EditIcon />
+                         </IconButton>
+                       </Tooltip>
+                       <Tooltip title="Delete">
+                         <IconButton  onClick={() => handleDelete(staff.id)}>
+                           <DeleteIcon />
+                         </IconButton>
+                       </Tooltip>
                      </div>
                   </td>
                </tr>

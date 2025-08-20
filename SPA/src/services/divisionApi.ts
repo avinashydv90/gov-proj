@@ -1,20 +1,15 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { Division } from "../components/types/division";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import { CreateDivisionDto, Division, UpdateDivisionDto } from "../components/types/division";
+import dynamicBaseQuery from "./StaffService/customBaseQuery";
 
 const baseUrl = "https://localhost:7031/api/";
 
 export const divisionApi = createApi({
   reducerPath: "divisionApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: baseUrl,
-    prepareHeaders: (headers) => {
-      const token = localStorage.getItem("token");
-      if (token) headers.set("Authorization", `Bearer ${token}`);
-      return headers;
-    },
-  }),
+  baseQuery: dynamicBaseQuery(baseUrl),
   tagTypes: ["Division"],
   endpoints: (builder) => ({
+
     // GET all divisions
     getAllDivisions: builder.query<Division[], void>({
       query: () => "Division",
@@ -22,19 +17,19 @@ export const divisionApi = createApi({
     }),
 
     // GET division by ID
-    getDivisionById: builder.query<Division, number>({
+    getDivisionById: builder.query<Division, string>({
       query: (id) => `Division/${id}`,
       providesTags: ["Division"],
     }),
 
     // GET by standardId
-    getDivisionsByStandardId: builder.query<Division[], number>({
+    getDivisionsByStandardId: builder.query<Division[], string>({
       query: (standardId) => `Division/standard/${standardId}`,
       providesTags: ["Division"],
     }),
 
     // POST - Add new division
-    addDivision: builder.mutation<Division, Omit<Division, "id">>({
+    addDivision: builder.mutation<void, CreateDivisionDto>({
       query: (division) => ({
         url: "Division",
         method: "POST",
@@ -44,17 +39,17 @@ export const divisionApi = createApi({
     }),
 
     // PUT - Update division
-    updateDivision: builder.mutation<Division, Division>({
-      query: (division) => ({
-        url: `Division/${division.id}`,
+    updateDivision: builder.mutation<void, UpdateDivisionDto>({
+      query: (payload) => ({
+        url: `Division/${payload.id}`,
         method: "PUT",
-        body: division,
+        body: payload,
       }),
       invalidatesTags: ["Division"],
     }),
 
     // DELETE - Remove division
-    deleteDivision: builder.mutation<void, number>({
+    deleteDivision: builder.mutation<void, string>({
       query: (id) => ({
         url: `Division/${id}`,
         method: "DELETE",

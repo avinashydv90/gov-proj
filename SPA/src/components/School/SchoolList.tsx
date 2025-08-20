@@ -1,15 +1,20 @@
 import React, { useEffect } from "react";
-import PageLayout from "../shared-components/PageLayout";
-import ButtonList from "../components/ButtonList";
+import PageLayout from "../../shared-components/PageLayout";
 import {
   useDeleteSchoolMutation,
   useGetAllSchoolsQuery,
-} from "../services/schoolApi";
+} from "../../services/schoolApi";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "reactjs-popup/dist/index.css";
-import { useGetAllSchoolTypesQuery } from "../services/newSchoolTypeApi";
-
+import { useGetAllSchoolTypesQuery } from "../../services/newSchoolTypeApi";
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import IsLoading from "../../Status/IsLoading";
+import ErrorMessage from "../../Status/IsError";
+import Tooltip from "@mui/material/Tooltip";
+import IconButton from "@mui/material/IconButton";
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 
 const SchoolList: React.FC = () => {
  const {
@@ -22,7 +27,7 @@ const SchoolList: React.FC = () => {
   });
     const { data: schoolTypes  } = useGetAllSchoolTypesQuery();
 
-  const [deleteSchool, { isLoading: isDeleting }] = useDeleteSchoolMutation();
+  const [deleteSchool] = useDeleteSchoolMutation();
     const location = useLocation();
   const { state } = location;
   
@@ -54,98 +59,63 @@ const SchoolList: React.FC = () => {
     return match ? match.type : 'N/A';
   };
 
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-[60vh]">
-        <div className="text-center">
-          <div
-            className="animate-spin inline-block w-8 h-8 border-4 border-current border-t-transparent text-[#5C4033] rounded-full"
-            role="status"
-            aria-label="लोड करत आहे..."
-          ></div>
-          <p className="mt-4 text-sm font-medium text-[#5C4033]">
-            लोड करत आहे...
-          </p>
-        </div>
-      </div>
-    );
-  }
-
-  if (isError) {
-    return (
-      <div className="flex items-center justify-center h-[60vh]">
-        <div className="bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-md text-center">
-          <strong className="block font-semibold mb-1">त्रुटी आली!</strong>
-          <span className="text-sm">
-            डेटा मिळवण्यात अडचण आली. कृपया पुन्हा प्रयत्न करा.
-          </span>
-        </div>
-      </div>
-    );
-  }
-
+  <><ErrorMessage isError={isError} title="अरेरे! काहीतरी चुकलं" message="कृपया इंटरनेट कनेक्शन तपासा आणि पुन्हा प्रयत्न करा." />
+  <IsLoading isLoading={isLoading} message="Schools लोड करत आहे..." /></>
 
   return (
     <>   
  <PageLayout>
-      <div className="flex flex-col  bg-gray-50 py-6 px-2 sm:px-4 md:px-6">
-        <h2 className="text-2xl font-bold mb-4 text-center text-[#5C4033]">शाळा यादी</h2>
-
-        <div className="flex justify-end mb-4">
-          <button
-            type="button"
-            className="flex py-2 px-4 border border-transparent rounded-md shadow-sm text-md font-bold   text-white bg-[#5C4033] hover:bg-[#4a3328] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#4a3328] transition-colors"
-            onClick={() => navigate("/admin/school-registration")}
-          >
-            नवीन शाळा नोंदवा
-          </button>
-        </div>
-
-        <div className="overflow-auto rounded-md shadow-sm border bg-white">
-          <table className="min-w-full divide-y divide-gray-200 text-md ">
+   <div className="flex flex-col  bg-gray-50 py-6 px-2 sm:px-4 md:px-6">
+      <h2 className="text-2xl font-bold mb-4 text-center text-[#5C4033]">शाळा यादी</h2>
+      <div className="flex justify-end mb-4">
+         <AddCircleIcon 
+         onClick={() => navigate("/admin/school-registration")}
+          className="text-[#5C4033] cursor-pointer"
+          fontSize="large"/>
+      </div>
+      <div className="overflow-auto rounded-md shadow-sm border bg-white">
+         <table className="min-w-full divide-y divide-gray-200 text-md ">
             <thead className="bg-gray-100 sticky top-0 z-10 ">
-              <tr >
-                {[
-                   "अ.क्र.",
-  "शाळेचा कोड",
-  "क्लस्टर कोड",
-  "शाळेचे नाव",
-  "स्थापनेची तारीख",
-  "शाळेचा प्रकार",
-  "शहर",
-  "जिल्हा",
-  "राज्य",
-  "पिनकोड",
-  "ईमेल",
-  "संपर्क",
-  "इयत्ता",
-  "कृती"
-                ].map((header) => (
+               <tr >
+                  {[
+                  "अ.क्र.",
+                  "शाळेचा कोड",
+                  "क्लस्टर कोड",
+                  "शाळेचे नाव",
+                  "स्थापनेची तारीख",
+                  "शाळेचा प्रकार",
+                  "शहर",
+                  "जिल्हा",
+                  "राज्य",
+                  "पिनकोड",
+                  "ईमेल",
+                  "संपर्क",
+                  "इयत्ता",
+                  "कृती"
+                  ].map((header) => (
                   <th
-                    key={header}
-                   className={`px-3 py-2 font-semibold text-gray-700 whitespace-nowrap ${
-          header === "कृती" ? "text-center" : "text-left"
-        }`} 
+                  key={header}
+                  className={`px-3 py-2 font-semibold text-gray-700 whitespace-nowrap ${
+                  header === "कृती" ? "text-center" : "text-left"
+                  }`} 
                   >
-                    {header}
+                  {header}
                   </th>
-                ))}
-              </tr>
+                  ))}
+               </tr>
             </thead>
-
             <tbody className="divide-y divide-gray-200">
-              {schools?.map((school, index) => (
-                <tr key={school.id} className="hover:bg-gray-50">
+               {schools?.map((school, index) => (
+               <tr key={school.id} className="hover:bg-gray-50">
                   <td className="px-3 py-2">{index + 1}</td>
                   <td className="px-3 py-2">{school.schoolCode}</td>
                   <td className="px-3 py-2">{school.clusterCode}</td>
                   <td className="px-3 py-2">{school.name}</td>
                   <td className="px-3 py-2">
-                    {new Date(school.establishMentDate).toLocaleDateString()}
+                     {new Date(school.establishMentDate).toLocaleDateString()}
                   </td>
                   <td className="px-3 py-2">
-                    {getSchoolTypeName(school.schoolTypeId.toString())}
+                     {getSchoolTypeName(school.schoolTypeId.toString())}
                   </td>
                   <td className="px-3 py-2">{school.city}</td>
                   <td className="px-3 py-2">{school.district}</td>
@@ -155,29 +125,27 @@ const SchoolList: React.FC = () => {
                   <td className="px-3 py-2">{school.phoneNumber}</td>
                   <td className="px-3 py-2">{school.lowerStandard} - {school.higherStandard}</td>
                   <td className="px-3 py-2 text-center md:text-lg">
-                    <div className="flex justify-center gap-2">
-                    <ButtonList
-                      buttons={[
-                        {
-                          label: "संपादन ",
-                          onClick: () => navigate(`/admin/school-edit/${school.id}`),
-                        },
-                        {
-                          label: "हटवा",
-                          onClick: () => handleDelete(school.id),
-                          disabled: isDeleting,
-                        },
-                      ]}
-                    />
-                    </div>
+                     <div className="flex justify-center gap-2">
+                        <Tooltip title="Edit">
+          <IconButton onClick={() => navigate(`/admin/school-edit/${school.id}`)}>
+            <EditIcon />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Delete">
+          <IconButton  onClick={() =>handleDelete(school.id)}>
+            <DeleteIcon />
+          </IconButton>
+        </Tooltip>
+
+                     </div>
                   </td>
-                </tr>
-              ))}
+               </tr>
+               ))}
             </tbody>
-          </table>
-        </div>
+         </table>
       </div>
-    </PageLayout>
+   </div>
+</PageLayout>
     </>
   );
 };

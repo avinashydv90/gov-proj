@@ -22,11 +22,13 @@ const TopbarAdminApp = () => {
   { label: "शाळेचा प्रकार", path: "/admin/schooltype-list" },
   { label: "इयत्ता आणि विभाग", path: "/admin/standard-list" },
   { label: "कर्मचारी यादी", path: "/admin/staff-list" },
-  { label: "कर्मचारी प्रकार", path: "/admin/stafftype-list" },
+  { label: "कर्मचारी प्रकार", path: "/admin/employeetype-list" },
+  { label: "स्टाफ प्रकार", path: "/admin/stafftype-list" },
   { label: "जात यादी", path: "/admin/castetype-list" },
   { label: "धर्म प्रकार", path: "/admin/religiontype-list" },
   { label: "विद्यार्थी", path: "/admin/student-list" },
-  { label: "हजेरी", path: "/admin/add-attandance" },
+  { label: "हजेरी यादी", path: "/admin/attendance-list" },
+  { label: "हजेरी",  path: "/admin/add-attendance" },
   { label: "लॉगआउट", path: "/logout" }
   ];
 

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { toast } from "react-toastify";
-import { Standard } from "../types/standard";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ICreateStandardDto, IUpdateStandardDto } from "../types/standard";
 import {
   useCreateStandardMutation,
   useGetStandardByIdQuery,
@@ -9,15 +10,15 @@ import {
 } from "../../services/standardApi";
 import { useGetAllSchoolsQuery } from "../../services/schoolApi";
 import PageLayout from "../../shared-components/PageLayout";
-import ButtonList from "../ButtonList";
+
 
 const StandardForm: React.FC = () => {
   const navigate = useNavigate();
   const { standardId } = useParams<{ standardId: string }>();
   const isEditMode = !!standardId;
 
-  const [formData, setFormData] = useState<Omit<Standard, "id">>({
-    std: "",
+  const [formData, setFormData] = useState<ICreateStandardDto>({
+    name: "",
     schoolId: "",
   });
 
@@ -30,12 +31,12 @@ const StandardForm: React.FC = () => {
     isLoading: isStandardLoading,
     isError: isStandardError,
     isSuccess: isStandardSuccess,
-  } = useGetStandardByIdQuery(Number(standardId), { skip: !isEditMode });
+  } = useGetStandardByIdQuery(String(standardId), { skip: !isEditMode });
 
   useEffect(() => {
     if (isEditMode && isStandardSuccess && existingStandard) {
       setFormData({
-        std: existingStandard.std || "",
+        name: existingStandard.name,
         schoolId: existingStandard.schoolId,
       });
     }
@@ -53,15 +54,20 @@ const StandardForm: React.FC = () => {
     e.preventDefault();
     try {
       if (isEditMode && standardId) {
-        await updateStandard({
-          id: Number(standardId),
-          data: formData,
-        }).unwrap();
+        const updatePayLoad:IUpdateStandardDto ={
+          id: standardId,
+          ...formData,
+        }
+        console.log("Update Payload:", updatePayLoad);
+        await updateStandard(updatePayLoad).unwrap();
         toast.success("इयत्ता यशस्वीरित्या अपडेट झाली.");
       } else {
-        await addStandard(formData).unwrap();
+        const createPayload: ICreateStandardDto = {
+          ...formData,
+        };
+        await addStandard(createPayload).unwrap();
         toast.success("इयत्ता यशस्वीरित्या नोंदवली गेली.");
-        setFormData({ std: "", schoolId: "" });
+        setFormData({ name: "", schoolId: "" });
       }
       navigate("/admin/standard-list");
     } catch (err) {
@@ -91,11 +97,7 @@ const StandardForm: React.FC = () => {
   return (
     <PageLayout>
       <div className="py-3 px-4 inline-flex items-center gap-x-2 text-xl font-semibold text-[#5E3023]">
-        <ButtonList
-          buttons={[
-            { label: "इयत्ता यादी", onClick: () => navigate("/standard-list") },
-          ]}
-        />
+      
       </div>
 
       <div className=" w-full flex items-center justify-center bg-gray-50 px-4 py-6">
@@ -103,23 +105,23 @@ const StandardForm: React.FC = () => {
           <h2 className="text-2xl font-bold mb-6 text-center text-[#5C4033]">
             {isEditMode ? "इयत्ता संपादित करा" : "इयत्ता नोंदणी फॉर्म"}
           </h2>
-
+           <ToastContainer position="top-right" autoClose={3000}/>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label
-                htmlFor="std"
+                htmlFor="name"
                 className="block text-sm font-bold text-[#5C4033]"
               >
                 इयत्ता नाव *
               </label>
               <input
                 type="text"
-                id="std"
-                name="std"
-                value={formData.std}
+                id="name"
+                name="name"
+                value={formData.name}
                 onChange={handleChange}
                 required
-                className="mt-1 block w-full rounded-md border text-sm font-semibold border-[#5C4033] p-2"
+                className="mt-1 block w-full rounded-md border text-lg font-sm border-[#5C4033] p-2"
               />
             </div>
 
@@ -136,7 +138,7 @@ const StandardForm: React.FC = () => {
                 value={formData.schoolId}
                 onChange={handleChange}
                 required
-                className="mt-1 block w-full rounded-md border text-sm font-semibold border-[#5C4033] p-2"
+                className="mt-1 block w-full rounded-md border text-lg font-sm border-[#5C4033] p-2"
               >
                 <option value="">शाळा निवडा</option>
                 {schools.map((school) => (
@@ -147,11 +149,20 @@ const StandardForm: React.FC = () => {
               </select>
             </div>
 
-            <div className="pt-4">
+            <div className="p-4 flex justify-center gap-x-4">
+              <button
+  type="button"
+  onClick={() => navigate("/admin/standard-list")}
+  className="mr-4 px-4 py-2 text-lg font-sm text-[#5C4033] border border-[#5C4033] 
+  rounded-md shadow-sm hover:bg-gray-100 
+  transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#5C4033]"
+>
+  रद्द करा
+</button>
               <button
                 type="submit"
                 disabled={isAdding || isUpdating}
-                className="w-full py-2 px-4 rounded-md text-lg font-semibold text-white bg-[#5C4033] hover:bg-[#4a3328]"
+                className=" py-2 px-4 rounded-md text-lg font-sm text-white bg-[#5C4033] hover:bg-[#4a3328]"
               >
                 {isAdding || isUpdating
                   ? "प्रक्रिया सुरू आहे..."

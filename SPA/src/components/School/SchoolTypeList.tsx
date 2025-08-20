@@ -1,9 +1,12 @@
 import { useNavigate } from "react-router-dom";
-import PageLayout from "../shared-components/PageLayout";
-
+import PageLayout from "../../shared-components/PageLayout";
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import IconButton from "@mui/material/IconButton";
 import { toast, ToastContainer } from "react-toastify";
-import { useDeleteSchoolTypeMutation, useGetAllSchoolTypesQuery } from "../services/newSchoolTypeApi";
-
+import { useDeleteSchoolTypeMutation, useGetAllSchoolTypesQuery } from "../../services/newSchoolTypeApi";
+import Tooltip from "@mui/material/Tooltip";
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 export const SchoolTypeList: React.FC = () => {
   const navigate = useNavigate();
   const { data: schoolTypes, isLoading } = useGetAllSchoolTypesQuery();
@@ -48,13 +51,11 @@ export const SchoolTypeList: React.FC = () => {
         </h2>
          <ToastContainer position="top-right" autoClose={3000} />
         <div className=" flex justify-end mb-4">
-          <button
-            type="button"
-            className="flex py-2 px-4 border border-transparent rounded-md shadow-sm text-md font-bold text-white bg-[#5C4033] hover:bg-[#4a3328] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#4a3328] transition-colors"
+          <AddCircleIcon
             onClick={() => navigate("/admin/add-schooltype")}
-          >
-           नवीन शाळा प्रकार
-          </button>
+            className="text-[#5C4033] cursor-pointer"
+            fontSize="large"
+          />
         </div>
 
         <div className="overflow-auto rounded-md shadow-sm border bg-white">
@@ -74,22 +75,21 @@ export const SchoolTypeList: React.FC = () => {
             <tbody className="divide-y divide-gray-200">
               {schoolTypes?.map((schooltype, index) => (
                 <tr key={schooltype.id} className="hover:bg-gray-50 text-center">
-                  <td className="px-3 py-2">{index + 1}</td>
-                  <td className="px-3 py-2">{schooltype.type}</td>
+                  <td className="px-3 text-lg font-sm py-2">{index + 1}</td>
+                  <td className="px-3 text-lg font-sm py-2">{schooltype.type}</td>
                   <td className="px-3 py-2">
                     <div className="flex justify-center space-x-2">
-                      <button
-                        onClick={() => navigate(`/admin/edit-schooltype/${schooltype.id}`)}
-                        className="bg-[#5C4033] hover:bg-[#4a3328] text-white py-1 px-3 rounded font-bold text-bold"
-                      >
-                        संपादन 
-                      </button>
-                      <button
-                        onClick={() => handleDelete(schooltype.id)}
-                        className="bg-[#5C4033] hover:bg-[#4a3328] text-white py-1 px-3 rounded font-bold text-bold"
-                      >
-                        हटवा 
-                      </button>
+                      <Tooltip title="Edit">
+          <IconButton onClick={() => navigate(`/admin/edit-schooltype/${schooltype.id}`)}>
+            <EditIcon />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Delete">
+          <IconButton onClick={() => handleDelete(schooltype.id)}
+>
+            <DeleteIcon />
+          </IconButton>
+        </Tooltip>
                     </div>
                   </td>
                 </tr>
@@ -101,3 +101,5 @@ export const SchoolTypeList: React.FC = () => {
     </PageLayout>
   );
 };
+
+export default SchoolTypeList;

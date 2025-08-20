@@ -1,13 +1,14 @@
-export interface Standard {
-  id?: number;
-  std: string;
+export interface IStandard {
+  id: string;
+  name: string;
   schoolId: string; // GUID
 }
-export interface CreateStandardDto {
+export interface ICreateStandardDto {
   name: string;
   schoolId: string; // Guid
 }
-export interface UpdateStandardDto {
+export interface IUpdateStandardDto {
+  id: string;
   name: string;
   schoolId: string; // Guid
 }

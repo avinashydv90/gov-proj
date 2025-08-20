@@ -2,7 +2,11 @@ import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { useDeleteEmployeeTypeMutation, useGetAllEmployeeTypeQuery } from "../../services/StaffService/employeeTypeApi";
 import PageLayout from "../../shared-components/PageLayout";
-
+import Tooltip from "@mui/material/Tooltip";
+import IconButton from "@mui/material/IconButton";
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 
 export const EmployeeTypeList: React.FC = () => {
   const navigate = useNavigate();
@@ -46,13 +50,11 @@ export const EmployeeTypeList: React.FC = () => {
         </h2>
         <ToastContainer position="top-right" autoClose={3000} />
         <div className="flex justify-end mb-4">
-          <button
-            type="button"
-            className="flex py-2 px-4 border border-transparent rounded-md shadow-sm text-md font-bold text-white bg-[#5C4033] hover:bg-[#4a3328] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#4a3328] transition-colors"
+          <AddCircleIcon
             onClick={() => navigate("/admin/add-employeetype")}
-          >
-            नवीन कर्मचारी प्रकार
-          </button>
+            className="text-[#5C4033] cursor-pointer"
+            fontSize="large"
+          />
         </div>
 
         <div className="overflow-auto rounded-md shadow-sm border bg-white">
@@ -76,20 +78,18 @@ export const EmployeeTypeList: React.FC = () => {
                   <td className="px-3 text-lg py-2">{employeeType.name}</td>
                   <td className="px-3 py-2">
                     <div className="flex justify-center space-x-2">
-                      <button
-                        onClick={() =>
+                      <Tooltip title="Edit">
+          <IconButton onClick={() =>
                           navigate(`/admin/edit-employeetype/${employeeType.id}`)
-                        }
-                        className="bg-[#5C4033] hover:bg-[#4a3328] text-white py-1 px-3 rounded font-bold"
-                      >
-                        संपादन
-                      </button>
-                      <button
-                        onClick={() => handleDelete(employeeType.id)}
-                        className="bg-[#5C4033] hover:bg-[#4a3328] text-white py-1 px-3 rounded font-bold"
-                      >
-                        हटवा
-                      </button>
+                        }>
+            <EditIcon />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Delete">
+          <IconButton  onClick={() => handleDelete(employeeType.id)}>
+            <DeleteIcon />
+          </IconButton>
+        </Tooltip>
                     </div>
                   </td>
                 </tr>

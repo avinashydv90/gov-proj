@@ -17,29 +17,30 @@ import { HelmetProvider } from "react-helmet-async";
 import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
 import { store } from "./app/store.ts";
-import SchoolList from "./Student/SchoolList.tsx";
+import SchoolList from "./components/School/SchoolList.tsx";
 import AdminApp from "./AdminApp.tsx";
 import LoginForm from "./components/Auth/LoginForm.tsx";
-import SchoolRegistrationForm from "./components/SchoolRegistration.tsx";
+import SchoolRegistrationForm from "./components/School/SchoolRegistration.tsx";
 import { ProtectedRoute } from "./components/Auth/ProtectedRoute.tsx";
 import Logout from "./components/Auth/Logout.tsx";
 import StandardList from "./components/Standard/StandardList.tsx";
 import StandardForm from "./components/Standard/StandardForm.tsx";
-import StudentForm from "./components/StudentForm.tsx";
-import StudentList from "./Student/StudentList.tsx";
-import StudentAttendanceForm from "./components/StudentAttendanceForm/StudentAttendanceForm.tsx";
-import SchoolTypeForm from "./components/SchoolTypeForm.tsx";
-import { SchoolTypeList } from "./components/SchoolTypeList.tsx";
+import StudentForm from "./components/Student/StudentForm.tsx";
+import StudentList from "./components/Student/StudentList.tsx";
+import StudentAttendanceForm from "./components/StudentAttendance/StudentAttendanceForm.tsx";
+import SchoolTypeForm from "./components/School/SchoolTypeForm.tsx";
+import { SchoolTypeList } from "./components/School/SchoolTypeList.tsx";
 import { EmployeeTypeList } from "./components/Staff/EmployeeTypeList.tsx";
 import EmployeeTypeForm from "./components/Staff/EmployeeTypeForm.tsx";
 import StaffList from "./components/Staff/StaffList.tsx";
 import StaffTypeForm from "./components/Staff/StaffTypeForm.tsx";
-import CasteTypeForm from "./components/Staff/CasteTypeForm.tsx";
+import CasteTypeForm from "./components/AllTypes/CasteTypeForm.tsx";
 import StaffForm from "./components/Staff/StaffForm.tsx";
-import { CasteTypeList } from "./components/Staff/CasteTypeList.tsx";
+import { CasteTypeList } from "./components/AllTypes/CasteTypeList.tsx";
 import { StaffTypeList } from "./components/Staff/StaffTypeList.tsx";
-import ReligionTypeForm from "./components/Staff/ReligionTypeForm.tsx";
-import { ReligionTypeList } from "./components/Staff/ReligionTypeList.tsx";
+import ReligionTypeForm from "./components/AllTypes/ReligionTypeForm.tsx";
+import { ReligionTypeList } from "./components/AllTypes/ReligionTypeList.tsx";
+import AttendanceList from "./components/StudentAttendance/AttendanceList.tsx";
 
 export const router = createBrowserRouter([
   {
@@ -154,23 +155,29 @@ export const router = createBrowserRouter([
       {
         path: "add-student",
         element: <StudentForm />,
-        handle: { label: RouteNames.StudentRegistration },
+        handle: { label: RouteNames.AddStudent },
       },
       {
         path: "student-list",
         element: <StudentList />,
-        handle: { label: RouteNames.StudentRegistration },
+        handle: { label: RouteNames.StudentList },
       },
       {
-        path: "edit-school/:id",
+        path: "edit-student/:id",
         element: <StudentForm />,
         handle: { label: RouteNames.EditStudent },
       },
       {
-        path: "add-attandance",
+        path: "add-attendance",    
         element: <StudentAttendanceForm />,
-        handle: { label: RouteNames.AddStandard },
+        handle: { label: RouteNames.AddStudentAttendance },
       },
+      {
+        path: "attendance-list",    
+        element: <AttendanceList />,
+        handle: { label: RouteNames.StudentAttendanceList },
+      },
+     
       {
         path: "add-schooltype",
         element: <SchoolTypeForm />,

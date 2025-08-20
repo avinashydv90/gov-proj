@@ -1,20 +1,29 @@
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import PageLayout from "../../shared-components/PageLayout";
-import { useDeleteCasteTypeMutation, useGetAllCasteTypesQuery } from "../../services/StaffService/casteTypeApi";
+import {
+  useDeleteReligionTypeMutation,
+  useGetAllReligionTypesQuery,
+} from "../../services/StaffService/religionTypeApi";
+import { IReligionType } from "../types/IReligionType";
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import Tooltip from "@mui/material/Tooltip";
+import IconButton from "@mui/material/IconButton";
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 
-export const CasteTypeList: React.FC = () => {
+export const ReligionTypeList: React.FC = () => {
   const navigate = useNavigate();
-  const { data: casteTypes, isLoading } = useGetAllCasteTypesQuery();
-  const [deleteCasteType] = useDeleteCasteTypeMutation();
+  const { data: religionTypes, isLoading } = useGetAllReligionTypesQuery();
+  const [deleteReligionType] = useDeleteReligionTypeMutation();
 
   const handleDelete = async (id: string) => {
     if (window.confirm("आपण हटवू इच्छिता याची खात्री आहे का?")) {
       try {
-        await deleteCasteType(id).unwrap();
-        toast.success("जात प्रकार यशस्वीरित्या हटवला!");
+        await deleteReligionType(id).unwrap();
+        toast.success("धर्म प्रकार यशस्वीरित्या हटवला!");
       } catch (error) {
-        console.error("जात प्रकार हटवण्यात अडचण आली:", error);
+        console.error("धर्म प्रकार हटवण्यात अडचण आली:", error);
         toast.error("हटवण्यात अडचण आली.");
       }
     }
@@ -41,24 +50,21 @@ export const CasteTypeList: React.FC = () => {
     <PageLayout>
       <div className="flex flex-col min-h-screen bg-gray-50 py-6 px-2 sm:px-4 md:px-6">
         <h2 className="text-2xl font-bold mb-4 text-center text-[#5C4033]">
-          जात प्रकार यादी
+          धर्म प्रकार यादी
         </h2>
         <ToastContainer position="top-right" autoClose={3000} />
         <div className="flex justify-end mb-4">
-          <button
-            type="button"
-            className="flex py-2 px-4 border border-transparent rounded-md shadow-sm text-md font-bold text-white bg-[#5C4033] hover:bg-[#4a3328] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#4a3328] transition-colors"
-            onClick={() => navigate("/admin/add-castetype")}
-          >
-            नवीन जात प्रकार
-          </button>
+         <AddCircleIcon 
+         onClick={() => navigate("/admin/add-religiontype")}
+          className="text-[#5C4033] cursor-pointer"
+          fontSize="large"/>
         </div>
 
         <div className="overflow-auto rounded-md shadow-sm border bg-white">
           <table className="min-w-full divide-y divide-gray-200 table-auto">
             <thead className="bg-gray-100 sticky top-0 z-10">
               <tr>
-                {["अ.क्र.", "जात प्रकार", "कृती"].map((header) => (
+                {["अ.क्र.", "धर्म प्रकार", "कृती"].map((header) => (
                   <th
                     key={header}
                     className="px-3 py-2 font-semibold text-center text-gray-700 whitespace-nowrap"
@@ -69,24 +75,24 @@ export const CasteTypeList: React.FC = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {casteTypes?.map((casteType, index) => (
-                <tr key={casteType.id} className="hover:bg-gray-50 text-center">
+              {religionTypes?.map((religionType : IReligionType, index : any) => (
+                <tr key={religionType.id} className="hover:bg-gray-50 text-center">
                   <td className="px-3 text-lg py-2">{index + 1}</td>
-                  <td className="px-3 text-lg py-2">{casteType.casteName}</td>
+                  <td className="px-3 text-lg py-2">{religionType.name}</td>
                   <td className="px-3 py-2">
                     <div className="flex justify-center space-x-2">
-                      <button
-                        onClick={() => navigate(`/admin/edit-castetype/${casteType.id}`)}
-                        className="bg-[#5C4033] hover:bg-[#4a3328] text-white py-1 px-3 rounded font-bold"
-                      >
-                        संपादन
-                      </button>
-                      <button
-                        onClick={() => handleDelete(casteType.id)}
-                        className="bg-[#5C4033] hover:bg-[#4a3328] text-white py-1 px-3 rounded font-bold"
-                      >
-                        हटवा
-                      </button>
+                      <Tooltip title="Edit">
+          <IconButton onClick={() => navigate(`/admin/edit-religiontype/${religionType.id}`)}>
+            <EditIcon />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Delete">
+          <IconButton  onClick={() =>  handleDelete(religionType.id)}
+>
+            <DeleteIcon />
+          </IconButton>
+        </Tooltip>
+
                     </div>
                   </td>
                 </tr>
@@ -97,5 +103,5 @@ export const CasteTypeList: React.FC = () => {
       </div>
     </PageLayout>
   );
-}
-
+};
+export default ReligionTypeList;

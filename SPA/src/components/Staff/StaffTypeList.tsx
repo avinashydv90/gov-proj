@@ -5,6 +5,11 @@ import {
   useDeleteStaffTypeMutation,
   useGetAllStaffTypesQuery,
 } from "../../services/StaffService/staffTypeApi";
+import Tooltip from "@mui/material/Tooltip";
+import IconButton from "@mui/material/IconButton";
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 export const StaffTypeList: React.FC = () => {
   const navigate = useNavigate();
@@ -48,13 +53,12 @@ export const StaffTypeList: React.FC = () => {
         </h2>
         <ToastContainer position="top-right" autoClose={3000} />
         <div className="flex justify-end mb-4">
-          <button
-            type="button"
-            className="flex py-2 px-4 border border-transparent rounded-md shadow-sm text-md font-bold text-white bg-[#5C4033] hover:bg-[#4a3328] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#4a3328] transition-colors"
+          <AddCircleIcon 
             onClick={() => navigate("/admin/add-stafftype")}
-          >
-            नवीन स्टाफ प्रकार
-          </button>
+            className="text-[#5C4033] cursor-pointer"
+            fontSize="large"
+         
+          />
         </div>
 
         <div className="overflow-auto rounded-md shadow-sm border bg-white">
@@ -78,18 +82,17 @@ export const StaffTypeList: React.FC = () => {
                   <td className="px-3 text-lg py-2">{staffType.name}</td>
                   <td className="px-3 py-2">
                     <div className="flex justify-center space-x-2">
-                      <button
-                        onClick={() => navigate(`/admin/edit-stafftype/${staffType.id}`)}
-                        className="bg-[#5C4033] hover:bg-[#4a3328] text-white py-1 px-3 rounded font-bold"
-                      >
-                        संपादन
-                      </button>
-                      <button
-                        onClick={() => handleDelete(staffType.id)}
-                        className="bg-[#5C4033] hover:bg-[#4a3328] text-white py-1 px-3 rounded font-bold"
-                      >
-                        हटवा
-                      </button>
+                     <Tooltip title="Edit">
+          <IconButton onClick={() =>  navigate(`/admin/edit-stafftype/${staffType.id}`)}>
+            <EditIcon />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Delete">
+          <IconButton  onClick={() => handleDelete(staffType.id)}>
+            <DeleteIcon />
+          </IconButton>
+        </Tooltip>
+
                     </div>
                   </td>
                 </tr>

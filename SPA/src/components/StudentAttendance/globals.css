@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Devanagari:wght@600&display=swap');
+
+
+
+/* index.css or globals.css */
+.custom-select {
+    -webkit-appearance: none;
+    /* Remove default arrow */
+    -moz-appearance: none;
+    appearance: none;
+
+    background-image: url("data:image/svg+xml;charset=US-ASCII,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'><path fill='gray' d='M2 0L0 2h4z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: left 0.5rem center;
+    /* <-- Move arrow to left */
+    background-size: 0.65em auto;
+
+    padding-left: 1.5rem;
+    /* Add space so text doesn't overlap arrow */
+}
+
+
+.noto-serif-devanagari {
+    font-family: "Noto Serif Devanagari", serif;
+    font-optical-sizing: auto;
+    font-weight: 600;
+    font-style: normal;
+    font-variation-settings:
+        "wdth" 100;
+}
+
+.pdf-friendly {
+    color: #000 !important;
+    background-color: #fff !important;
+    border-color: #ccc !important;
+}

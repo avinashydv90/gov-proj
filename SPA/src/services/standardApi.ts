@@ -1,90 +1,19 @@
-// import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-// import { Standard } from '../components/types/standard';
 
-// const baseUrl = "https://localhost:7031/api/";
-
-// export const standardApi = createApi({
-//     reducerPath: 'standardApi',
-//     baseQuery: fetchBaseQuery({ baseUrl }),
-//     tagTypes: ['Standard'],
-//     endpoints: (builder) => ({
-//         // GET all standards
-//         getAllStandards: builder.query<Standard[], void>({
-//             query: () => 'Standard',
-//             providesTags: ['Standard'],
-//         }),
-
-//         // GET by ID
-//         getStandardById: builder.query<Standard, number>({
-//             query: (id) => `Standard/${id}`,
-//             providesTags: ['Standard'],
-//         }),
-
-//         // GET by School ID
-//         getStandardsBySchoolId: builder.query<Standard[], string>({
-//             query: (schoolId) => `Standard?schoolId=${schoolId}`,
-//             providesTags: ['Standard'],
-//         }),
-
-//         // POST
-//         addStandard: builder.mutation<Standard, Omit<Standard, 'id'>>({
-//             query: (standard) => ({
-//                 url: 'Standard',
-//                 method: 'POST',
-//                 body: standard,
-//             }),
-//             invalidatesTags: ['Standard'],
-//         }),
-
-//         // PUT
-//         updateStandard: builder.mutation<Standard, Standard>({
-//             query: (standard) => ({
-//                 url: `Standard/${standard.id}`,
-//                 method: 'PUT',
-//                 body: standard,
-//             }),
-//             invalidatesTags: ['Standard'],
-//         }),
-
-//         // DELETE
-//         deleteStandard: builder.mutation<void, number>({
-//             query: (id) => ({
-//                 url: `Standard/${id}`,
-//                 method: 'DELETE',
-//             }),
-//             invalidatesTags: ['Standard'],
-//         }),
-//     }),
-// });
-// export const {
-//     useGetAllStandardsQuery,
-//     useGetStandardByIdQuery,
-//     useGetStandardsBySchoolIdQuery,
-//     useAddStandardMutation,
-//     useUpdateStandardMutation,
-//     useDeleteStandardMutation,
-// } = standardApi;
-
-
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { Standard } from "../components/types/standard";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import { ICreateStandardDto, IStandard, IUpdateStandardDto } from "../components/types/standard";
+import dynamicBaseQuery from "./StaffService/customBaseQuery";
 
 
 const baseUrl = "https://localhost:7031/api/";
 
 export const standardApi = createApi({
   reducerPath: "standardApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: baseUrl,
-    prepareHeaders: (headers) => {
-      const token = localStorage.getItem("token");
-      if (token) headers.set("Authorization", `Bearer ${token}`);
-      return headers;
-    },
-  }),
+  baseQuery: dynamicBaseQuery(baseUrl),
+
   tagTypes: ["Standard"],
+
   endpoints: (builder) => ({
-    createStandard: builder.mutation<Standard, Standard>({
+    createStandard: builder.mutation<void, ICreateStandardDto>({
       query: (data) => ({
         url: "Standard",
         method: "POST",
@@ -93,33 +22,33 @@ export const standardApi = createApi({
       invalidatesTags: ["Standard"],
     }),
 
-    getStandardsBySchoolId: builder.query<Standard[], string>({
+    getStandardsBySchoolId: builder.query<IStandard[], string>({
       query: (schoolId) => `Standard/school/${schoolId}`,
       providesTags: ["Standard"],
     }),
 
-    getStandardById: builder.query<Standard, number>({
+    getStandardById: builder.query<IStandard, string>({
       query: (id) => `Standard/${id}`,
-      providesTags: (_, __, id) => [{ type: "Standard", id }],
+      providesTags: ["Standard"]
     }),
 
-    updateStandard: builder.mutation<Standard, { id: number; data: Standard }>({
-      query: ({ id, data }) => ({
-        url: `Standard/${id}`,
+    updateStandard: builder.mutation<void, IUpdateStandardDto>({
+      query: (formData) => ({
+        url: `Standard/${formData.id}`,
         method: "PUT",
-        body: data,
+        body: formData,
       }),
-      invalidatesTags: (_, __, { id }) => [{ type: "Standard", id }],
+      invalidatesTags: ["Standard"],
     }),
 
-    deleteStandard: builder.mutation<{ message: string }, number>({
+    deleteStandard: builder.mutation<void, string>({
       query: (id) => ({
         url: `Standard/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: (_, __, id) => [{ type: "Standard", id }],
+      invalidatesTags: ["Standard"],
     }),
-    getAllStandards: builder.query<Standard[], void>({
+    getAllStandards: builder.query<IStandard[], void>({
       query: () => "Standard",
       providesTags: ["Standard"],
     }),

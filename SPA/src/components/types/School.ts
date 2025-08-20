@@ -1,6 +1,6 @@
 
 
-export interface School {
+export interface ISchool {
   id: string;
   schoolCode: string;
   clusterCode: string;
@@ -15,16 +15,11 @@ export interface School {
   lowerStandard: number;
   higherStandard: number;
   establishMentDate: string;
-  schoolTypeId: number;
-  schoolType?: { id: number; type: string };
-  createdBy: string;
-  createdDate: string;
-  updatedBy: string;
-  updatedDate: string;// exact match from backend
+  schoolTypeId: string;
 
 }
 
-export interface SchoolRegistrationRequest {
+export interface ISchoolRegistrationRequest {
   id?: string;
   schoolCode: string;
   clusterCode: string;
@@ -39,9 +34,23 @@ export interface SchoolRegistrationRequest {
   lowerStandard: number;
   higherStandard: number;
   establishMentDate: string;
-  schoolTypeId: number;
-
-  //type: "अनुदानित" | "बिनअनुदानित";
+  schoolTypeId: string;
 }
-
+export interface ISchoolUpdationRequest {
+  id: string;
+  schoolCode: string;
+  clusterCode: string;
+  name: string;
+  address: string;
+  city: string;
+  district: string;
+  pinCode: string;
+  state: string;
+  email: string;
+  phoneNumber: string;
+  lowerStandard: number;
+  higherStandard: number;
+  establishMentDate: string;
+  schoolTypeId: string;
+}
 

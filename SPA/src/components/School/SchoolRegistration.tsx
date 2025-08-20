@@ -1,26 +1,28 @@
 import React, { useEffect, useState } from "react";
 import {
-  useRegisterSchoolMutation,
   useUpdateSchoolMutation,
   useGetSchoolByIdQuery,
-} from "../services/schoolApi";
-import PageLayout from "../shared-components/PageLayout";
-import { SchoolRegistrationRequest } from "./types/School";
+  useAddSchoolMutation,
+} from "../../services/schoolApi";
+import PageLayout from "../../shared-components/PageLayout";
+import { ISchoolRegistrationRequest, ISchoolUpdationRequest } from "../types/School";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
-import { SchoolType } from "./types/schoolType";
-import { useGetAllSchoolTypesQuery } from "../services/newSchoolTypeApi";
+import { SchoolType } from "../types/schoolType";
+import { useGetAllSchoolTypesQuery } from "../../services/newSchoolTypeApi";
 import "react-toastify/dist/ReactToastify.css";
-import InputField from "./InputField";
+import InputField from "../InputField";
+import TextareaField from "../TextareaField";
 
 const SchoolRegistrationForm: React.FC = () => {
+
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>(); // for edit
   const isEditMode = !!id;
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
-  const [formData, setFormData] = useState<SchoolRegistrationRequest>({
+  const [formData, setFormData] = useState<ISchoolRegistrationRequest>({
     schoolCode: "",
     clusterCode: "",
     name: "",
@@ -31,14 +33,14 @@ const SchoolRegistrationForm: React.FC = () => {
     state: "",
     email: "",
     phoneNumber: "",
-    lowerStandard: 1,
-    higherStandard: 12,
+    lowerStandard: 0,
+    higherStandard: 0,
     establishMentDate: "",
-    schoolTypeId: 0,
+    schoolTypeId: "",
   });
 
   const [registerSchool, { isLoading: isRegistering }] =
-    useRegisterSchoolMutation();
+    useAddSchoolMutation();
   const { data: schoolTypes, isLoading: isSchoolTypesLoading } =
     useGetAllSchoolTypesQuery();
   const [updateSchool, { isLoading: isUpdating }] = useUpdateSchoolMutation();
@@ -52,8 +54,7 @@ const SchoolRegistrationForm: React.FC = () => {
   });
 
   useEffect(() => {
-    console.log("Fetched School Data:", existingSchool);
-    console.log("Setting formData...");
+    
     if (isEditMode && existingSchool) {
       setFormData({
         id: existingSchool.id, // include id for update
@@ -97,17 +98,19 @@ const SchoolRegistrationForm: React.FC = () => {
     const pinCodeRegex = /^[1-9][0-9]{5}$/;
     const phoneNumberRegex = /^\d{10,11}$/;
     const onlyLettersRegex = /^[A-Za-z\u0900-\u097F\s]+$/;
+    const schoolNameRegex = /^[\p{L}\s.'-]+$/u;
 
-    if (formData.name.length > 100) {
-      newErrors.name = "शाळेचे नाव 100 अक्षरांपेक्षा कमी असावे.";
+   if (formData.name.length > 100) {
+  newErrors.name = "शाळेचे नाव 100 अक्षरांपेक्षा कमी असावे.";
+  toast.error(newErrors.name);
+  return false;
+}
 
-      return false;
-    } else if (!onlyLettersRegex.test(formData.name.trim())) {
-      newErrors.name =
-        "शाळेचे नाव फक्त अक्षरांत असावे. संख्या किंवा विशेष चिन्हे वापरू नका.";
-      toast.error(newErrors.name);
-      return false;
-    }
+if (!schoolNameRegex.test(formData.name.trim())) {
+  newErrors.name = "शाळेचे नाव फक्त अक्षरे, स्पेस, डॉट (.) आणि विशेष चिन्हे (-, ') असावीत.";
+  toast.error(newErrors.name);
+  return false;
+}
 
     if (!schoolCodeRegex.test(formData.schoolCode.trim())) {
       newErrors.schoolCode = "वैध शाळेचा कोड प्रविष्ट करा ";
@@ -183,7 +186,7 @@ const SchoolRegistrationForm: React.FC = () => {
       toast.error(newErrors.higherStandard);
       return false;
     }
-    if (!formData.schoolTypeId || formData.schoolTypeId === 0) {
+    if (!formData.schoolTypeId ) {
       newErrors.schoolTypeId = "कृपया शाळेचा प्रकार निवडा.";
       toast.error(newErrors.schoolTypeId);
       return false;
@@ -205,23 +208,27 @@ const SchoolRegistrationForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) return;
+
     try {
-      const action =
-        isEditMode && id
-          ? updateSchool({ id, data: formData })
-          : registerSchool(formData);
-      await action;
-
-      const message = isEditMode
-        ? "शाळेची माहिती यशस्वीरित्या अपडेट झाली."
-        : "शाळा यशस्वीपणे नोंदवली.";
-      toast.success(message);
-      // Refresh the school list after registration or update
-
-      navigate("/admin/school-list", { state: { updated: true } });
-
-      if (!isEditMode) {
-        setFormData({
+     if(isEditMode && id)
+    {
+       const updatePayLoad: ISchoolUpdationRequest={
+      
+        ...formData,
+        establishMentDate: new Date(formData.establishMentDate).toISOString(),
+        id
+       };
+      const response = await updateSchool(updatePayLoad);
+      console.log("Update response:", response);
+      }
+      else {
+         const registerPayload: ISchoolRegistrationRequest = {
+    ...formData,
+    establishMentDate: new Date(formData.establishMentDate).toISOString()
+  };
+        await registerSchool(registerPayload).unwrap();
+        toast.success("शाळा यशस्वीरित्या नोंदवली गेली.");
+          setFormData({
           schoolCode: "",
           clusterCode: "",
           name: "",
@@ -232,14 +239,16 @@ const SchoolRegistrationForm: React.FC = () => {
           state: "",
           email: "",
           phoneNumber: "",
-          lowerStandard: 1,
-          higherStandard: 10,
+          lowerStandard: 0,
+          higherStandard: 0,
           establishMentDate: "",
-          schoolTypeId: 0,
+          schoolTypeId: "",
         });
       }
+
+      navigate("/admin/school-list", { state: { updated: true } });
     } catch (err) {
-      console.error("अपडेट अयशस्वी:", err);
+     // console.error("अपडेट अयशस्वी:", err);
       toast.error("अपडेट अयशस्वी");
     }
   };
@@ -301,7 +310,17 @@ const SchoolRegistrationForm: React.FC = () => {
 
             <div className="grid grid-cols-3 gap-4">
               {/* Keep textarea as-is */}
-              <div>
+              <TextareaField
+  label="पत्ता"
+  name="address"
+  value={formData.address}
+  onChange={handleChange}
+  required
+  rows={2}
+  maxLength={500}
+  error={errors.address}
+/>
+              {/* <div>
                 <label
                   htmlFor="address"
                   className="block text-md font-bold text-[#5C4033]"
@@ -326,7 +345,7 @@ const SchoolRegistrationForm: React.FC = () => {
                 {errors.address && (
                   <p className="text-sm text-red-600 mt-1">{errors.address}</p>
                 )}
-              </div>
+              </div> */}
 
               <InputField
                 label="शहर "
@@ -466,11 +485,20 @@ const SchoolRegistrationForm: React.FC = () => {
               </div>
             </div>
 
-            <div className="pt-4 flex justify-center">
+            <div className="pt-4 flex justify-center p-4 gap-x-4">
+                 <button
+        type="button"
+        onClick={() => navigate("/admin/school-list")} // 👈 replace with your actual list route
+        className="px-4 py-2 text-lg font-sm text-[#5C4033] border border-[#5C4033] 
+        rounded-md shadow-sm hover:bg-gray-100 
+        transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#5C4033]"
+      >
+        रद्द करा
+      </button>
               <button
                 type="submit"
                 disabled={isRegistering || isUpdating}
-                className="px-4 py-2 text-lg font-semibold text-white bg-[#5C4033] hover:bg-[#4a3328] 
+                className="px-4 py-2 text-lg font-sm text-white bg-[#5C4033] hover:bg-[#4a3328] 
       rounded-md shadow-sm disabled:opacity-50 disabled:cursor-not-allowed 
       transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#4a3328]"
               >
@@ -480,6 +508,8 @@ const SchoolRegistrationForm: React.FC = () => {
                   ? "अपडेट करा"
                   : "शाळा नोंदणी करा"}
               </button>
+               {/* Cancel Button */}
+   
             </div>
           </form>
 

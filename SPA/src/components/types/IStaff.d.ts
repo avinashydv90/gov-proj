@@ -5,6 +5,9 @@ export interface IStaff {
     subject: string;
     joiningDate: string;
     gender: string;
+    address: string; // Optional field for address
+    contact: string; // Optional field for contact
+    email: string; // Optional field for email
     minimumStandard: string;
     maximumStandard: string;
     dateOfBirth: string;
@@ -25,6 +28,9 @@ export interface IStaffRequest {
     subject: string;
     joiningDate: string;
     gender: string;
+    address: string; // Optional field for address
+    contact: string; // Optional field for contact
+    email: string; // Optional field for email
     minimumStandard: string;
     maximumStandard: string;
     dateOfBirth: string;
