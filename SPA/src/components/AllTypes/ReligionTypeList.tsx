@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
+import {  ToastContainer } from "react-toastify";
 import PageLayout from "../../shared-components/PageLayout";
 import {
   useDeleteReligionTypeMutation,
@@ -11,22 +11,25 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import { useDialogs } from "@toolpad/core/useDialogs";
 
 export const ReligionTypeList: React.FC = () => {
   const navigate = useNavigate();
+  const dialogs = useDialogs();
   const { data: religionTypes, isLoading } = useGetAllReligionTypesQuery();
   const [deleteReligionType] = useDeleteReligionTypeMutation();
 
   const handleDelete = async (id: string) => {
-    if (window.confirm("आपण हटवू इच्छिता याची खात्री आहे का?")) {
-      try {
-        await deleteReligionType(id).unwrap();
-        toast.success("धर्म प्रकार यशस्वीरित्या हटवला!");
-      } catch (error) {
-        console.error("धर्म प्रकार हटवण्यात अडचण आली:", error);
-        toast.error("हटवण्यात अडचण आली.");
-      }
-    }
+   const confirmed = await dialogs.confirm("आपण हटवू इच्छिता याची खात्री आहे का?");
+   if (confirmed) {
+     try {
+       await deleteReligionType(id).unwrap();
+       await dialogs.alert("धर्म प्रकार यशस्वीरित्या हटवला!");
+     } catch (error) {
+       await dialogs.alert("धर्म प्रकार हटवण्यात अडचण आली:");
+       console.error(error);
+     }
+   }
   };
 
   if (isLoading) {

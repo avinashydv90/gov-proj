@@ -109,6 +109,7 @@ const LoginForm: React.FC = () => {
           </div>
         </div>
         <div className="hidden md:flex mt-6 flex-col md:flex-row gap-4">
+          
           {/* Left Side: Logo */}
           <div className="md:w-1/3 lg:w-1/2 bg-white  rounded-xl p-6 flex justify-center items-center">
             <img

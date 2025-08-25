@@ -31,6 +31,7 @@ const StaffForm: React.FC = () => {
     address: "",
     contact: "",
     email: "",
+    password: "",
     minimumStandard: "",
     maximumStandard: "",
     dateOfBirth: "",
@@ -171,6 +172,7 @@ const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 />
               <InputField label="संपर्क" name="contact" value={formData.contact} required onChange={handleChange} />
               <InputField label="ईमेल" name="email" value={formData.email} onChange={handleChange} />
+              <InputField label="password" name="password" value={formData.password} onChange={handleChange} />
               <InputField label="किमान इयत्ता" name="minimumStandard" value={formData.minimumStandard} required onChange={handleChange} />
               <InputField label="कमाल इयत्ता" name="maximumStandard" value={formData.maximumStandard} required onChange={handleChange} />
               <InputField label="जन्मतारीख" type="date" name="dateOfBirth" value={formData.dateOfBirth} onChange={handleChange} required error={errors.dateOfBirth} />

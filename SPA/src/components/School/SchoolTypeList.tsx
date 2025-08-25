@@ -3,28 +3,41 @@ import PageLayout from "../../shared-components/PageLayout";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from "@mui/material/IconButton";
-import { toast, ToastContainer } from "react-toastify";
+import {  ToastContainer } from "react-toastify";
 import { useDeleteSchoolTypeMutation, useGetAllSchoolTypesQuery } from "../../services/newSchoolTypeApi";
 import Tooltip from "@mui/material/Tooltip";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import { useDialogs } from "@toolpad/core/useDialogs";
 export const SchoolTypeList: React.FC = () => {
   const navigate = useNavigate();
   const { data: schoolTypes, isLoading } = useGetAllSchoolTypesQuery();
   const [deleteSchoolType] = useDeleteSchoolTypeMutation();
+  const dialogs = useDialogs();
+
+  // const handleDelete = async (id: string) => {
+  //  if (window.confirm("आपण हटवू इच्छिता याची खात्री आहे का?"))  {
+  //     try {
+  //       await deleteSchoolType(id).unwrap();
+  //       toast.success("शाळेचा प्रकार यशस्वीरित्या हटवला!");
+  //     } catch (error) {
+  //       console.error("Failed to delete school type:", error);
+  //       toast.error("हटवण्यात अडचण आली.");
+  //     }
+  //   }
+  // };
 
   const handleDelete = async (id: string) => {
-   if (window.confirm("आपण हटवू इच्छिता याची खात्री आहे का?"))  {
+    const confirmed = await dialogs.confirm("आपण हटवू इच्छिता याची खात्री आहे का?");
+    if (confirmed) {
       try {
         await deleteSchoolType(id).unwrap();
-        toast.success("शाळेचा प्रकार यशस्वीरित्या हटवला!");
+        await dialogs.alert("शाळेचा प्रकार यशस्वीरित्या हटवला!");
       } catch (error) {
         console.error("Failed to delete school type:", error);
-        toast.error("हटवण्यात अडचण आली.");
+        await dialogs.alert("हटवण्यात अडचण आली.");
       }
     }
   };
-
-  
 
   if (isLoading) {
     return (

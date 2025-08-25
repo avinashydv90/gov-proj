@@ -10,14 +10,28 @@ import IconButton from "@mui/material/IconButton";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { useDialogs } from "@toolpad/core/useDialogs";
 
 export const StaffTypeList: React.FC = () => {
+  const dialogs = useDialogs();
   const navigate = useNavigate();
   const { data: staffTypes, isLoading } = useGetAllStaffTypesQuery();
   const [deleteStaffType] = useDeleteStaffTypeMutation();
 
-  const handleDelete = async (id: string) => {
-    if (window.confirm("आपण हटवू इच्छिता याची खात्री आहे का?")) {
+  // const handleDelete = async (id: string) => {
+  //   if (window.confirm("आपण हटवू इच्छिता याची खात्री आहे का?")) {
+  //     try {
+  //       await deleteStaffType(id).unwrap();
+  //       toast.success("स्टाफ प्रकार यशस्वीरित्या हटवला!");
+  //     } catch (error) {
+  //       console.error("स्टाफ प्रकार हटवण्यात अडचण आली:", error);
+  //       toast.error("हटवण्यात अडचण आली.");
+  //     }
+  //   }
+  // };
+    const handleDelete = async (id: string) => {
+      const confirmed = await dialogs.confirm("आपण हटवू इच्छिता याची खात्री आहे का?");
+    if (confirmed) {
       try {
         await deleteStaffType(id).unwrap();
         toast.success("स्टाफ प्रकार यशस्वीरित्या हटवला!");

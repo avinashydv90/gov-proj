@@ -5,7 +5,7 @@ import {
   useGetStudentBySchoolIdQuery,
 } from "../../services/studentApi";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+//import { toast } from "react-toastify";
 import IsLoading from "../../Status/IsLoading";
 import { useGetAllSchoolsQuery } from "../../services/schoolApi";
 import { useGetAllCasteTypesQuery } from "../../services/StaffService/casteTypeApi";
@@ -17,16 +17,40 @@ import ErrorMessage from "../../Status/IsError";
 import { Division } from "../types/division";
 import {
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination,
-  Tooltip, IconButton
+  Tooltip, IconButton,
+
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
+import { useDialogs } from '@toolpad/core/useDialogs';
+import Filter from "../FilterComponent/Filter";
+import StandardFilter from "../FilterComponent/StandardFilter";
+import DivisionFilter from "../FilterComponent/DivisionFilter";
+
+//import { jwtDecode } from "jwt-decode";
 
 
-
+// interface TokenPayload {
+//   schoolId: string; // must match your JWT claim name
+//   // add other claims if needed (e.g., sub, exp, name, etc.)
+// }
 
 const StudentList: React.FC = () => {
+  //  const token = localStorage.getItem("token"); // or get it from cookies/context
+  // let schoolId = "";
+  //  if (token) {
+  //   try {
+  //     const decoded = jwtDecode<TokenPayload>(token);
+  //     schoolId = decoded.schoolId; // claim name from JWT payload
+  //   } catch (error) {
+  //     console.error("Invalid token", error);
+  //   }
+  // }
+   const [selectedSchool, setSelectedSchool] = useState<string | null>(null);
+  const [selectedStandard, setSelectedStandard] = useState<string | null>(null);
+  const [selectedDivision, setSelectedDivision] = useState<string | null>(null);
+
     const headers = [
     "अ.क्र.",
     "विद्यार्थी नाव",
@@ -46,21 +70,37 @@ const StudentList: React.FC = () => {
     "विभाग",
     "कृती",
   ];
-  const schoolId = "f12ee097-5132-454f-9161-07564a3e9f88" // Replace with actual school ID
+
+ // const schoolId = "f12ee097-5132-454f-9161-07564a3e9f88" // Replace with actual school ID
+  
+   // Fetch students only when a school is selected
   const {
     data: studentsData,
     isLoading,
     isError,
-    refetch,
-  } = useGetStudentBySchoolIdQuery(schoolId);
-    const { data: schoolsData } = useGetAllSchoolsQuery();
-   
-    const { data: divisionData } = useGetAllDivisionsQuery();
-    const { data: standardData } = useGetAllStandardsQuery();
+    refetch
+  } = useGetStudentBySchoolIdQuery(selectedSchool ?? "", { skip: !selectedSchool });
+//} = useGetStudentBySchoolIdQuery(schoolId, { skip: !schoolId });
+     const {
+    data: schoolsData,
+    isLoading: isSchoolsLoading
+  } = useGetAllSchoolsQuery();
+
+  const {
+    data: standardData,
+    isLoading: isStandardsLoading
+  } = useGetAllStandardsQuery();
+
+  const {
+    data: divisionData,
+    isLoading: isDivisionsLoading
+  } = useGetAllDivisionsQuery();
+
     const { data: casteTypeData } = useGetAllCasteTypesQuery();
     const { data: religionTypeData } = useGetAllReligionTypesQuery();
 
- 
+   const dialogs = useDialogs();
+
   const students = studentsData ?? [];
   const [deleteStudent] = useDeleteStudentMutation();
 
@@ -83,26 +123,40 @@ const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => 
   setPage(0); // reset to first page
 };
 
+const handleDelete = async (id: string) => {
+    const confirmed = await dialogs.confirm(
+      "Are you sure you want to delete this student?"
+    );
 
-  const handleDelete = async (id: string) => {
-    if (confirm("Are you sure you want to delete this student?")) {
+    if (confirmed) {
       try {
         await deleteStudent(id).unwrap();
-        toast.success("Student deleted successfully");
+        await dialogs.alert("Student deleted successfully.");
         refetch();
       } catch (err) {
-        toast.error("Failed to delete the student");
+        await dialogs.alert("Failed to delete the student.");
         console.error(err);
       }
     }
   };
-console.log("division data:", divisionData);
+   // Filter students based on standard & division
+  const filteredStudents = students.filter(student =>
+    (!selectedStandard || student.standardId === selectedStandard) &&
+    (!selectedDivision || student.divisionId === selectedDivision)
+  );
 
 const getDivisionNameById = (id: string, divisionData?: Division[]) => {
   const division = divisionData?.find(d => d.id === id);
   return division ? division.name : "";
 };
 
+ if (isLoading || isSchoolsLoading || isStandardsLoading || isDivisionsLoading) {
+    return (
+      <PageLayout>
+        <IsLoading isLoading message="विद्यार्थी लोड करत आहे..." />
+      </PageLayout>
+    );
+  }
 
  // Show loading state
   if (isLoading) {
@@ -128,20 +182,53 @@ const getDivisionNameById = (id: string, divisionData?: Division[]) => {
 
 
   return (
+    
     <PageLayout>
    <div className="flex flex-col bg-gray-50 py-6 px-2 sm:px-4 md:px-6">
       <h2 className="text-2xl font-bold mb-1 text-center text-[#5C4033]">
         विद्यार्थी यादी
       </h2>
+      <div className="flex gap-4 mb-6">
+         <Filter schools={schoolsData} onSchoolChange={(school) => {
+    setSelectedSchool(school?.id ?? null);
+    setSelectedStandard(null); // Reset dependent filters
+    setSelectedDivision(null);
+  }} />
+        <StandardFilter
+  standards={standardData}
+  selectedSchoolId={selectedSchool ?? ""}
+  onStandardChange={(standard) => {
+    setSelectedStandard(standard?.id ?? null);
+    setSelectedDivision(null); // Reset divisions
+  }}
+/>
+        <DivisionFilter
+  divisions={divisionData}
+  selectedStandardId={selectedStandard ?? ""}
+  onDivisionChange={(division) => setSelectedDivision(division?.id ?? null)}
+/>
+      </div>
 
-      {/* Add Student Button */}
+
+         {/* Add Student Button */}
+        {selectedSchool && (
+          <div className="flex justify-end mb-4">
+            <AddCircleIcon
+              onClick={() => navigate("/admin/add-student")}
+              className="text-[#5C4033] cursor-pointer"
+              fontSize="large"
+            />
+          </div>
+        )}
+
+      {/* Add Student Button
       <div className="flex justify-end mb-4">
         <AddCircleIcon
           onClick={() => navigate("/admin/add-student")}
           className="text-[#5C4033] cursor-pointer"
           fontSize="large"
         />
-      </div>
+      </div> */}
 
       {/* Student Table */}
       <TableContainer  component={Paper} sx={{ maxWidth: "100%", overflowX: "auto" }}>
@@ -166,7 +253,7 @@ const getDivisionNameById = (id: string, divisionData?: Division[]) => {
           </TableHead>
 
          <TableBody>
-  {students
+  {filteredStudents
     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) // 🔹 only current page data
     .map((student, index) => (
       <TableRow key={student.id} hover>
@@ -214,11 +301,16 @@ const getDivisionNameById = (id: string, divisionData?: Division[]) => {
               <EditIcon />
             </IconButton>
           </Tooltip>
+          
           <Tooltip title="Delete">
-            <IconButton onClick={() => handleDelete(student.id)}>
-              <DeleteIcon />
-            </IconButton>
-          </Tooltip>
+      <IconButton
+        onClick={() => (handleDelete(student.id))
+          
+        }
+      >
+        <DeleteIcon />
+      </IconButton>
+    </Tooltip>
         </TableCell>
       </TableRow>
     ))}
@@ -229,7 +321,7 @@ const getDivisionNameById = (id: string, divisionData?: Division[]) => {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25, 50]}
             component="div"
-            count={students.length}
+            count={filteredStudents.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

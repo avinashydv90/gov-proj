@@ -8,6 +8,7 @@ export interface IStaff {
     address: string; // Optional field for address
     contact: string; // Optional field for contact
     email: string; // Optional field for email
+    password: string;
     minimumStandard: string;
     maximumStandard: string;
     dateOfBirth: string;
@@ -31,6 +32,7 @@ export interface IStaffRequest {
     address: string; // Optional field for address
     contact: string; // Optional field for contact
     email: string; // Optional field for email
+    password: string;
     minimumStandard: string;
     maximumStandard: string;
     dateOfBirth: string;

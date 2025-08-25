@@ -49,6 +49,8 @@ export enum RouteNames {
   ReligionTypeList = "Religion Type List",
   EditReligionType = "Edit Religion Type",
   AddStudentAttendance = "Add Student Attendance",
-  EditStudentAttendance = "Edit Student Attendance",
+  StaffAttendance = "Student Attendance",
+  StaffAttendanceList = "Student Attendance List",
   StudentAttendanceList = "Student Attendance List",
+  CustomLogin = "Custom Login"
 }

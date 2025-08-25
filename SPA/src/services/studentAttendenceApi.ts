@@ -1,11 +1,10 @@
-//https://localhost:7031/api/StudentAttendence
-
 import { createApi } from "@reduxjs/toolkit/query/react";
 import dynamicBaseQuery from "./StaffService/customBaseQuery";
 import { StudentAttendance, StudentAttendanceReportDto } from "../components/types/studentAttendence";
+import { baseUrl } from "./api";
 
 
-const baseUrl = "https://localhost:7031/api/";
+//const baseUrl = "https://localhost:7031/api/";
 
 export const studentAttendanceApi = createApi({
   reducerPath: "studentAttendanceApi",

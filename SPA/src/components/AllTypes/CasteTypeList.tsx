@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
+import {  ToastContainer } from "react-toastify";
 import PageLayout from "../../shared-components/PageLayout";
 import { useDeleteCasteTypeMutation, useGetAllCasteTypesQuery } from "../../services/StaffService/casteTypeApi";
 import Tooltip from "@mui/material/Tooltip";
@@ -7,22 +7,28 @@ import IconButton from "@mui/material/IconButton";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import { useDialogs } from "@toolpad/core/useDialogs";
+
 
 export const CasteTypeList: React.FC = () => {
   const navigate = useNavigate();
   const { data: casteTypes, isLoading } = useGetAllCasteTypesQuery();
   const [deleteCasteType] = useDeleteCasteTypeMutation();
+  const dialogs = useDialogs();
 
   const handleDelete = async (id: string) => {
-    if (window.confirm("आपण हटवू इच्छिता याची खात्री आहे का?")) {
+    const confirmed = await dialogs.confirm("आपण हटवू इच्छिता याची खात्री आहे का?");
+    if (confirmed) {
       try {
         await deleteCasteType(id).unwrap();
-        toast.success("जात प्रकार यशस्वीरित्या हटवला!");
+        await dialogs.alert("जात प्रकार यशस्वीरित्या हटवला!");
+        
       } catch (error) {
-        console.error("जात प्रकार हटवण्यात अडचण आली:", error);
-        toast.error("हटवण्यात अडचण आली.");
+        await dialogs.alert("जात प्रकार हटवण्यात अडचण आली:");
+        console.error(error);
       }
     }
+    
   };
 
   if (isLoading) {

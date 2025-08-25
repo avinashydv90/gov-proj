@@ -26,6 +26,8 @@ const TopbarAdminApp = () => {
   { label: "स्टाफ प्रकार", path: "/admin/stafftype-list" },
   { label: "जात यादी", path: "/admin/castetype-list" },
   { label: "धर्म प्रकार", path: "/admin/religiontype-list" },
+  { label: "कर्मचारी हजेरी", path: "/admin/add-staff-attendance" },
+  { label: "कर्मचारी हजेरी यादी", path: "/admin/staff-attendance-list" },
   { label: "विद्यार्थी", path: "/admin/student-list" },
   { label: "हजेरी यादी", path: "/admin/attendance-list" },
   { label: "हजेरी",  path: "/admin/add-attendance" },

@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
+import {  ToastContainer } from "react-toastify";
 import { useDeleteEmployeeTypeMutation, useGetAllEmployeeTypeQuery } from "../../services/StaffService/employeeTypeApi";
 import PageLayout from "../../shared-components/PageLayout";
 import Tooltip from "@mui/material/Tooltip";
@@ -7,23 +7,37 @@ import IconButton from "@mui/material/IconButton";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import { useDialogs } from "@toolpad/core/useDialogs";
 
 export const EmployeeTypeList: React.FC = () => {
+  const dialogs = useDialogs();
   const navigate = useNavigate();
   const { data: employeeTypes, isLoading } = useGetAllEmployeeTypeQuery();
   const [deleteEmployeeType] = useDeleteEmployeeTypeMutation();
 
+  // const handleDelete = async (id: string) => {
+  //   if (window.confirm("आपण हटवू इच्छिता याची खात्री आहे का?")) {
+  //     try {
+  //       await deleteEmployeeType(id).unwrap();
+  //       toast.success("कर्मचारी प्रकार यशस्वीरित्या हटवला!");
+  //     } catch (error) {
+  //       console.error("कर्मचारी प्रकार हटवण्यात अडचण आली:", error);
+  //       toast.error("हटवण्यात अडचण आली.");
+  //     }
+  //   }
+  // };
   const handleDelete = async (id: string) => {
-    if (window.confirm("आपण हटवू इच्छिता याची खात्री आहे का?")) {
+    const confirmed = await dialogs.confirm("आपण हटवू इच्छिता याची खात्री आहे का?");
+    if (confirmed) {
       try {
         await deleteEmployeeType(id).unwrap();
-        toast.success("कर्मचारी प्रकार यशस्वीरित्या हटवला!");
+        await dialogs.alert("कर्मचारी प्रकार यशस्वीरित्या हटवला!");
       } catch (error) {
         console.error("कर्मचारी प्रकार हटवण्यात अडचण आली:", error);
-        toast.error("हटवण्यात अडचण आली.");
+        await dialogs.alert("हटवण्यात अडचण आली.");
       }
     }
-  };
+  }
 
   if (isLoading) {
     return (

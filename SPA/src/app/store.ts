@@ -12,6 +12,7 @@ import { casteTypeApi } from "../services/StaffService/casteTypeApi";
 import { staffTypeApi } from "../services/StaffService/staffTypeApi";
 import { employeeTypeApi } from "../services/StaffService/employeeTypeApi";
 import { religionTypeApi } from "../services/StaffService/religionTypeApi";
+import { staffAttendanceApi } from "../services/staffAttendanceApi";
 
 
 const isDev = process.env.NODE_ENV === "development";
@@ -31,8 +32,7 @@ export const store = configureStore({
     [staffTypeApi.reducerPath]: staffTypeApi.reducer,
     [employeeTypeApi.reducerPath]: employeeTypeApi.reducer,
     [religionTypeApi.reducerPath]: religionTypeApi.reducer,
-
-
+    [staffAttendanceApi.reducerPath]: staffAttendanceApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -48,7 +48,8 @@ export const store = configureStore({
       casteTypeApi.middleware,
       staffTypeApi.middleware,
       employeeTypeApi.middleware,
-      religionTypeApi.middleware
+      religionTypeApi.middleware,
+      staffAttendanceApi.middleware
     ),
 
   devTools: isDev,

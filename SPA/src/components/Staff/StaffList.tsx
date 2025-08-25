@@ -1,20 +1,27 @@
 import { useNavigate } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import PageLayout from "../../shared-components/PageLayout";
 //import { jwtDecode } from "jwt-decode";
-import { skipToken } from '@reduxjs/toolkit/query';
-import { useDeleteStaffMutation, useGetStaffBySchoolIdQuery } from "../../services/StaffService/staffApi";
+import { skipToken } from "@reduxjs/toolkit/query";
+import {
+  useDeleteStaffMutation,
+  useGetStaffBySchoolIdQuery,
+} from "../../services/StaffService/staffApi";
 import { useGetAllSchoolsQuery } from "../../services/schoolApi";
 import { useGetAllEmployeeTypeQuery } from "../../services/StaffService/employeeTypeApi";
 import { useGetAllCasteTypesQuery } from "../../services/StaffService/casteTypeApi";
 import { useGetAllReligionTypesQuery } from "../../services/StaffService/religionTypeApi";
 import { useGetAllStaffTypesQuery } from "../../services/StaffService/staffTypeApi";
-import { getNameById  } from "../types/utility";
+import { getNameById } from "../types/utility";
 import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import { useDialogs } from "@toolpad/core/useDialogs";
+import { useState } from "react";
+import { ISchool } from "../types/School";
+import Filter from "../FilterComponent/Filter";
 
 // interface Jwtpayload{
 //   sub: string;
@@ -23,7 +30,10 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 
 export const StaffList: React.FC = () => {
   const navigate = useNavigate();
-
+  const [selectedSchool, setSelectedSchool] = useState<ISchool | null>(null);
+  const { data: staffs, isLoading } = useGetStaffBySchoolIdQuery(
+    selectedSchool?.id ?? skipToken
+  );
   // const token = localStorage.getItem("token");
 
   // let schoolId: string | undefined;
@@ -37,30 +47,38 @@ export const StaffList: React.FC = () => {
 
   //   }
   // }
-  const schoolId ="f12ee097-5132-454f-9161-07564a3e9f88";
-  const { data: staffs, isLoading } = useGetStaffBySchoolIdQuery(
-    schoolId ?? skipToken
-  );
+  //  const schoolId ="f12ee097-5132-454f-9161-07564a3e9f88";
+  // const { data: staffs, isLoading } = useGetStaffBySchoolIdQuery(
+  //   schoolId ?? skipToken
+  // );
   const { data: schoolsData } = useGetAllSchoolsQuery();
   const { data: staffTypeData } = useGetAllStaffTypesQuery();
   const { data: employeeTypeData } = useGetAllEmployeeTypeQuery();
   const { data: casteTypeData } = useGetAllCasteTypesQuery();
   const { data: religionTypeData } = useGetAllReligionTypesQuery();
-
+  const dialogs = useDialogs();
 
   const [deleteStaff] = useDeleteStaffMutation();
 
   const handleDelete = async (id: string) => {
-    if (window.confirm("आपण कर्मचारी हटवू इच्छिता याची खात्री आहे का?")) {
+    const confirmed = await dialogs.confirm(
+      "आपण कर्मचारी हटवू इच्छिता याची खात्री आहे का?"
+    );
+    if (confirmed) {
       try {
         await deleteStaff(id).unwrap();
-        toast.success("कर्मचारी यशस्वीरित्या हटवला!");
+        await dialogs.alert("कर्मचारी यशस्वीरित्या हटवला!");
       } catch (error) {
         console.error("कर्मचारी हटवण्यात अडचण आली:", error);
-        toast.error("हटवण्यात अडचण आली.");
+        await dialogs.alert("हटवण्यात अडचण आली.");
       }
     }
   };
+  const handleSchoolChange = (school: ISchool | null) => {
+    setSelectedSchool(school);
+  };
+  // const filteredStaffs = selectedSchool
+  // ? staffs?.filter(staff => staff.schoolId === selectedSchool.id) : staffs;
 
   if (isLoading) {
     return (
@@ -78,122 +96,160 @@ export const StaffList: React.FC = () => {
       </div>
     );
   }
+  if (!selectedSchool) {
+    return (
+      <PageLayout>
+        <div className="flex flex-col min-h-screen bg-gray-50 py-6 px-2 sm:px-4 md:px-6">
+          <h2 className="text-2xl font-bold mb-4 text-center text-[#5C4033]">
+            कर्मचारी यादी
+          </h2>
+          <ToastContainer position="top-right" autoClose={3000} />
+          <Filter schools={schoolsData} onSchoolChange={handleSchoolChange} />
+          <div className="text-center mt-10 text-lg text-gray-600">
+            कृपया शाळा निवडा
+          </div>
+        </div>
+      </PageLayout>
+    );
+  }
 
-
-//console.log("Staffs data:", staffs);
   return (
     <PageLayout>
-   <div className="flex flex-col min-h-screen bg-gray-50 py-6 px-2 sm:px-4 md:px-6">
-      <h2 className="text-2xl font-bold mb-4 text-center text-[#5C4033]">कर्मचारी यादी</h2>
-      <ToastContainer position="top-right" autoClose={3000} />
-      <div className="flex justify-end mb-4">
-         <AddCircleIcon
+      <div className="flex flex-col min-h-screen bg-gray-50 py-6 px-2 sm:px-4 md:px-6">
+        <h2 className="text-2xl font-bold mb-4 text-center text-[#5C4033]">
+          कर्मचारी यादी
+        </h2>
+        <ToastContainer position="top-right" autoClose={3000} />
+        <Filter schools={schoolsData} onSchoolChange={handleSchoolChange} />
+        <div className="flex justify-end mb-4">
+          <AddCircleIcon
             onClick={() => navigate("/admin/add-staff")}
             className="text-[#5C4033] cursor-pointer"
             fontSize="large"
           />
-      </div>
-      <div className="overflow-auto rounded-md shadow-sm border bg-white">
-         <table className="min-w-full divide-y divide-gray-200 table-auto">
+        </div>
+        <div className="overflow-auto rounded-md shadow-sm border bg-white">
+          <table className="min-w-full divide-y divide-gray-200 table-auto">
             <thead className="bg-gray-100 sticky top-0 z-10">
-               <tr>
-                  {[
-                 "क्रमांक", 
-  "नाव", 
-  "लिंग", 
-  "पात्रता", 
-  "विषय", 
-  "किमान - कमाल वर्ग", 
-  "जन्मतारीख", 
-  "नोकरी सुरू झाल्याची तारीख", 
-  "धर्म", 
-  "जात", 
-  "धर्म प्रकार", 
-  "जात प्रकार", 
-  "कर्मचारी प्रकार", 
-  "स्टाफ प्रकार", 
-  "शाळा",
-  "ईमेल",           // नवीन कॉलम
-  "संपर्क क्रमांक",   // नवीन कॉलम
-  "पत्ता",           // नवीन कॉलम
-  "क्रिया"           // Actions
-                  ].map((header) => (
+              <tr>
+                {[
+                  "क्रमांक",
+                  "नाव",
+                  "लिंग",
+                  "पात्रता",
+                  "विषय",
+                  "किमान - कमाल वर्ग",
+                  "जन्मतारीख",
+                  "नोकरी सुरू झाल्याची तारीख",
+                  "धर्म",
+                  "जात",
+                  "धर्म प्रकार",
+                  "जात प्रकार",
+                  "कर्मचारी प्रकार",
+                  "स्टाफ प्रकार",
+                  "शाळा",
+                  "ईमेल", // नवीन कॉलम
+                  "संपर्क क्रमांक", // नवीन कॉलम
+                  "पत्ता", // नवीन कॉलम
+                  "क्रिया", // Actions
+                ].map((header) => (
                   <th
-                     key={header}
-                     className="px-3 py-2 font-semibold text-center text-gray-700 whitespace-nowrap"
-                     >
-                     {header}
+                    key={header}
+                    className="px-3 py-2 font-semibold text-center text-gray-700 whitespace-nowrap"
+                  >
+                    {header}
                   </th>
-                  ))}
-               </tr>
+                ))}
+              </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-               {staffs?.map((staff, index) => (
-               <tr key={staff.id} className="hover:bg-gray-50 text-center">
+              {staffs?.map((staff, index) => (
+                <tr key={staff.id} className="hover:bg-gray-50 text-center">
                   <td className="px-2 py-2">{index + 1}</td>
                   <td className="px-2 py-2">{staff.name}</td>
                   <td className="px-2 py-2">{staff.gender}</td>
                   <td className="px-2 py-2">{staff.qualification}</td>
                   <td className="px-2 py-2">{staff.subject}</td>
                   <td className="px-2 py-2">
-                     {staff.minimumStandard} - {staff.maximumStandard}
+                    {staff.minimumStandard} - {staff.maximumStandard}
                   </td>
-                  <td className="px-2 py-2">{staff.dateOfBirth ? new Date(staff.dateOfBirth).toLocaleDateString() : ''}</td>
-                  <td className="px-2 py-2">{staff.joiningDate ? new Date(staff.joiningDate).toLocaleDateString() : ''}</td>
+                  <td className="px-2 py-2">
+                    {staff.dateOfBirth
+                      ? new Date(staff.dateOfBirth).toLocaleDateString()
+                      : ""}
+                  </td>
+                  <td className="px-2 py-2">
+                    {staff.joiningDate
+                      ? new Date(staff.joiningDate).toLocaleDateString()
+                      : ""}
+                  </td>
                   <td className="px-2 py-2">{staff.religion}</td>
                   <td className="px-2 py-2">{staff.caste}</td>
-                  <td className="px-2 py-2">{getNameById(staff.religionTypeId ,religionTypeData)}</td>
-                  <td className="px-2 py-2">{getNameById(
-                     staff.casteTypeId,
-                     casteTypeData?.map((item) => ({
-                     id: item.id,
-                     name: item.casteName,
-                     }))
-                     )}
+                  <td className="px-2 py-2">
+                    {getNameById(staff.religionTypeId, religionTypeData)}
                   </td>
-                  <td className="px-2 py-2">{getNameById(staff.employeeTypeId ,employeeTypeData)}</td>
-                  <td className="px-2 py-2">{getNameById(staff.staffTypeId ,staffTypeData)}</td>
-                  <td className="px-2 py-2">{getNameById(staff.schoolId ,schoolsData)}</td>
-                   <td className="px-2 py-2">{staff.email ?? "-"}</td>
-    <td className="px-2 py-2">{staff.contact ?? "-"}</td>
-    <td className="px-2 py-2" style={{whiteSpace: "normal", maxWidth: "200px"}}>
-      {staff.address ?? "-"}
-    </td>
+                  <td className="px-2 py-2">
+                    {getNameById(
+                      staff.casteTypeId,
+                      casteTypeData?.map((item) => ({
+                        id: item.id,
+                        name: item.casteName,
+                      }))
+                    )}
+                  </td>
+                  <td className="px-2 py-2">
+                    {getNameById(staff.employeeTypeId, employeeTypeData)}
+                  </td>
+                  <td className="px-2 py-2">
+                    {getNameById(staff.staffTypeId, staffTypeData)}
+                  </td>
+                  <td className="px-2 py-2">
+                    {getNameById(staff.schoolId, schoolsData)}
+                  </td>
+                  <td className="px-2 py-2">{staff.email ?? "-"}</td>
+                  <td className="px-2 py-2">{staff.contact ?? "-"}</td>
+                  <td
+                    className="px-2 py-2"
+                    style={{ whiteSpace: "normal", maxWidth: "200px" }}
+                  >
+                    {staff.address ?? "-"}
+                  </td>
                   {/* 
                   <td className="px-2 py-2">{staff.userId ?? "-"}</td>
                   */}
                   <td className="px-2 py-2">
-                     <div className="flex justify-center space-x-2">
-                       <Tooltip title="Edit">
-                         <IconButton onClick={() =>
-                           navigate(`/admin/edit-staff/${staff.id}`)
-                         }>
-                           <EditIcon />
-                         </IconButton>
-                       </Tooltip>
-                       <Tooltip title="Delete">
-                         <IconButton  onClick={() => handleDelete(staff.id)}>
-                           <DeleteIcon />
-                         </IconButton>
-                       </Tooltip>
-                     </div>
+                    <div className="flex justify-center space-x-2">
+                      <Tooltip title="Edit">
+                        <IconButton
+                          onClick={() =>
+                            navigate(`/admin/edit-staff/${staff.id}`)
+                          }
+                        >
+                          <EditIcon />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Delete">
+                        <IconButton onClick={() => handleDelete(staff.id)}>
+                          <DeleteIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </div>
                   </td>
-               </tr>
-               ))}
-               {staffs?.length === 0 && (
-               <tr>
+                </tr>
+              ))}
+              {staffs?.length === 0 && (
+                <tr>
                   <td colSpan={16} className="text-center py-4">
-                     कर्मचारी सापडले नाहीत.
+                    कर्मचारी सापडले नाहीत.
                   </td>
-               </tr>
-               )}
+                </tr>
+              )}
             </tbody>
-         </table>
+          </table>
+        </div>
       </div>
-   </div>
-</PageLayout>
+    </PageLayout>
   );
 };
-
 
 export default StaffList;

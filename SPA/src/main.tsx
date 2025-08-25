@@ -41,6 +41,10 @@ import { StaffTypeList } from "./components/Staff/StaffTypeList.tsx";
 import ReligionTypeForm from "./components/AllTypes/ReligionTypeForm.tsx";
 import { ReligionTypeList } from "./components/AllTypes/ReligionTypeList.tsx";
 import AttendanceList from "./components/StudentAttendance/AttendanceList.tsx";
+import { DialogsProvider } from '@toolpad/core/useDialogs';
+import Login from "./pages/Login.tsx";
+import StaffAttendanceList from "./components/Staff/Attendance/StaffAttendanceList.tsx";
+import StaffAttendanceForm from "./components/Staff/Attendance/StaffAttendanceForm.tsx";
 
 export const router = createBrowserRouter([
   {
@@ -139,43 +143,52 @@ export const router = createBrowserRouter([
       },
       {
         path: "standard-list",
-        element: <StandardList />,
+        element:(<ProtectedRoute allowedRoles={["SuperAdmin","Teacher","Principal"]}><StandardList /></ProtectedRoute> ),
         handle: { label: RouteNames.StandardList },
       },
       {
         path: "add-standard",
-        element: <StandardForm />,
+        element: (<ProtectedRoute allowedRoles={["SuperAdmin","Teacher","Principal"]}><StandardForm /></ProtectedRoute>),
         handle: { label: RouteNames.AddStandard },
       },
       {
         path: "edit-standard/:standardId",
-        element: <StandardForm />,
+        element: (<ProtectedRoute allowedRoles={["SuperAdmin","Teacher","Principal"]}><StandardForm /></ProtectedRoute>),
         handle: { label: RouteNames.EditStandard },
       },
       {
         path: "add-student",
-        element: <StudentForm />,
+        element: (<ProtectedRoute allowedRoles={["SuperAdmin","Teacher"]}><StudentForm /></ProtectedRoute>),
         handle: { label: RouteNames.AddStudent },
       },
       {
         path: "student-list",
-        element: <StudentList />,
+        element: (<ProtectedRoute allowedRoles={["SuperAdmin","Teacher"]}><StudentList /></ProtectedRoute>),
         handle: { label: RouteNames.StudentList },
       },
       {
         path: "edit-student/:id",
-        element: <StudentForm />,
+       element: (<ProtectedRoute allowedRoles={["SuperAdmin","Teacher"]}><StudentForm /></ProtectedRoute>),
         handle: { label: RouteNames.EditStudent },
       },
       {
         path: "add-attendance",    
-        element: <StudentAttendanceForm />,
+        element: (<ProtectedRoute allowedRoles={["SuperAdmin","Teacher"]}><StudentAttendanceForm /></ProtectedRoute>),
         handle: { label: RouteNames.AddStudentAttendance },
       },
       {
         path: "attendance-list",    
-        element: <AttendanceList />,
+       element: (<ProtectedRoute allowedRoles={["SuperAdmin","Teacher"]}><AttendanceList /></ProtectedRoute>),
         handle: { label: RouteNames.StudentAttendanceList },
+      },{
+        path: "add-staff-attendance",    
+        element: (<ProtectedRoute allowedRoles={["SuperAdmin","Teacher"]}><StaffAttendanceForm /></ProtectedRoute>),
+        handle: { label: RouteNames.StaffAttendance },
+      },
+      {
+        path: "staff-attendance-list",    
+        element: (<ProtectedRoute allowedRoles={["SuperAdmin","Teacher"]}><StaffAttendanceList /></ProtectedRoute>),
+        handle: { label: RouteNames.StaffAttendanceList },
       },
      
       {
@@ -261,7 +274,13 @@ export const router = createBrowserRouter([
         path: "edit-religiontype/:id",
         element: <ReligionTypeForm />,
         handle: { label: RouteNames.EditReligionType },
+      },
+      {
+        path: "custom-login",
+        element: <Login />,
+        handle: { label: RouteNames.CustomLogin },
       }
+
     ],
   },
   {
@@ -277,7 +296,9 @@ export const router = createBrowserRouter([
 createRoot(document.getElementById("root")!).render(
   <HelmetProvider>
     <Provider store={store}>
-      <RouterProvider router={router} />
+    <DialogsProvider>
+          <RouterProvider router={router} />
+        </DialogsProvider>
     </Provider>
   </HelmetProvider>
 );

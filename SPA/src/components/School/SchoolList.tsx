@@ -5,7 +5,7 @@ import {
   useGetAllSchoolsQuery,
 } from "../../services/schoolApi";
 import { useLocation, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+//import { toast } from "react-toastify";
 import "reactjs-popup/dist/index.css";
 import { useGetAllSchoolTypesQuery } from "../../services/newSchoolTypeApi";
 import EditIcon from '@mui/icons-material/Edit';
@@ -15,6 +15,7 @@ import ErrorMessage from "../../Status/IsError";
 import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import { useDialogs } from "@toolpad/core/useDialogs";
 
 const SchoolList: React.FC = () => {
  const {
@@ -26,6 +27,7 @@ const SchoolList: React.FC = () => {
     refetchOnMountOrArgChange: true, // Ensures refetch on mount
   });
     const { data: schoolTypes  } = useGetAllSchoolTypesQuery();
+    const dialogs = useDialogs();
 
   const [deleteSchool] = useDeleteSchoolMutation();
     const location = useLocation();
@@ -39,21 +41,35 @@ const SchoolList: React.FC = () => {
     }
   }, [state, refetch]);
 
-  const handleDelete = async (id: string) => {
-    if (confirm("Are you sure you want to delete this school?")) {
-      try {
-        await deleteSchool(id)
-          .unwrap()
-          .then(() => console.log("Deleted success"))
-          .catch((e) => console.error("Delete failed:", e));
-        toast.success("School deleted successfully");
-        refetch(); // Refresh the list after deletion
-      } catch (err) {
-        toast.error("Failed to delete the school");
-        console.error(err);
-      }
-    }
-  };
+//   const handleDelete = async (id: string) => {
+//     if (confirm("Are you sure you want to delete this school?")) {
+//       try {
+//         await deleteSchool(id)
+//           .unwrap()
+//           .then(() => console.log("Deleted success"))
+//           .catch((e) => console.error("Delete failed:", e));
+//         toast.success("School deleted successfully");
+//         refetch(); // Refresh the list after deletion
+//       } catch (err) {
+//         toast.error("Failed to delete the school");
+//         console.error(err);
+//       }
+//     }
+//   };
+const handleDelete = async(id:string)=>{
+   const confirmed = await dialogs.confirm("Are you sure you want to delete this school?");
+   if(confirmed)
+   {
+     try {
+       await deleteSchool(id).unwrap();
+       await dialogs.alert("School deleted successfully.");
+       refetch(); // Refresh the list after deletion
+     } catch (err) {
+       await dialogs.alert("Failed to delete the school.");
+       console.error(err);
+     }
+   }
+}
   const getSchoolTypeName = (id: string) => {
     const match = schoolTypes?.find((type) => type.id === id);
     return match ? match.type : 'N/A';
