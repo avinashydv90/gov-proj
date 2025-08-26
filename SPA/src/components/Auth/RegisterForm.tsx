@@ -6,7 +6,6 @@ import PageLayout from "../../shared-components/PageLayout";
 import { useRegisterMutation } from "../../services/authApi";
 import { Link, useNavigate } from "react-router-dom";
 import { toast, Toaster } from "react-hot-toast";
-import { Eye, EyeOff } from "lucide-react";
 import Topbar from "../Topbar";
 import Footer from "../Footer";
 
@@ -179,7 +178,7 @@ const RegisterForm: React.FC = () => {
                       className="absolute top-9 right-3 text-gray-600 hover:text-black"
                       tabIndex={-1}
                     >
-                      {show ? <EyeOff size={18} /> : <Eye size={18} />}
+                      {/* {show ? <EyeOff size={18} /> : <Eye size={18} />} */}
                     </button>
                   )}
                 </div>

@@ -2,49 +2,49 @@ import { createApi } from "@reduxjs/toolkit/query/react";
 
 import { IStaff, IStaffRequest } from "../../components/types/IStaff";
 import dynamicBaseQuery from "./customBaseQuery";
-
+import { baseUrl } from "../api";
 
 export const staffApi = createApi({
   reducerPath: "staffApi",
-  baseQuery: dynamicBaseQuery("https://localhost:7031/api/"),
+  baseQuery: dynamicBaseQuery(baseUrl),
 
   tagTypes: ["Staff"],
   endpoints: (builder) => ({
     getAllStaff: builder.query<IStaff[], void>({
       query: () => "Staff",
-      providesTags: ["Staff"]
+      providesTags: ["Staff"],
     }),
     getStaffById: builder.query<IStaff, string>({
       query: (id) => `Staff/${id}`,
-      providesTags: ['Staff']
+      providesTags: ["Staff"],
     }),
     getStaffBySchoolId: builder.query<IStaff[], string>({
       query: (id) => `Staff/school/${id}`,
-      providesTags: ['Staff']
+      providesTags: ["Staff"],
     }),
     createStaff: builder.mutation<void, IStaffRequest>({
       query: (newStaff) => ({
-        url: 'Staff',
-        method: 'POST',
-        body: newStaff
+        url: "Staff",
+        method: "POST",
+        body: newStaff,
       }),
-      invalidatesTags: ['Staff']
+      invalidatesTags: ["Staff"],
     }),
     updateStaff: builder.mutation<void, IStaff>({
       query: (staff) => ({
         url: `Staff/${staff.id}`,
-        method: 'PUT',
-        body: staff
+        method: "PUT",
+        body: staff,
       }),
-      invalidatesTags: ['Staff']
+      invalidatesTags: ["Staff"],
     }),
     deleteStaff: builder.mutation<void, string>({
       query: (id) => ({
         url: `Staff/${id}`,
-        method: 'DELETE'
+        method: "DELETE",
       }),
-      invalidatesTags: ['Staff']
-    })
+      invalidatesTags: ["Staff"],
+    }),
   }),
 });
 export const {
@@ -53,6 +53,5 @@ export const {
   useGetStaffBySchoolIdQuery,
   useCreateStaffMutation,
   useUpdateStaffMutation,
-  useDeleteStaffMutation
+  useDeleteStaffMutation,
 } = staffApi;
-

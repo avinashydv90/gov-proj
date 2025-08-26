@@ -5,7 +5,10 @@ import {
   useAddSchoolMutation,
 } from "../../services/schoolApi";
 import PageLayout from "../../shared-components/PageLayout";
-import { ISchoolRegistrationRequest, ISchoolUpdationRequest } from "../types/School";
+import {
+  ISchoolRegistrationRequest,
+  ISchoolUpdationRequest,
+} from "../types/School";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { SchoolType } from "../types/schoolType";
@@ -15,7 +18,6 @@ import InputField from "../InputField";
 import TextareaField from "../TextareaField";
 
 const SchoolRegistrationForm: React.FC = () => {
-
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>(); // for edit
   const isEditMode = !!id;
@@ -39,8 +41,7 @@ const SchoolRegistrationForm: React.FC = () => {
     schoolTypeId: "",
   });
 
-  const [registerSchool, { isLoading: isRegistering }] =
-    useAddSchoolMutation();
+  const [registerSchool, { isLoading: isRegistering }] = useAddSchoolMutation();
   const { data: schoolTypes, isLoading: isSchoolTypesLoading } =
     useGetAllSchoolTypesQuery();
   const [updateSchool, { isLoading: isUpdating }] = useUpdateSchoolMutation();
@@ -54,7 +55,6 @@ const SchoolRegistrationForm: React.FC = () => {
   });
 
   useEffect(() => {
-    
     if (isEditMode && existingSchool) {
       setFormData({
         id: existingSchool.id, // include id for update
@@ -100,17 +100,18 @@ const SchoolRegistrationForm: React.FC = () => {
     const onlyLettersRegex = /^[A-Za-z\u0900-\u097F\s]+$/;
     const schoolNameRegex = /^[\p{L}\s.'-]+$/u;
 
-   if (formData.name.length > 100) {
-  newErrors.name = "शाळेचे नाव 100 अक्षरांपेक्षा कमी असावे.";
-  toast.error(newErrors.name);
-  return false;
-}
+    if (formData.name.length > 100) {
+      newErrors.name = "शाळेचे नाव 100 अक्षरांपेक्षा कमी असावे.";
+      toast.error(newErrors.name);
+      return false;
+    }
 
-if (!schoolNameRegex.test(formData.name.trim())) {
-  newErrors.name = "शाळेचे नाव फक्त अक्षरे, स्पेस, डॉट (.) आणि विशेष चिन्हे (-, ') असावीत.";
-  toast.error(newErrors.name);
-  return false;
-}
+    if (!schoolNameRegex.test(formData.name.trim())) {
+      newErrors.name =
+        "शाळेचे नाव फक्त अक्षरे, स्पेस, डॉट (.) आणि विशेष चिन्हे (-, ') असावीत.";
+      toast.error(newErrors.name);
+      return false;
+    }
 
     if (!schoolCodeRegex.test(formData.schoolCode.trim())) {
       newErrors.schoolCode = "वैध शाळेचा कोड प्रविष्ट करा ";
@@ -186,7 +187,7 @@ if (!schoolNameRegex.test(formData.name.trim())) {
       toast.error(newErrors.higherStandard);
       return false;
     }
-    if (!formData.schoolTypeId ) {
+    if (!formData.schoolTypeId) {
       newErrors.schoolTypeId = "कृपया शाळेचा प्रकार निवडा.";
       toast.error(newErrors.schoolTypeId);
       return false;
@@ -210,25 +211,22 @@ if (!schoolNameRegex.test(formData.name.trim())) {
     if (!validateForm()) return;
 
     try {
-     if(isEditMode && id)
-    {
-       const updatePayLoad: ISchoolUpdationRequest={
-      
-        ...formData,
-        establishMentDate: new Date(formData.establishMentDate).toISOString(),
-        id
-       };
-      const response = await updateSchool(updatePayLoad);
-      console.log("Update response:", response);
-      }
-      else {
-         const registerPayload: ISchoolRegistrationRequest = {
-    ...formData,
-    establishMentDate: new Date(formData.establishMentDate).toISOString()
-  };
+      if (isEditMode && id) {
+        const updatePayLoad: ISchoolUpdationRequest = {
+          ...formData,
+          establishMentDate: new Date(formData.establishMentDate).toISOString(),
+          id,
+        };
+        const response = await updateSchool(updatePayLoad);
+        console.log("Update response:", response);
+      } else {
+        const registerPayload: ISchoolRegistrationRequest = {
+          ...formData,
+          establishMentDate: new Date(formData.establishMentDate).toISOString(),
+        };
         await registerSchool(registerPayload).unwrap();
         toast.success("शाळा यशस्वीरित्या नोंदवली गेली.");
-          setFormData({
+        setFormData({
           schoolCode: "",
           clusterCode: "",
           name: "",
@@ -248,7 +246,7 @@ if (!schoolNameRegex.test(formData.name.trim())) {
 
       navigate("/admin/school-list", { state: { updated: true } });
     } catch (err) {
-     // console.error("अपडेट अयशस्वी:", err);
+      // console.error("अपडेट अयशस्वी:", err);
       toast.error("अपडेट अयशस्वी");
     }
   };
@@ -311,15 +309,15 @@ if (!schoolNameRegex.test(formData.name.trim())) {
             <div className="grid grid-cols-3 gap-4">
               {/* Keep textarea as-is */}
               <TextareaField
-  label="पत्ता"
-  name="address"
-  value={formData.address}
-  onChange={handleChange}
-  required
-  rows={2}
-  maxLength={500}
-  error={errors.address}
-/>
+                label="पत्ता"
+                name="address"
+                value={formData.address}
+                onChange={handleChange}
+                required
+                rows={2}
+                maxLength={500}
+                error={errors.address}
+              />
               {/* <div>
                 <label
                   htmlFor="address"
@@ -391,6 +389,7 @@ if (!schoolNameRegex.test(formData.name.trim())) {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
+                required
                 maxLength={100}
                 error={errors.email}
               />
@@ -486,15 +485,15 @@ if (!schoolNameRegex.test(formData.name.trim())) {
             </div>
 
             <div className="pt-4 flex justify-center p-4 gap-x-4">
-                 <button
-        type="button"
-        onClick={() => navigate("/admin/school-list")} // 👈 replace with your actual list route
-        className="px-4 py-2 text-lg font-sm text-[#5C4033] border border-[#5C4033] 
+              <button
+                type="button"
+                onClick={() => navigate("/admin/school-list")} // 👈 replace with your actual list route
+                className="px-4 py-2 text-lg font-sm text-[#5C4033] border border-[#5C4033] 
         rounded-md shadow-sm hover:bg-gray-100 
         transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#5C4033]"
-      >
-        रद्द करा
-      </button>
+              >
+                रद्द करा
+              </button>
               <button
                 type="submit"
                 disabled={isRegistering || isUpdating}
@@ -505,11 +504,10 @@ if (!schoolNameRegex.test(formData.name.trim())) {
                 {isRegistering || isUpdating
                   ? "प्रक्रिया सुरू आहे..."
                   : isEditMode
-                  ? "अपडेट करा"
-                  : "शाळा नोंदणी करा"}
+                    ? "अपडेट करा"
+                    : "शाळा नोंदणी करा"}
               </button>
-               {/* Cancel Button */}
-   
+              {/* Cancel Button */}
             </div>
           </form>
 

@@ -1,15 +1,17 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
-import { CreateDivisionDto, Division, UpdateDivisionDto } from "../components/types/division";
+import {
+  CreateDivisionDto,
+  Division,
+  UpdateDivisionDto,
+} from "../components/types/division";
 import dynamicBaseQuery from "./StaffService/customBaseQuery";
-
-const baseUrl = "https://localhost:7031/api/";
+import { baseUrl } from "./api";
 
 export const divisionApi = createApi({
   reducerPath: "divisionApi",
   baseQuery: dynamicBaseQuery(baseUrl),
   tagTypes: ["Division"],
   endpoints: (builder) => ({
-
     // GET all divisions
     getAllDivisions: builder.query<Division[], void>({
       query: () => "Division",

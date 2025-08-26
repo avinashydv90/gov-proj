@@ -1,10 +1,11 @@
-
 import { createApi } from "@reduxjs/toolkit/query/react";
-import { ICreateStandardDto, IStandard, IUpdateStandardDto } from "../components/types/standard";
+import {
+  ICreateStandardDto,
+  IStandard,
+  IUpdateStandardDto,
+} from "../components/types/standard";
 import dynamicBaseQuery from "./StaffService/customBaseQuery";
-
-
-const baseUrl = "https://localhost:7031/api/";
+import { baseUrl } from "./api";
 
 export const standardApi = createApi({
   reducerPath: "standardApi",
@@ -29,7 +30,7 @@ export const standardApi = createApi({
 
     getStandardById: builder.query<IStandard, string>({
       query: (id) => `Standard/${id}`,
-      providesTags: ["Standard"]
+      providesTags: ["Standard"],
     }),
 
     updateStandard: builder.mutation<void, IUpdateStandardDto>({
