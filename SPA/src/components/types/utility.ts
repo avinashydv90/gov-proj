@@ -41,20 +41,4 @@ export function getDivisionNameById(
     return standard ? standard.name : "-";
 }
 
-// export function getDivisionNameById(
-//     id: string,
-//     divisions: Division[]
-// ): string {
-//     if (!id || !divisions) return "-";
-//     const found = divisions.find((d) => d.id === id);
-//     return found?.name ?? "-";
-// }
 
-// export function getDivisionNameById(
-//     id: string,
-//     divisions?: Division[] | undefined
-// ): string {
-//     if (!id || !divisions) return "-";
-//     const found = divisions.find((d) => String(d.id) === String(id));
-//     return found?.name ?? "-";
-// }
