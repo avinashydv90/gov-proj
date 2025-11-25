@@ -5,7 +5,10 @@ import {
   useAddSchoolMutation,
 } from "../../services/schoolApi";
 import PageLayout from "../../shared-components/PageLayout";
-import { ISchoolRegistrationRequest, ISchoolUpdationRequest } from "../types/School";
+import {
+  ISchoolRegistrationRequest,
+  ISchoolUpdationRequest,
+} from "../types/School";
 import { useNavigate, useParams } from "react-router-dom";
 import { SchoolType } from "../types/schoolType";
 import { useGetAllSchoolTypesQuery } from "../../services/newSchoolTypeApi";
@@ -39,8 +42,7 @@ const [alertMessage, setAlertMessage] = useState<string | null>(null);
     schoolTypeId: "",
   });
 
-  const [registerSchool, { isLoading: isRegistering }] =
-    useAddSchoolMutation();
+  const [registerSchool, { isLoading: isRegistering }] = useAddSchoolMutation();
   const { data: schoolTypes, isLoading: isSchoolTypesLoading } =
     useGetAllSchoolTypesQuery();
   const [updateSchool, { isLoading: isUpdating }] = useUpdateSchoolMutation();
@@ -60,7 +62,6 @@ useEffect(() => {
 }, [alertMessage]);
 
   useEffect(() => {
-    
     if (isEditMode && existingSchool) {
       setFormData({
         id: existingSchool.id, 
@@ -209,7 +210,7 @@ if (!onlyLettersRegex.test(formData.city.trim())) {
       setAlertMessage(newErrors.higherStandard);
       return false;
     }
-    if (!formData.schoolTypeId ) {
+    if (!formData.schoolTypeId) {
       newErrors.schoolTypeId = "कृपया शाळेचा प्रकार निवडा.";
       setAlertType("error");
       setAlertMessage(newErrors.schoolTypeId);
@@ -407,6 +408,7 @@ setTimeout(() => {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
+                required
                 maxLength={100}
                 error={errors.email}
               />
@@ -502,15 +504,15 @@ setTimeout(() => {
             </div>
 
             <div className="pt-4 flex justify-center p-4 gap-x-4">
-                 <button
-        type="button"
-        onClick={() => navigate("/admin/school-list")} // 👈 replace with your actual list route
-        className="px-4 py-2 text-lg font-sm text-[#5C4033] border border-[#5C4033] 
+              <button
+                type="button"
+                onClick={() => navigate("/admin/school-list")} // 👈 replace with your actual list route
+                className="px-4 py-2 text-lg font-sm text-[#5C4033] border border-[#5C4033] 
         rounded-md shadow-sm hover:bg-gray-100 
         transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#5C4033]"
-      >
-        रद्द करा
-      </button>
+              >
+                रद्द करा
+              </button>
               <button
                 type="submit"
                 disabled={isRegistering || isUpdating}
@@ -521,8 +523,8 @@ setTimeout(() => {
                 {isRegistering || isUpdating
                   ? "प्रक्रिया सुरू आहे..."
                   : isEditMode
-                  ? "अपडेट करा"
-                  : "शाळा नोंदणी करा"}
+                    ? "अपडेट करा"
+                    : "शाळा नोंदणी करा"}
               </button>
             </div>
           </form>

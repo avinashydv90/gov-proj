@@ -4,7 +4,7 @@
 // export const schoolTypeApi = createApi({
 //     reducerPath: "schoolTypeApi",
 //     baseQuery: fetchBaseQuery({
-//         baseUrl: "https://localhost:7031/api/",
+//         baseUrl: "https://api.poitdp.shahapur-mh.in/api/",
 
 //         prepareHeaders: (headers) => {
 //             const token = localStorage.getItem("token");
@@ -54,4 +54,3 @@
 //     useUpdateSchoolTypeMutation,
 //     useDeleteSchoolTypeMutation
 // } = schoolTypeApi;
-

@@ -1,6 +1,9 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import dynamicBaseQuery from "./StaffService/customBaseQuery";
-import { StudentAttendance, StudentAttendanceReportDto } from "../components/types/studentAttendence";
+import {
+  StudentAttendance,
+  StudentAttendanceReportDto,
+} from "../components/types/studentAttendence";
 import { baseUrl } from "./api";
 
 
@@ -11,8 +14,12 @@ export const studentAttendanceApi = createApi({
 
   endpoints: (builder) => ({
     // GET /api/StudentAttendance/{divisionId}/{date}
-    getAttendance: builder.query<StudentAttendance[], { divisionId: string; date: string }>({
-      query: ({ divisionId, date }) => `StudentAttendance/${divisionId}/${date}`,
+    getAttendance: builder.query<
+      StudentAttendance[],
+      { divisionId: string; date: string }
+    >({
+      query: ({ divisionId, date }) =>
+        `StudentAttendance/${divisionId}/${date}`,
       providesTags: ["StudentAttendance"],
     }),
     // ✅ GET /api/StudentAttendance/attendance/standard/{standardId}/division/{divisionId}?date=...
@@ -56,14 +63,13 @@ export const studentAttendanceApi = createApi({
           window.URL.revokeObjectURL(url);
         },
       }),
-
-    }),
+    }
+    ),
   }),
-
 });
 export const {
   useGetAttendanceQuery,
   useGetAttendanceByStandardDivisionAndDateQuery,
   useDownloadAttendancePdfMutation,
-  useSaveAttendanceMutation
+  useSaveAttendanceMutation,
 } = studentAttendanceApi;

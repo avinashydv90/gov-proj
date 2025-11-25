@@ -6,8 +6,7 @@ import {
   IStudentUpdationRequest,
 } from "../components/types/student";
 import dynamicBaseQuery from "./StaffService/customBaseQuery";
-
-const baseUrl = "https://localhost:7031/api/";
+import { baseUrl } from "./api";
 
 export const studentApi = createApi({
   reducerPath: "studentApi",
@@ -62,7 +61,6 @@ export const studentApi = createApi({
       }),
       invalidatesTags: ["Student"],
     }),
-
 
     // PUT /Student/{id}
     updateStudent: builder.mutation<void, IStudentUpdationRequest>({
