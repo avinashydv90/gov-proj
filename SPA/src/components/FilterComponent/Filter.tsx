@@ -5,6 +5,8 @@ import { ISchool } from "../types/School";
 interface SchoolFilterProps {
  schools?: ISchool[]; // Optional prop in case it's undefined at first
   onSchoolChange: (school: ISchool | null) => void;
+ selectedSchool?: ISchool | null;
+ 
 }
 
 const filterOptions = createFilterOptions<ISchool>({
@@ -12,15 +14,16 @@ const filterOptions = createFilterOptions<ISchool>({
   stringify: (option) => option.name,
 });
 
-export default function Filter({ schools, onSchoolChange }: SchoolFilterProps) {
+export default function Filter({ schools, onSchoolChange,selectedSchool }: SchoolFilterProps) {
   return (
     <Autocomplete
       options={schools || []}
+      value={selectedSchool || null}
       getOptionLabel={(option) => option?.name || "" }
       filterOptions={filterOptions}
       onChange={(_, newValue) => onSchoolChange(newValue)}
       sx={{ width: 300 }}
-       renderInput={(params) => <TextField {...params} label="शाळा निवडा"
+       renderInput={(params) => <TextField {...params} label=" कृपया शाळा निवडा"
        className="mt-1 block w-full rounded-md border text-sm font-semibold 
        shadow-sm p-2 bg-white/90 border-[#5C4033] focus:border-[#4a3328] focus:ring-[#4a3328]"
      sx={{
@@ -37,7 +40,7 @@ export default function Filter({ schools, onSchoolChange }: SchoolFilterProps) {
             },
           }}
       />}
-      isOptionEqualToValue={(option, value) => option.id === value.id}
+      isOptionEqualToValue={(option, value) => option?.id === value?.id}
     />
   );
 }

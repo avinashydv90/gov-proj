@@ -3,41 +3,57 @@ import PageLayout from "../../shared-components/PageLayout";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from "@mui/material/IconButton";
-import {  ToastContainer } from "react-toastify";
 import { useDeleteSchoolTypeMutation, useGetAllSchoolTypesQuery } from "../../services/newSchoolTypeApi";
 import Tooltip from "@mui/material/Tooltip";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import { useDialogs } from "@toolpad/core/useDialogs";
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
+import { useEffect, useState } from "react";
+import AppSnackbar from "../alert/AppSnackbar";
+import "../../constants/confirm-custom.css";
+//import { useDialogs } from "@toolpad/core/useDialogs";
+
 export const SchoolTypeList: React.FC = () => {
+    const [alertMessage, setAlertMessage] = useState<string | null>(null);
+  const [alertType, setAlertType] = useState<"success" | "error" | "info" | "warning">("info");
   const navigate = useNavigate();
   const { data: schoolTypes, isLoading } = useGetAllSchoolTypesQuery();
   const [deleteSchoolType] = useDeleteSchoolTypeMutation();
-  const dialogs = useDialogs();
+  //const dialogs = useDialogs();
 
-  // const handleDelete = async (id: string) => {
-  //  if (window.confirm("आपण हटवू इच्छिता याची खात्री आहे का?"))  {
-  //     try {
-  //       await deleteSchoolType(id).unwrap();
-  //       toast.success("शाळेचा प्रकार यशस्वीरित्या हटवला!");
-  //     } catch (error) {
-  //       console.error("Failed to delete school type:", error);
-  //       toast.error("हटवण्यात अडचण आली.");
-  //     }
-  //   }
-  // };
+  useEffect(() => {
+     if (alertMessage) {
+       const timer = setTimeout(() => setAlertMessage(null), 2000);
+       return () => clearTimeout(timer);
+     }
+   }, [alertMessage]);
 
   const handleDelete = async (id: string) => {
-    const confirmed = await dialogs.confirm("आपण हटवू इच्छिता याची खात्री आहे का?");
-    if (confirmed) {
-      try {
-        await deleteSchoolType(id).unwrap();
-        await dialogs.alert("शाळेचा प्रकार यशस्वीरित्या हटवला!");
-      } catch (error) {
-        console.error("Failed to delete school type:", error);
-        await dialogs.alert("हटवण्यात अडचण आली.");
+  confirmAlert({
+    title: "तुम्हाला हा शाळेचा प्रकार हटवायचा आहे का?",
+    message: "कृपया पुढे जाण्यासाठी पुष्टी करा.",
+    buttons: [
+      {
+        label: "होय",
+        onClick: async () => {
+          try {
+            await deleteSchoolType(id).unwrap();
+            setAlertType("success");
+            setAlertMessage("शाळेचा प्रकार यशस्वीरित्या हटवला!");
+          } catch (error) {
+            setAlertType("error");
+            setAlertMessage("शाळेचा प्रकार हटवण्यात अडचण आली: " + (error as any).message);
+          }
+        }
+      },
+      {
+        label: "नाही",
+        onClick: () => {} 
       }
-    }
-  };
+    ]
+  });
+};
+
 
   if (isLoading) {
     return (
@@ -62,7 +78,12 @@ export const SchoolTypeList: React.FC = () => {
         <h2 className="text-2xl font-bold mb-4 text-center text-[#5C4033]">
          शाळेचा प्रकार यादी
         </h2>
-         <ToastContainer position="top-right" autoClose={3000} />
+          <AppSnackbar
+  open={!!alertMessage}
+  message={alertMessage}
+  type={alertType}
+  onClose={() => setAlertMessage(null)}
+  />
         <div className=" flex justify-end mb-4">
           <AddCircleIcon
             onClick={() => navigate("/admin/add-schooltype")}

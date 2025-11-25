@@ -1,16 +1,17 @@
 import { useForm } from "react-hook-form";
 import { IEmployeeType } from "../types/IEmployeeType";
 import { useCreateEmployeeTypeMutation, useGetEmployeeTypeByIdQuery, useUpdateEmployeeTypeMutation } from "../../services/StaffService/employeeTypeApi";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import PageLayout from "../../shared-components/PageLayout";
-import { ToastContainer ,toast} from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { useNavigate, useParams } from "react-router-dom";
+import AppSnackbar from "../alert/AppSnackbar";
 
 
 
 const EmployeeTypeForm: React.FC = () => {
-      const { id } = useParams<{ id: string }>();
+  const [alertMessage, setAlertMessage] =  useState<string | null>(null);
+  const [alertType, setAlertType] =  useState<"success" | "error" | "info" | "warning">("info");
+    const { id } = useParams<{ id: string }>();
     const isEditMode = Boolean(id);
 
     const { register, handleSubmit, reset ,formState: { errors } } = 
@@ -23,6 +24,14 @@ const EmployeeTypeForm: React.FC = () => {
 
     const navigate = useNavigate();
 
+    useEffect(() => {
+  if (alertMessage) {
+    const timer = setTimeout(() => setAlertMessage(null), 2000);
+    return () => clearTimeout(timer);
+  }
+}, [alertMessage]);
+
+
   useEffect(() => {
     if (data)
          { reset({ name: data.name });
@@ -33,21 +42,23 @@ const EmployeeTypeForm: React.FC = () => {
     try {
       if (isEditMode) {
         await updateEmployeeType({...formdata , id: id!}).unwrap();
-        toast.success("कर्मचारी प्रकार यशस्वीरित्या अद्ययावत केला.");
-
-        
+        setAlertType("success");
+        setAlertMessage("कर्मचारी प्रकार यशस्वीरित्या अद्ययावत केला.");
+           
       } else {
         await addEmployeeType(formdata).unwrap();
           reset();
-        toast.success("कर्मचारी प्रकार यशस्वीरित्या तयार केला.");
+        setAlertType("success");
+        setAlertMessage("कर्मचारी प्रकार यशस्वीरित्या तयार केला.");
          reset({ name: "" });
       }
-    console.log("Navigating to caste-type list...");
-    navigate("/admin/employeetype-list");
-    
+      setTimeout(() => {
+     navigate("/admin/employeetype-list");
+     }, 1200);
     } catch (error: any) {
-      //toast.error("काहीतरी चुकले आहे. कृपया पुन्हा प्रयत्न करा.");
-      console.error("कर्मचारी प्रकार तयार करण्यात अडचण आली:", error);
+     setAlertType("error");
+     setAlertMessage("कर्मचारी प्रकार तयार करण्यात अडचण आली."+ error.message);
+      
     }
   };
    const handleCancel = () => {
@@ -56,6 +67,13 @@ const EmployeeTypeForm: React.FC = () => {
    const isSubmitting = isAdding || isUpdating || isFetching;
   return (
     <PageLayout>
+ <AppSnackbar
+  open={!!alertMessage}
+  message={alertMessage}
+  type={alertType}
+  onClose={() => setAlertMessage(null)}
+  />
+
       <div className="w-full flex items-center justify-center bg-gray-50 px-4 py-6">
         <div className="w-full max-w-xl bg-white rounded-lg shadow-lg p-8 border border-gray-200">
           <h2 className="text-2xl font-bold mb-6 text-center text-[#5C4033]">
@@ -71,7 +89,7 @@ const EmployeeTypeForm: React.FC = () => {
                 type="text"
                 id="name"
                 {...register("name", {
-                  required: "EmployeeType आवश्यक आहे",
+                  required: "कर्मचारी प्रकार आवश्यक आहे",
                   maxLength: { value: 50, message: "कमाल ५० अक्षरे अनुमत आहेत." }
                 })}
                 placeholder="कर्मचारी प्रकाराचे नाव टाका"
@@ -132,7 +150,6 @@ const EmployeeTypeForm: React.FC = () => {
               </button>
             </div>
           </form>
-          <ToastContainer position="top-right" autoClose={5000} />
         </div>
       </div>
     </PageLayout>

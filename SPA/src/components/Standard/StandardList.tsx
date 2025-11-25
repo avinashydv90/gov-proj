@@ -1,7 +1,6 @@
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { useGetAllSchoolsQuery } from "../../services/schoolApi";
 import PageLayout from "../../shared-components/PageLayout";
@@ -14,13 +13,17 @@ import Tooltip from "@mui/material/Tooltip";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ArrowDropDownCircleIcon from '@mui/icons-material/ArrowDropDownCircle';
-import { useDialogs } from "@toolpad/core/useDialogs";
 import Filter from "../FilterComponent/Filter";
 import { ISchool } from "../types/School";
-
+import AppSnackbar from "../alert/AppSnackbar";
+import { confirmAlert } from "react-confirm-alert";
+import 'react-confirm-alert/src/react-confirm-alert.css';
+import "../../constants/confirm-custom.css";
 
 
 const StandardList: React.FC = () => {
+  const [alertMessage, setAlertMessage] = useState<string | null>(null);
+  const [alertType, setAlertType] = useState<"success" | "error" | "info" | "warning">("info");
   const navigate = useNavigate();
   const [openDivisionIds, setOpenDivisionIds] = useState<string[]>([]);
   const [selectedSchool, setSelectedSchool] = useState<ISchool | null>(null);
@@ -37,7 +40,14 @@ const StandardList: React.FC = () => {
   const [deleteStandard, { isLoading: isDeleting }] =
     useDeleteStandardMutation();
 
-    const dialogs = useDialogs();
+    //const dialogs = useDialogs();
+
+    useEffect(() => {
+     if (alertMessage) {
+       const timer = setTimeout(() => setAlertMessage(null), 2000);
+       return () => clearTimeout(timer);
+     }
+   }, [alertMessage]);
 
   const toggleDivision = (standardId: string) => {
     setOpenDivisionIds((prev) =>
@@ -54,21 +64,40 @@ const getSchoolName = (schoolId: string) => {
 
 
   const handleDeleteStandard = async (id: string) => {
-    const confirmed = await dialogs.confirm("Are you sure you want to delete this standard?");
-    if (confirmed) {
-      try {
-        await deleteStandard(id).unwrap();
-        toast.success("Standard deleted successfully");
-        refetch();
-      } catch (err) {
-        console.error(err);
-        toast.error("Failed to delete standard");
+  confirmAlert({
+    title: "तुम्हाला ही इयत्ता हटवायची आहे का?",
+    message: "कृपया पुढे जाण्यासाठी पुष्टी करा.",
+    buttons: [
+      {
+        label: "होय",
+        onClick: async () => {
+          try {
+            await deleteStandard(id).unwrap();
+            setAlertType("success");
+            setAlertMessage("इयत्ता यशस्वीरित्या हटवली!");
+            refetch();
+          } catch (err) {
+            setAlertType("error");
+            setAlertMessage("इयत्ता हटवण्यात अडचण आली: " + (err as any).message);
+          }
+        }
+      },
+      {
+        label: "नाही",
+        onClick: () => {}
       }
-    }
-  };
+    ]
+  });
+};
+
   const handleSchoolChange = (school: ISchool | null) => {
      setSelectedSchool(school);
+      setOpenDivisionIds([]); 
   };
+  <PageLayout>
+    <IsLoading isLoading={isLoading} />
+   <ErrorMessage isError={isError} />
+  </PageLayout>
 
 const filteredStandards = selectedSchool ? 
 standards.filter(standard =>standard.schoolId === selectedSchool.id) :standards;
@@ -76,14 +105,23 @@ standards.filter(standard =>standard.schoolId === selectedSchool.id) :standards;
 
   return (
   <PageLayout>
-   <IsLoading isLoading={isLoading} />
-   <ErrorMessage isError={isError} />
    <div className="w-full flex items-center justify-center bg-gray-50 px-4 py-6">
       <div className="w-full max-w-7xl bg-white rounded-lg shadow-lg p-8 border border-gray-200">
          <h2 className="text-2xl font-bold mb-6 text-center text-[#5C4033]">
             इयत्ता यादी
          </h2>
-         <Filter schools={schools} onSchoolChange={handleSchoolChange} />
+          <AppSnackbar
+  open={!!alertMessage}
+  message={alertMessage}
+  type={alertType}
+  onClose={() => setAlertMessage(null)}
+  />
+        <Filter
+  schools={schools}
+  onSchoolChange={handleSchoolChange}
+  selectedSchool={selectedSchool}
+/>
+
          {selectedSchool  &&(
          <div className="flex justify-end mb-4">
             <AddCircleIcon

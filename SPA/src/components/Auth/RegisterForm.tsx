@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import "./index.css";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import LeftImg from "../../assets/logo.jpg";
 import PageLayout from "../../shared-components/PageLayout";
 import { useRegisterMutation } from "../../services/authApi";
 import { Link, useNavigate } from "react-router-dom";
-import { toast, Toaster } from "react-hot-toast";
 import { Eye, EyeOff } from "lucide-react";
 import Topbar from "../Topbar";
 import Footer from "../Footer";
+import AppSnackbar from "../alert/AppSnackbar";
 
 interface ErrorResponse {
   status?: number;
@@ -26,6 +26,8 @@ const placeholderMap: { [key: string]: string } = {
 };
 
 const RegisterForm: React.FC = () => {
+  const [alertMessage, setAlertMessage] = useState<string | null>(null);
+  const [alertType, setAlertType] = useState<"success" | "error" | "info" | "warning">("info");
   const [register, { isLoading }] = useRegisterMutation();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -45,6 +47,12 @@ const RegisterForm: React.FC = () => {
   const toggleDropdown = () => {
     setShowDropdown((prev) => !prev);
   };
+  useEffect(() => {
+     if (alertMessage) {
+       const timer = setTimeout(() => setAlertMessage(null), 2000);
+       return () => clearTimeout(timer);
+     }
+   }, [alertMessage]);
 
   const handleRoleSelect = (selectedRole: string) => {
     setUser((prevUser) => ({ ...prevUser, role: selectedRole }));
@@ -80,12 +88,14 @@ const RegisterForm: React.FC = () => {
       !password ||
       !confirmPassword
     ) {
-      toast.error("सर्व फील्ड आवश्यक आहेत.");
+      setAlertType("error");
+      setAlertMessage("सर्व फील्ड आवश्यक आहेत.");
       return;
     }
 
     if (password !== confirmPassword) {
-      toast.error("संकेतशब्द जुळत नाहीत!");
+      setAlertType("error");
+      setAlertMessage("संकेतशब्द जुळत नाहीत!");
       return;
     }
 
@@ -98,18 +108,23 @@ const RegisterForm: React.FC = () => {
         role,
         password,
       }).unwrap();
-      toast.success("नोंदणी यशस्वी!");
+      setAlertType("success");
+      setAlertMessage("नोंदणी यशस्वी!");
       navigate("/login");
     } catch (error) {
       const err = error as Partial<ErrorResponse>;
       if (err.status === 400) {
-        toast.error("अवैध माहिती. कृपया तपासा.");
+        setAlertType("error");
+        setAlertMessage("अवैध माहिती. कृपया तपासा.");
       } else if (err.status === 500) {
-        toast.error("सर्व्हर त्रुटी. कृपया नंतर प्रयत्न करा.");
+        setAlertType("error");
+        setAlertMessage("सर्व्हर त्रुटी. कृपया नंतर प्रयत्न करा.");
       } else if (err.data?.message) {
-        toast.error(err.data.message);
+        setAlertType("error");
+        setAlertMessage(err.data.message);
       } else {
-        toast.error("नोंदणी अयशस्वी. कृपया पुन्हा प्रयत्न करा.");
+        setAlertType("error");
+        setAlertMessage("नोंदणी अयशस्वी. कृपया पुन्हा प्रयत्न करा.");
       }
     }
   };
@@ -117,7 +132,12 @@ const RegisterForm: React.FC = () => {
   return (
     <PageLayout>
       <Topbar />
-      <Toaster position="top-right" />
+     <AppSnackbar
+  open={!!alertMessage}
+  message={alertMessage}
+  type={alertType}
+  onClose={() => setAlertMessage(null)}
+  />
       <div className="hidden md:flex mt-6 flex-col md:flex-row gap-4">
         {/* Left Side: Logo */}
         <div className="md:w-1/3 lg:w-1/2 bg-white rounded-xl p-6 flex justify-center items-center">

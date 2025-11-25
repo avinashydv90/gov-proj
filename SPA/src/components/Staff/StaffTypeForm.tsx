@@ -5,13 +5,14 @@ import {
   useGetStaffTypeByIdQuery,
   useUpdateStaffTypeMutation,
 } from "../../services/StaffService/staffTypeApi";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import PageLayout from "../../shared-components/PageLayout";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { useNavigate, useParams } from "react-router-dom";
+import AppSnackbar from "../alert/AppSnackbar";
 
 const StaffTypeForm: React.FC = () => {
+  const [alertMessage, setAlertMessage] =  useState<string | null>(null);
+  const [alertType, setAlertType] =  useState<"success" | "error" | "info" | "warning">("info");
   const { id } = useParams<{ id: string }>();
   const isEditMode = Boolean(id);
 
@@ -33,6 +34,13 @@ const StaffTypeForm: React.FC = () => {
   const [updateStaffType, { isLoading: isUpdating }] = useUpdateStaffTypeMutation();
 
   const navigate = useNavigate();
+  useEffect(() => {
+  if (alertMessage) {
+    const timer = setTimeout(() => setAlertMessage(null), 2000);
+    return () => clearTimeout(timer);
+  }
+}, [alertMessage]);
+
 
   useEffect(() => {
     if (data) {
@@ -44,17 +52,23 @@ const StaffTypeForm: React.FC = () => {
     try {
       if (isEditMode) {
         await updateStaffType({ ...formData, id: id! }).unwrap();
-        toast.success("स्टाफ प्रकार यशस्वीरित्या अद्ययावत केला.");
+        setAlertType("success");
+        setAlertMessage("स्टाफ प्रकार यशस्वीरित्या अद्ययावत केला.");   
       } else {
         await addStaffType(formData).unwrap();
-        toast.success("स्टाफ प्रकार यशस्वीरित्या तयार केला.");
+        setAlertType("success");
+        setAlertMessage("स्टाफ प्रकार यशस्वीरित्या तयार केला.");
         reset({ name: "" });
       }
+setTimeout(() => {
+  navigate("/admin/stafftype-list");
+}, 1200);
 
-      navigate("/admin/stafftype-list");
+      
     } catch (error) {
-      console.error("स्टाफ प्रकार तयार करण्यात अडचण आली:", error);
-      toast.error("काहीतरी चुकले आहे. कृपया पुन्हा प्रयत्न करा.");
+      setAlertType("error");
+      setAlertMessage("स्टाफ प्रकार तयार करण्यात अडचण आली." + (error as any).message);
+     
     }
   };
 
@@ -66,6 +80,12 @@ const StaffTypeForm: React.FC = () => {
 
   return (
     <PageLayout>
+      <AppSnackbar
+        open={!!alertMessage}
+        message={alertMessage}
+        type={alertType}
+        onClose={() => setAlertMessage(null)}
+      />
       <div className="w-full flex items-center justify-center bg-gray-50 px-4 py-6">
         <div className="w-full max-w-xl bg-white rounded-lg shadow-lg p-8 border border-gray-200">
           <h2 className="text-2xl font-bold mb-6 text-center text-[#5C4033]">
@@ -135,8 +155,6 @@ const StaffTypeForm: React.FC = () => {
               </button>
             </div>
           </form>
-
-          <ToastContainer position="top-right" autoClose={5000} />
         </div>
       </div>
     </PageLayout>

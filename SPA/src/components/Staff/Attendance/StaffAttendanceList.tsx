@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
 import { skipToken } from "@reduxjs/toolkit/query/react";
-import { ToastContainer } from "react-toastify";
+import 'react-confirm-alert/src/react-confirm-alert.css';  
 import { useGetAllSchoolsQuery } from "../../../services/schoolApi";
 import PageLayout from "../../../shared-components/PageLayout";
 import { StaffAttendance, StaffAttendanceReportDto } from "../../types/IStaffAttendance";
 import {  useDownloadStaffAttendancePdfMutation, useGetStaffAttendanceBySchoolIdAndDateQuery } from "../../../services/staffAttendanceApi";
+import AppSnackbar from "../../alert/AppSnackbar";
 
 const StaffAttendanceList: React.FC = () => {
+  const [alertMessage, setAlertMessage] = useState<string | null>(null);
+  const [alertType, setAlertType] = useState<"success" | "error" | "info" | "warning">("info");
   const [selectedSchool, setSelectedSchool] = useState<string>("");
   const [selectedDate, setSelectedDate] = useState<string>(
     new Date().toISOString().split("T")[0]
@@ -24,43 +27,52 @@ const StaffAttendanceList: React.FC = () => {
   const [downloadStaffAttendancePdf, { isLoading: isPdfLoading }] =
     useDownloadStaffAttendancePdfMutation();
 
+    useEffect(() => {
+     if (alertMessage) {
+       const timer = setTimeout(() => setAlertMessage(null), 2000);
+       return () => clearTimeout(timer);
+     }
+   }, [alertMessage]);
+
   useEffect(() => {
     if (staffData && staffData.length > 0) {
       setStaff(staffData);
     }
   }, [staffData]);
 
- const downloadCSV = () => {
-  if (!staff || staff.length === 0) return;
+//  const downloadCSV = () => {
+//   if (!staff || staff.length === 0) return;
 
-  const header = ["क्र. नं.", "कर्मचाऱ्याचे नाव", "शाळा", "उपस्थित / अनुपस्थित"];
+//   const header = ["क्र. नं.", "कर्मचाऱ्याचे नाव", "शाळा", "उपस्थित / अनुपस्थित"];
 
-  const rows = staff.map((s: StaffAttendance, index: number) => [
-    index + 1,
-    `"${s.fullName}"`,
-    `"${schools?.find(sc => sc.id === s.schoolId)?.name || "-"}"`,
-    s.isPresent ? "उपस्थित" : "अनुपस्थित"
-  ]);
+//   const rows = staff.map((s: StaffAttendance, index: number) => [
+//     index + 1,
+//     `"${s.fullName}"`,
+//     `"${schools?.find(sc => sc.id === s.schoolId)?.name || "-"}"`,
+//     `"${s.date}"`,
+//     s.isPresent ? "उपस्थित" : "अनुपस्थित"
+//   ]);
 
-  const csvContent =
-    "data:text/csv;charset=utf-8," +
-    [header, ...rows].map((e) => e.join(",")).join("\n");
+//   const csvContent =
+//     "data:text/csv;charset=utf-8," +
+//     [header, ...rows].map((e) => e.join(",")).join("\n");
 
-  const encodedUri = encodeURI(csvContent);
-  const link = document.createElement("a");
-  link.setAttribute("href", encodedUri);
-  link.setAttribute("download", `staff_attendance_${selectedDate}.csv`);
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-};
+//   const encodedUri = encodeURI(csvContent);
+//   const link = document.createElement("a");
+//   link.setAttribute("href", encodedUri);
+//   link.setAttribute("download", `staff_attendance_${selectedDate}.csv`);
+//   document.body.appendChild(link);
+//   link.click();
+//   document.body.removeChild(link);
+// };
 
 const handleDownloadPDF = async () => {
   const reportData: StaffAttendanceReportDto[] = staff.map(
     (s: StaffAttendance, index: number) => ({
       srNo: index + 1,
       fullName: s.fullName,
-      schoolId: schools?.find(sc => sc.id === s.schoolId)?.name || "-",
+      date:selectedDate,
+      schoolId:selectedSchool,
       isPresent: s.isPresent,
     })
   );
@@ -68,7 +80,9 @@ const handleDownloadPDF = async () => {
   try {
     await downloadStaffAttendancePdf(reportData).unwrap();
   } catch (error) {
-    console.error("Failed to download PDF", error);
+    setAlertType("error");
+    setAlertMessage("Failed to download PDF." + (error as any).message);
+    
   }
 };
 
@@ -89,7 +103,12 @@ const handleDownloadPDF = async () => {
           <h2 className="text-2xl font-semibold mb-6 text-center font-noto-serif-devanagari text-[#5C4033]">
             कर्मचाऱ्यांची हजेरी यादी
           </h2>
-          <ToastContainer position="top-right" autoClose={3000} />
+          <AppSnackbar
+  open={!!alertMessage}
+  message={alertMessage}
+  type={alertType}
+  onClose={() => setAlertMessage(null)}
+  />
 
           {/* Dropdown and Date Picker */}
           <div className="flex gap-4 mb-6 justify-center">
@@ -151,13 +170,13 @@ const handleDownloadPDF = async () => {
 
                 {/* Buttons */}
                 <div className="flex justify-end gap-4 mt-4">
-                  <button
+                  {/* <button
                     onClick={downloadCSV}
                     disabled={!staff || staff.length === 0}
                     className="px-6 py-2 border border-[#5C4033] text-[#5C4033] rounded-md shadow-md font-bold hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Download CSV
-                  </button>
+                  </button> */}
                   <button
                     onClick={handleDownloadPDF}
                     disabled={!staff || staff.length === 0}

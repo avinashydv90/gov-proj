@@ -2,10 +2,8 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { ISchool, ISchoolRegistrationRequest, ISchoolUpdationRequest } from '../components/types/School';
 import dynamicBaseQuery from './StaffService/customBaseQuery';
+import { baseUrl } from './api';
 
-
-
-const baseUrl = 'https://localhost:7031/api/';
 
 export const schoolApi = createApi({
     reducerPath: 'schoolApi',

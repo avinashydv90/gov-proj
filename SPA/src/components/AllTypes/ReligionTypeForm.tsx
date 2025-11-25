@@ -5,13 +5,14 @@ import {
   useGetReligionTypeByIdQuery,
   useUpdateReligionTypeMutation,
 } from "../../services/StaffService/religionTypeApi";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import PageLayout from "../../shared-components/PageLayout";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { useNavigate, useParams } from "react-router-dom";
+import AppSnackbar from "../alert/AppSnackbar";
 
 const ReligionTypeForm: React.FC = () => {
+  const [alertMessage, setAlertMessage] = useState<string | null>(null);
+  const [alertType, setAlertType] = useState<"success" | "error" | "info" | "warning">("info");
   const { id } = useParams<{ id: string }>();
   const isEditMode = Boolean(id);
 
@@ -42,21 +43,35 @@ const ReligionTypeForm: React.FC = () => {
     }
   }, [data, reset]);
 
+  useEffect(() => {
+    if (alertMessage) {
+      const timer = setTimeout(() => setAlertMessage(null), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [alertMessage]);
+
   const onSubmit = async (formData: IReligionType) => {
     try {
       if (isEditMode) {
         await updateReligionType({ ...formData, id: id! }).unwrap();
-        toast.success("धर्म प्रकार यशस्वीरित्या अद्ययावत केला.");
+        setAlertType("success");
+        setAlertMessage("धर्म प्रकार यशस्वीरित्या अद्ययावत केला.");
+       
       } else {
         await addReligionType(formData).unwrap();
-        toast.success("धर्म प्रकार यशस्वीरित्या तयार केला.");
+        setAlertType("success");
+        setAlertMessage("धर्म प्रकार यशस्वीरित्या तयार केला.");
+      
         reset({ name: "" });
       }
-
-      navigate("/admin/religiontype-list");
-    } catch (error) {
-      console.error("धर्म प्रकार तयार करण्यात अडचण आली:", error);
-      toast.error("काहीतरी चुकले आहे. कृपया पुन्हा प्रयत्न करा.");
+ setTimeout(() => {
+   navigate("/admin/religiontype-list");
+}, 1600);
+      
+    } catch (error: any) {
+      setAlertType("error");
+      setAlertMessage("काहीतरी चुकले आहे. कृपया पुन्हा प्रयत्न करा."+ error.message);
+     
     }
   };
 
@@ -73,7 +88,12 @@ const ReligionTypeForm: React.FC = () => {
           <h2 className="text-2xl font-bold mb-6 text-center text-[#5C4033]">
             {isEditMode ? "धर्म प्रकार अद्ययावत करा" : "नवीन धर्म प्रकार तयार करा"}
           </h2>
-
+<AppSnackbar
+  open={!!alertMessage}
+  message={alertMessage}
+  type={alertType}
+  onClose={() => setAlertMessage(null)}
+/>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div>
               <label htmlFor="name" className="block text-md font-bold text-[#5C4033] mb-1">
@@ -140,7 +160,7 @@ const ReligionTypeForm: React.FC = () => {
             </div>
           </form>
 
-          <ToastContainer position="top-right" autoClose={5000} />
+         
         </div>
       </div>
     </PageLayout>

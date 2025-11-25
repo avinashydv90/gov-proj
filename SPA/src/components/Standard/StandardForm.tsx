@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { ICreateStandardDto, IUpdateStandardDto } from "../types/standard";
 import {
   useCreateStandardMutation,
@@ -10,9 +8,12 @@ import {
 } from "../../services/standardApi";
 import { useGetAllSchoolsQuery } from "../../services/schoolApi";
 import PageLayout from "../../shared-components/PageLayout";
+import AppSnackbar from "../alert/AppSnackbar";
 
 
 const StandardForm: React.FC = () => {
+  const [alertMessage, setAlertMessage] = useState<string | null>(null);
+  const [alertType, setAlertType] = useState<"success" | "error" | "info" | "warning">("info");
   const navigate = useNavigate();
   const { standardId } = useParams<{ standardId: string }>();
   const isEditMode = !!standardId;
@@ -32,6 +33,14 @@ const StandardForm: React.FC = () => {
     isError: isStandardError,
     isSuccess: isStandardSuccess,
   } = useGetStandardByIdQuery(String(standardId), { skip: !isEditMode });
+
+  useEffect(() => {
+  if (alertMessage) {
+    const timer = setTimeout(() => setAlertMessage(null), 2000);
+    return () => clearTimeout(timer);
+  }
+}, [alertMessage]);
+
 
   useEffect(() => {
     if (isEditMode && isStandardSuccess && existingStandard) {
@@ -58,21 +67,26 @@ const StandardForm: React.FC = () => {
           id: standardId,
           ...formData,
         }
-        console.log("Update Payload:", updatePayLoad);
         await updateStandard(updatePayLoad).unwrap();
-        toast.success("इयत्ता यशस्वीरित्या अपडेट झाली.");
+        setAlertType("success");
+        setAlertMessage("इयत्ता यशस्वीरित्या अपडेट झाली.");
       } else {
         const createPayload: ICreateStandardDto = {
           ...formData,
         };
         await addStandard(createPayload).unwrap();
-        toast.success("इयत्ता यशस्वीरित्या नोंदवली गेली.");
+        setAlertType("success");
+        setAlertMessage("इयत्ता यशस्वीरित्या नोंदवली गेली.");
         setFormData({ name: "", schoolId: "" });
       }
-      navigate("/admin/standard-list");
+      setTimeout(() => {
+ navigate("/admin/standard-list");
+}, 2000);
+
+      
     } catch (err) {
-      console.error("त्रुटी:", err);
-      toast.error("प्रक्रिया अयशस्वी");
+      setAlertType("error");
+      setAlertMessage("काहीतरी चुकले आहे. कृपया पुन्हा प्रयत्न करा." + (err as any).message);
     }
   };
 
@@ -96,6 +110,12 @@ const StandardForm: React.FC = () => {
 
   return (
     <PageLayout>
+       <AppSnackbar
+  open={!!alertMessage}
+  message={alertMessage}
+  type={alertType}
+  onClose={() => setAlertMessage(null)}
+  />
       <div className="py-3 px-4 inline-flex items-center gap-x-2 text-xl font-semibold text-[#5E3023]">
       
       </div>
@@ -105,7 +125,6 @@ const StandardForm: React.FC = () => {
           <h2 className="text-2xl font-bold mb-6 text-center text-[#5C4033]">
             {isEditMode ? "इयत्ता संपादित करा" : "इयत्ता नोंदणी फॉर्म"}
           </h2>
-           <ToastContainer position="top-right" autoClose={3000}/>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label

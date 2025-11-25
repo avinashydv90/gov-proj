@@ -1,7 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, {  useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import PageLayout from "../../shared-components/PageLayout";
 import InputField from "../InputField";
 import SelectField from "../SelectField";
@@ -13,10 +11,13 @@ import { useGetAllCasteTypesQuery } from "../../services/StaffService/casteTypeA
 import { useGetAllSchoolsQuery } from "../../services/schoolApi";
 import { useGetAllReligionTypesQuery } from "../../services/StaffService/religionTypeApi";
 import TextareaField from "../TextareaField";
+import AppSnackbar from "../alert/AppSnackbar";
 
 
 
 const StaffForm: React.FC = () => {
+  const [alertMessage, setAlertMessage] = useState<string | null>(null);
+  const [alertType, setAlertType] = useState<"success" | "error" | "info" | "warning">("info");
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const isEditMode = !!id;
@@ -60,6 +61,14 @@ const StaffForm: React.FC = () => {
     skip: !isEditMode,
   });
 
+  useEffect(() => {
+  if (alertMessage) {
+    const timer = setTimeout(() => setAlertMessage(null), 2000);
+    return () => clearTimeout(timer);
+  }
+}, [alertMessage]);
+
+
 useEffect(() => {
   if (isEditMode && existingStaff) {
     setFormData(prev => ({
@@ -76,7 +85,8 @@ useEffect(() => {
 }, [isEditMode, existingStaff]);
 
 
-  const handleChange = ( e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+  const handleChange = ( e: React.ChangeEvent<HTMLInputElement 
+    | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
     setErrors((prev) => ({ ...prev, [name]: "" }));
@@ -84,6 +94,7 @@ useEffect(() => {
 
   const validateForm = () => {
     const newErrors: { [key: string]: string } = {};
+
     if (!formData.name.trim()) newErrors.name = "नाव आवश्यक आहे";
     if (!formData.joiningDate) newErrors.joiningDate = "जॉईनिंग दिनांक आवश्यक आहे";
     if (!formData.dateOfBirth) newErrors.dateOfBirth = "जन्मतारीख आवश्यक आहे";
@@ -100,17 +111,20 @@ useEffect(() => {
     }
 
     setErrors(newErrors);
-    Object.values(newErrors).forEach((msg) => toast.error(msg));
-    return Object.keys(newErrors).length === 0;
+   if(Object.keys(newErrors).length > 0){
+    const firstErrorField = Object.keys(newErrors)[0];
+    setAlertType("error");
+    setAlertMessage(firstErrorField);
+    return false;
+   }
+   return true;
   };
- // Date formatting helper
+
   const formatDate = (dateStr: string) => {
     if (!dateStr) return "";
-    // Input type="date" gives YYYY-MM-DD string, backend might accept this directly
-    // Otherwise convert to ISO string:
     const d = new Date(dateStr);
-    return d.toISOString(); // If backend expects full ISO
-    // return dateStr; // Uncomment this if backend expects just YYYY-MM-DD
+    return d.toISOString();
+   
   };
 
 const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -125,14 +139,20 @@ const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   try {
     if (isEditMode) {
       await updateStaff(payload).unwrap();
-      toast.success("स्टाफ माहिती अपडेट झाली.");
+      setAlertType("success");
+      setAlertMessage("staff updated successfully.");
     } else {
       await createStaff(payload).unwrap();
-      toast.success("स्टाफ यशस्वीरित्या नोंदवला गेला.");
+      setAlertType("success");
+      setAlertMessage("staff created successfully.");
     }
-    navigate("/admin/staff-list", { state: { updated: true } });
+    setTimeout(()=>{
+        navigate("/admin/staff-list", { state: { updated: true } });
+    },1200);
+   
   } catch (err) {
-    toast.error("कारवाई अयशस्वीरित्या अयशस्वी.");
+    setAlertType("error");
+    setAlertMessage("कारवाई अयशस्वीरित्या अयशस्वी." + (err as any).message);
   }
 };
 
@@ -148,6 +168,12 @@ const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 
   return (
     <PageLayout>
+      <AppSnackbar
+  open={!!alertMessage}
+  message={alertMessage}
+  type={alertType}
+  onClose={() => setAlertMessage(null)}
+/>
       <div className="w-full flex items-center justify-center bg-gray-50 px-4 py-6">
         <div className="w-full max-w-6xl bg-white rounded-lg shadow-lg p-8 border border-gray-200 overflow-auto">
           <h2 className="text-2xl font-bold mb-8 text-center text-[#5C4033]">
@@ -206,7 +232,6 @@ const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
               </button>
             </div>
           </form>
-          <ToastContainer position="top-right" autoClose={3000} />
         </div>
       </div>
     </PageLayout>

@@ -5,13 +5,14 @@ import {
   useGetCasteTypeByIdQuery,
   useUpdateCasteTypeMutation,
 } from "../../services/StaffService/casteTypeApi";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import PageLayout from "../../shared-components/PageLayout";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { useNavigate, useParams } from "react-router-dom";
+import AppSnackbar from "../alert/AppSnackbar";
 
 const CasteTypeForm: React.FC = () => {
+  const [alertMessage, setAlertMessage] = useState<string | null>(null);
+  const [alertType, setAlertType] = useState<"success" | "error" | "info" | "warning">("info");
   const { id } = useParams<{ id: string }>();
   const isEditMode = Boolean(id);
 
@@ -39,27 +40,45 @@ const CasteTypeForm: React.FC = () => {
       reset({ casteName: data.casteName });
     }
   }, [data, reset]);
+  // Auto hide alert after 2 seconds
+  useEffect(() => {
+    if (alertMessage) {
+      const timer = setTimeout(() => setAlertMessage(null), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [alertMessage]);
 
   const onSubmit = async (formData: ICasteType) => {
     try {
       if (isEditMode) {
         await updateCasteType({ ...formData, id: id! }).unwrap();
-        toast.success("जात प्रकार यशस्वीरित्या अद्ययावत केला.");
+        setAlertType("success");
+        setAlertMessage("जात प्रकार यशस्वीरित्या अद्ययावत केला.");
       } else {
         await addCasteType(formData).unwrap();
-        toast.success("जात प्रकार यशस्वीरित्या तयार केला.");
+       
+        setAlertType("success");
+        setAlertMessage("जात प्रकार यशस्वीरित्या तयार केला.");
+    
         reset({ casteName: "" });
       }
 
-      navigate("/admin/castetype-list");
-    } catch (error) {
-      console.error("जात प्रकार तयार करण्यात अडचण आली:", error);
-      toast.error("काहीतरी चुकले आहे. कृपया पुन्हा प्रयत्न करा.");
+      setTimeout(() => {
+  navigate("/admin/castetype-list");
+}, 1200); // 1.2 sec delay so alert is visible
+
+    } catch (error: any) {
+      setAlertType("error");
+      setAlertMessage("काहीतरी चुकले आहे. कृपया पुन्हा प्रयत्न करा." + error.message);
+      
+     
     }
   };
 
   const handleCancel = () => {
-    navigate("/admin/castetype-list");
+    setTimeout(() => {
+  navigate("/admin/castetype-list");
+}, 1200); // 0.8 second delay
   };
 
   const isSubmitting = isAdding || isUpdating || isFetching;
@@ -71,6 +90,12 @@ const CasteTypeForm: React.FC = () => {
           <h2 className="text-2xl font-bold mb-6 text-center text-[#5C4033]">
             {isEditMode ? "जात प्रकार अद्ययावत करा" : "नवीन जात प्रकार तयार करा"}
           </h2>
+ <AppSnackbar
+  open={!!alertMessage}
+  message={alertMessage}
+  type={alertType}
+  onClose={() => setAlertMessage(null)}
+/>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div>
@@ -136,7 +161,7 @@ const CasteTypeForm: React.FC = () => {
             </div>
           </form>
 
-          <ToastContainer position="top-right" autoClose={5000} />
+          
         </div>
       </div>
     </PageLayout>

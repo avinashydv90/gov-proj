@@ -4,8 +4,6 @@ import { StudentAttendance, StudentAttendanceReportDto } from "../components/typ
 import { baseUrl } from "./api";
 
 
-//const baseUrl = "https://localhost:7031/api/";
-
 export const studentAttendanceApi = createApi({
   reducerPath: "studentAttendanceApi",
   baseQuery: dynamicBaseQuery(baseUrl),
@@ -35,11 +33,14 @@ export const studentAttendanceApi = createApi({
       }),
       invalidatesTags: ["StudentAttendance"], // refresh the cache
     }),
-    downloadAttendancePdf: builder.mutation<Blob, StudentAttendanceReportDto[]>({
-      query: (student) => ({
-        url: "StudentAttendance/download-pdf",
+    downloadAttendancePdf: builder.mutation<Blob, { schoolName: string; students: StudentAttendanceReportDto[] }>({
+      query: ({ schoolName, students }) => ({
+        url: `StudentAttendance/download-pdf?schoolName=${encodeURIComponent(schoolName)}`,
         method: "POST",
-        body: student, // 👈 Must match expected DTO shape
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: students, // 👈 Must match expected DTO shape
         responseHandler: async (response) => {
           if (!response.ok) {
             const text = await response.text();

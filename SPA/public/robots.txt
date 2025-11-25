@@ -1,4 +1,4 @@
 User-agent: *
 Disallow:
 
-Sitemap: https://poitdp.shahapur-mh.in/sitemap_index
+Sitemap: https://poitdp.shahapur-mh.in/sitemap_index.xml

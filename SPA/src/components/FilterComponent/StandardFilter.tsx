@@ -6,6 +6,7 @@ import { IStandard } from "../types/standard";
 interface StandardFilterProps {
   standards?: IStandard[];
   selectedSchoolId?: string;
+   value?: string | null;    
   onStandardChange: (standard: IStandard | null) => void;
 }
 
@@ -17,6 +18,7 @@ const filterOptions = createFilterOptions<IStandard>({
 const StandardFilter: React.FC<StandardFilterProps> = ({
   standards,
   selectedSchoolId,
+  value,
   onStandardChange,
 }) => {
   const filteredStandards =
@@ -24,8 +26,11 @@ const StandardFilter: React.FC<StandardFilterProps> = ({
       ? standards.filter((std) => std.schoolId === selectedSchoolId)
       : [];
 
+      const selectedObj =
+    filteredStandards.find((s) => s.id === value) || null; 
   return (
     <Autocomplete
+   value={selectedObj}   
       options={filteredStandards}
       getOptionLabel={(option) => option?.name || ""}
       filterOptions={filterOptions}
@@ -48,7 +53,7 @@ const StandardFilter: React.FC<StandardFilterProps> = ({
           }}
         />
       )}
-      isOptionEqualToValue={(option, value) => option.id === value.id}
+      isOptionEqualToValue={(option, value) => option?.id === value?.id}
       disabled={!selectedSchoolId}
     />
   );

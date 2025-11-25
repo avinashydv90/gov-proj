@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import {  ToastContainer } from "react-toastify";
 import PageLayout from "../../shared-components/PageLayout";
 import { useDeleteCasteTypeMutation, useGetAllCasteTypesQuery } from "../../services/StaffService/casteTypeApi";
 import Tooltip from "@mui/material/Tooltip";
@@ -7,29 +6,54 @@ import IconButton from "@mui/material/IconButton";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import { useDialogs } from "@toolpad/core/useDialogs";
+//import { useDialogs } from "@toolpad/core/useDialogs";
+import { useEffect, useState } from "react";
+import AppSnackbar from "../alert/AppSnackbar";
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
+import "../../constants/confirm-custom.css";
 
 
 export const CasteTypeList: React.FC = () => {
+  const [alertMessage, setAlertMessage] = useState<string | null>(null);
+  const [alertType, setAlertType] = useState<"success" | "error" | "info" | "warning">("info");
   const navigate = useNavigate();
   const { data: casteTypes, isLoading } = useGetAllCasteTypesQuery();
   const [deleteCasteType] = useDeleteCasteTypeMutation();
-  const dialogs = useDialogs();
+  //const dialogs = useDialogs();
 
-  const handleDelete = async (id: string) => {
-    const confirmed = await dialogs.confirm("आपण हटवू इच्छिता याची खात्री आहे का?");
-    if (confirmed) {
-      try {
-        await deleteCasteType(id).unwrap();
-        await dialogs.alert("जात प्रकार यशस्वीरित्या हटवला!");
-        
-      } catch (error) {
-        await dialogs.alert("जात प्रकार हटवण्यात अडचण आली:");
-        console.error(error);
+  useEffect(() => {
+     if (alertMessage) {
+       const timer = setTimeout(() => setAlertMessage(null), 2000);
+       return () => clearTimeout(timer);
+     }
+   }, [alertMessage]);
+
+ const handleDelete = async (id: string) => {
+  confirmAlert({
+    title: "तुम्हाला हा जात प्रकार हटवायचा आहे का?",
+    message: "कृपया पुढे जाण्यासाठी पुष्टी करा.",
+    buttons: [
+      {
+        label: "होय",
+        onClick: async () => {
+          try {
+            await deleteCasteType(id).unwrap();
+            setAlertType("success");
+            setAlertMessage("जात प्रकार यशस्वीरित्या हटवला!");
+          } catch (error) {
+            setAlertType("error");
+            setAlertMessage("जात प्रकार हटवण्यात अडचण आली: " + (error as any).message);
+          }
+        }
+      },
+      {
+        label: "नाही",
+        onClick: () => {}
       }
-    }
-    
-  };
+    ]
+  });
+};
 
   if (isLoading) {
     return (
@@ -54,7 +78,12 @@ export const CasteTypeList: React.FC = () => {
         <h2 className="text-2xl font-bold mb-4 text-center text-[#5C4033]">
           जात प्रकार यादी
         </h2>
-        <ToastContainer position="top-right" autoClose={3000} />
+         <AppSnackbar
+  open={!!alertMessage}
+  message={alertMessage}
+  type={alertType}
+  onClose={() => setAlertMessage(null)}
+  />
         <div className="flex justify-end mb-4">
           <AddCircleIcon 
           onClick={() => navigate("/admin/add-castetype")}

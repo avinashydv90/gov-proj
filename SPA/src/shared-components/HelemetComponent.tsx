@@ -13,9 +13,9 @@ interface HelmetProps {
 const HelmetComponent: React.FC<HelmetProps> = ({
   title = "एकात्मिक आदिवासी विकास प्रकल्प, शहापुर | Adivasi Vikas Prakalp Shahapur",
   description = "Welcome to Adivasi Vikas Prakalp Shahapur",
-  keywords = "adivasi vikas shahapur,Adivasi Vikas Prakalp Shahapur,Adivasi,vikas,Adivasi vikas,Adivasi vikas shahapur,poitdp shahapur,poitdp shahapur mh,आदिवासी विकास प्रकल्प, शहापुर,",
+  keywords = "adivasi vikas shahapur,Adivasi Vikas Prakalp Shahapur,Adivasi vikas,Adivasi vikas shahapur,poitdp shahapur,poitdp shahapur mh,आदिवासी विकास प्रकल्प, शहापुर,",
   author = "Adivasi Vikas Prakalp Shahapur",
-  canonical = "https://yourdomain.com/",
+  canonical = "https://poitdp.shahapur-mh.in/",
 }) => {
   return (
     <Helmet>

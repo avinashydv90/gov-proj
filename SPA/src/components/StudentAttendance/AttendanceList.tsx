@@ -1,13 +1,16 @@
-import { useEffect, useState } from "react";
+import {   useState } from "react";
 import { useGetAllStandardsQuery } from "../../services/standardApi";
 import { useGetDivisionsByStandardIdQuery } from "../../services/divisionApi";
 import { useDownloadAttendancePdfMutation, useGetAttendanceByStandardDivisionAndDateQuery } from "../../services/studentAttendenceApi";
 import { skipToken } from "@reduxjs/toolkit/query/react";
 import PageLayout from "../../shared-components/PageLayout";
-import { ToastContainer } from "react-toastify";
 import "../StudentAttendance/globals.css";
 import { StudentAttendanceReportDto } from "../types/studentAttendence";
+import { useGetAllSchoolsQuery } from "../../services/schoolApi";
+//import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 
+const schoolId = "7ab5bd57-a14f-409e-abf1-55f661d44636"
+//const schoolId = "ef420f0e-7dd4-4930-91bc-809da2bc9ff1"
 
 const AttendanceList: React.FC = () => {
    const [selectedStandard, setSelectedStandard] = useState<string>("");
@@ -15,27 +18,37 @@ const AttendanceList: React.FC = () => {
    const [selectedDate, setSelectedDate] = useState<string>(
        new Date().toISOString().split("T")[0]
      );
-        
+    const { data: schools, isLoading: isSchoolsLoading } = useGetAllSchoolsQuery();    
    const [downloadAttendancePdf, { isLoading: isPdfLoading }] = useDownloadAttendancePdfMutation();
  
    const { data: standards, isLoading: isStandardsLoading } = useGetAllStandardsQuery();
    const { data: divisions, isLoading: isDivisionsLoading } = useGetDivisionsByStandardIdQuery(selectedStandard, { skip: !selectedStandard });
-   const { data: studentsData = [], isLoading: isStudentsLoading } = useGetAttendanceByStandardDivisionAndDateQuery(
-    selectedStandard && selectedDivision
-      ? { standardId: selectedStandard, divisionId: selectedDivision, date: selectedDate }
-      : skipToken
-  );
-      
-   const [students, setStudents] = useState(studentsData);
-    
+   const { data: studentsData = [], isLoading: isStudentsLoading } =
+    useGetAttendanceByStandardDivisionAndDateQuery(
+      selectedStandard && selectedDivision
+        ? {
+            standardId: selectedStandard,
+            divisionId: selectedDivision,
+            date: selectedDate,
+          }
+        : skipToken
+        
+    );
 
-    useEffect(() => {
-      if (studentsData && studentsData.length > 0) {
-        // Reset students whenever the query returns new data
-        setStudents(studentsData);
-      }
-    }, [studentsData]);
-    
+  // Final students data reference
+  const students = studentsData;
+
+  const filteredStandards = standards?.filter(
+    (s) => String(s.schoolId) === String(schoolId)
+  );
+
+
+   //  useEffect(() => {
+   //    if (studentsData && studentsData.length > 0) {
+   //      // Reset students whenever the query returns new data
+   //      setStudents(studentsData);
+   //    }
+   //  }, [studentsData]);
 
       const handleStandardChange = (value: string) => {
       setSelectedStandard(value);
@@ -43,49 +56,31 @@ const AttendanceList: React.FC = () => {
     };
 
 
-const downloadCSV = () => {
-  if (!students || students.length === 0) return;
-
-  const header = ["क्र. नं.", "विद्यार्थ्याचे नाव", "इयत्ता", "विभाग", "उपस्थित / अनुपस्थित"];
-
-  const rows = students.map((s, index) => [
-    index + 1,
-    `"${s.fullName}"`,
-    `"${standards?.find(st => st.id === s.standardId)?.name || "-"}"`,
-    `"${divisions?.find(d => d.id === s.divisionId)?.name || "-"}"`,
-    s.isPresent ? "उपस्थित" : "अनुपस्थित"
-  ]);
-
-  const csvContent = "data:text/csv;charset=utf-8," +
-    [header, ...rows].map(e => e.join(",")).join("\n");
-
-  const encodedUri = encodeURI(csvContent);
-  const link = document.createElement("a");
-  link.setAttribute("href", encodedUri);
-  link.setAttribute("download", `attendance_${selectedDate}.csv`);
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-};
-
-
 const handleDownloadPDF = async () => {
- const reportData: StudentAttendanceReportDto[] = students.map((s, index) => ({
+  const reportData: StudentAttendanceReportDto[] = students.map((s, index) => ({
     srNo: index + 1,
     fullName: s.fullName,
     standard: standards?.find(st => st.id === s.standardId)?.name || "-",
     division: divisions?.find(d => d.id === s.divisionId)?.name || "-",
+    date: selectedDate,
+    schoolId: schoolId,
     isPresent: s.isPresent,
   }));
+ const schoolName = schools?.find(sch => sch.id === schoolId)?.name || "-";
 
-   try {
-    await downloadAttendancePdf(reportData).unwrap(); // ✅ call mutation trigger correctly
+  try {
+    // Fix here 👇
+     await downloadAttendancePdf({
+      schoolName,
+      students: reportData,
+    });
   } catch (error) {
     console.error("Failed to download PDF", error);
   }
 };
+
  // Loading state
-  if (isStandardsLoading || isDivisionsLoading || isStudentsLoading) {
+  if (isStandardsLoading || isDivisionsLoading || isStudentsLoading || isSchoolsLoading) {
     return <PageLayout><p className="text-center mt-20">Loading...</p></PageLayout>;
   }
 
@@ -96,7 +91,6 @@ const handleDownloadPDF = async () => {
          <h2 className="text-2xl font-semibold mb-6 text-center font-noto-serif-devanagari text-[#5C4033]">
             विद्यार्थ्यांची हजेरी यादी
          </h2>
-         <ToastContainer position="top-right" autoClose={3000}/>
          {/* Dropdowns and Date Picker */}
          <div className="flex gap-4 mb-6">
             <select
@@ -106,11 +100,11 @@ const handleDownloadPDF = async () => {
                className="custom-select-left-arrow border p-2 font-sm rounded w-1/3 text-gray-700 font-noto-serif-devanagari"
                >
                <option value="">इयत्ता निवडा</option>
-               {standards?.map((s) => (
+               {filteredStandards?.map((s) => (
                <option key={s.id} value={s.id}>
-                  {s.name}
-               </option>
-               ))}
+               {s.name}
+                </option>
+    ))}
             </select>
             <select
                value={selectedDivision}
@@ -174,16 +168,10 @@ const handleDownloadPDF = async () => {
             {/* Buttons at the bottom of table */}
             <div className="flex justify-end gap-4 mt-4">
                <button
-               onClick={downloadCSV}
-               disabled={!students || students.length === 0}
-               className="px-6 py-2 border border-[#5C4033]-700 text-[#5C4033] rounded-md shadow-md font-bold  hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
-               >
-               Download CSV
-               </button>
-               <button
                onClick={handleDownloadPDF}
                disabled={!students || students.length === 0}
-               className="px-6 py-2 border border-[#5C4033]-700 text-[#5C4033] rounded-md shadow-md font-bold  hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+               className="px-6 py-2 border border-[#5C4033]-700 text-[#5C4033]
+                rounded-md shadow-md font-bold  hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
                >
                {isPdfLoading ? "Generating PDF..." : "Download PDF"}
                </button>

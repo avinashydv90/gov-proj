@@ -5,7 +5,7 @@ export interface StudentAttendance {
     fullName: string;     // Student's name
     divisionId: string;   // Division Id
     date: string;         // ISO string of the attendance date
-    schoolName: string;   // Name of the school
+    schoolId: string;   // Name of the school
     isPresent: boolean;   // Whether student is present
 }
 
@@ -15,5 +15,6 @@ export interface StudentAttendanceReportDto {
     standard: string;
     division: string;
     schoolId: string;
+    date: string;
     isPresent: boolean;
 }

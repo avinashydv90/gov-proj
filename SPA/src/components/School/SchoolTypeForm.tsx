@@ -1,16 +1,16 @@
 
 import React, { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import {  useForm } from 'react-hook-form';
 import {  useNavigate, useParams } from 'react-router-dom';
 import { useCreateSchoolTypeMutation, useGetSchoolTypeByIdQuery, useUpdateSchoolTypeMutation } from '../../services/newSchoolTypeApi';
 import { CreateSchoolTypeRequest } from '../types/schoolType';
-import { toast, ToastContainer } from 'react-toastify';
 import PageLayout from '../../shared-components/PageLayout';
-import 'react-toastify/dist/ReactToastify.css';
-
+import AppSnackbar from '../alert/AppSnackbar';
 
 
 const SchoolTypeForm: React.FC = () => {
+  const [alertMessage, setAlertMessage] = React.useState<string | null>(null);
+  const [alertType, setAlertType] = React.useState<"success" | "error" | "info" | "warning">("info");
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const isEditMode = Boolean(id);
@@ -29,7 +29,12 @@ const SchoolTypeForm: React.FC = () => {
  const [addSchoolType, { isLoading: isAdding }] = useCreateSchoolTypeMutation();
   const [updateSchoolType, { isLoading: isUpdating}] = useUpdateSchoolTypeMutation();
 
-
+  useEffect(() => {
+     if (alertMessage) {
+       const timer = setTimeout(() => setAlertMessage(null), 2000);
+       return () => clearTimeout(timer);
+     }
+   }, [alertMessage]);
   useEffect(() => {
     if (schoolTypeData && isEditMode) {
       reset({ type: schoolTypeData.type });
@@ -41,28 +46,38 @@ const SchoolTypeForm: React.FC = () => {
       if (isEditMode && id) {
         
         await updateSchoolType({ ...formData, id });
-
-        //await refetch();
-        toast.success('School type updated successfully');
-        navigate("/admin/schooltype-list")
+        setAlertType("success");
+        setAlertMessage("शाळेचा प्रकार यशस्वीपणे अपडेट झाला!");
+        setTimeout(() => {
+   navigate("/admin/schooltype-list")
+}, 1600);
+       
        
       } else {
         await addSchoolType(formData);
-        toast.success('School type created successfully');
-        navigate("/admin/schooltype-list")
+        setAlertType("success");
+       setAlertMessage("शाळेचा प्रकार यशस्वीपणे तयार झाला!");
+        setTimeout(() => {
+   navigate("/admin/schooltype-list")
+}, 1600);
+       
         
       }
      
     } catch (err: any) {
 
     if (err?.status === 'PARSING_ERROR') {
-      console.error("Parsing error:", err);
-      toast.error("Server returned invalid response. Check backend logs.");
+      setAlertType("error");
+      setAlertMessage("सर्व्हरने अवैध प्रतिसाद परत पाठवला. कृपया backend logs तपासा. " + err.message);
+      
     } else if (err?.data?.message) {
-      toast.error(err.data.message);
+      setAlertType("error");
+      setAlertMessage(err.data.message);
+    
     } else {
-      console.error("Unknown error:", err);
-      toast.error("An error occurred while submitting the form.");
+      setAlertType("error");
+     setAlertMessage("फॉर्म सबमिट करताना त्रुटी आली. " + err.message);
+     
   }
 }
   
@@ -80,7 +95,12 @@ const SchoolTypeForm: React.FC = () => {
           <h2 className="text-2xl font-bold mb-6 text-center text-[#5C4033]">
            {isEditMode ? "शाळेचा प्रकार संपादित करा" : "नवीन शाळेचा प्रकार तयार करा"}
           </h2>
-
+  <AppSnackbar
+  open={!!alertMessage}
+  message={alertMessage}
+  type={alertType}
+  onClose={() => setAlertMessage(null)}
+  />
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div>
               <label htmlFor="type" className="block text-lg font-bold text-[#5C4033] mb-1">
@@ -148,7 +168,7 @@ const SchoolTypeForm: React.FC = () => {
               </button>
             </div>
           </form>
-          <ToastContainer position="top-right" autoClose={5000} />
+          
         </div>
       </div>
     </PageLayout>

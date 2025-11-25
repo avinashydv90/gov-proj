@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
 import PageLayout from "../../shared-components/PageLayout";
 //import { jwtDecode } from "jwt-decode";
 import { skipToken } from "@reduxjs/toolkit/query";
@@ -18,10 +17,13 @@ import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import { useDialogs } from "@toolpad/core/useDialogs";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ISchool } from "../types/School";
 import Filter from "../FilterComponent/Filter";
+import { confirmAlert } from 'react-confirm-alert';
+import "../../constants/confirm-custom.css";
+import 'react-confirm-alert/src/react-confirm-alert.css';
+import AppSnackbar from "../alert/AppSnackbar";
 
 // interface Jwtpayload{
 //   sub: string;
@@ -29,6 +31,8 @@ import Filter from "../FilterComponent/Filter";
 // }
 
 export const StaffList: React.FC = () => {
+ const [alertMessage, setAlertMessage] = useState<string | null>(null);
+  const [alertType, setAlertType] = useState<"success" | "error" | "info" | "warning">("info");
   const navigate = useNavigate();
   const [selectedSchool, setSelectedSchool] = useState<ISchool | null>(null);
   const { data: staffs, isLoading } = useGetStaffBySchoolIdQuery(
@@ -56,29 +60,48 @@ export const StaffList: React.FC = () => {
   const { data: employeeTypeData } = useGetAllEmployeeTypeQuery();
   const { data: casteTypeData } = useGetAllCasteTypesQuery();
   const { data: religionTypeData } = useGetAllReligionTypesQuery();
-  const dialogs = useDialogs();
 
   const [deleteStaff] = useDeleteStaffMutation();
 
-  const handleDelete = async (id: string) => {
-    const confirmed = await dialogs.confirm(
-      "आपण कर्मचारी हटवू इच्छिता याची खात्री आहे का?"
-    );
-    if (confirmed) {
-      try {
-        await deleteStaff(id).unwrap();
-        await dialogs.alert("कर्मचारी यशस्वीरित्या हटवला!");
-      } catch (error) {
-        console.error("कर्मचारी हटवण्यात अडचण आली:", error);
-        await dialogs.alert("हटवण्यात अडचण आली.");
+  useEffect(() => {
+     if (alertMessage) {
+       const timer = setTimeout(() => setAlertMessage(null), 2000);
+       return () => clearTimeout(timer);
+     }
+   }, [alertMessage]);
+
+const handleDelete = async (id: string) => {
+  confirmAlert({
+    title: "तुम्हाला हा कर्मचारी हटवायचा आहे का?",
+    message: "कृपया पुढे जाण्यासाठी पुष्टी करा.",
+    buttons: [
+      {
+        label: "होय",
+        onClick: async () => {
+          try {
+            await deleteStaff(id).unwrap();
+            setAlertType("success");
+            setAlertMessage("कर्मचारी यशस्वीरित्या हटवला!");
+          } catch (error) {
+            setAlertType("error");
+            setAlertMessage("कर्मचारी हटवण्यात अडचण आली: " + (error as any).message);
+          }
+        }
+      },
+      {
+        label: "नाही",
+        onClick: () => {}
       }
-    }
-  };
+    ]
+  });
+};
+
+
+
   const handleSchoolChange = (school: ISchool | null) => {
     setSelectedSchool(school);
   };
-  // const filteredStaffs = selectedSchool
-  // ? staffs?.filter(staff => staff.schoolId === selectedSchool.id) : staffs;
+
 
   if (isLoading) {
     return (
@@ -103,7 +126,6 @@ export const StaffList: React.FC = () => {
           <h2 className="text-2xl font-bold mb-4 text-center text-[#5C4033]">
             कर्मचारी यादी
           </h2>
-          <ToastContainer position="top-right" autoClose={3000} />
           <Filter schools={schoolsData} onSchoolChange={handleSchoolChange} />
           <div className="text-center mt-10 text-lg text-gray-600">
             कृपया शाळा निवडा
@@ -119,9 +141,17 @@ export const StaffList: React.FC = () => {
         <h2 className="text-2xl font-bold mb-4 text-center text-[#5C4033]">
           कर्मचारी यादी
         </h2>
-        <ToastContainer position="top-right" autoClose={3000} />
-        <Filter schools={schoolsData} onSchoolChange={handleSchoolChange} />
-        <div className="flex justify-end mb-4">
+         <AppSnackbar
+  open={!!alertMessage}
+  message={alertMessage}
+  type={alertType}
+  onClose={() => setAlertMessage(null)}
+  />
+        <Filter 
+        schools={schoolsData}
+        selectedSchool={selectedSchool}
+         onSchoolChange={handleSchoolChange} />
+            <div className="flex justify-end mb-4">
           <AddCircleIcon
             onClick={() => navigate("/admin/add-staff")}
             className="text-[#5C4033] cursor-pointer"
@@ -155,7 +185,7 @@ export const StaffList: React.FC = () => {
                 ].map((header) => (
                   <th
                     key={header}
-                    className="px-3 py-2 font-semibold text-center text-gray-700 whitespace-nowrap"
+                    className="px-3 py-2 font-medium text-center text-gray-700 whitespace-nowrap"
                   >
                     {header}
                   </th>

@@ -1,17 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   useAddDivisionMutation,
   useDeleteDivisionMutation,
   useGetDivisionsByStandardIdQuery,
 } from "../../services/divisionApi";
-
-import { toast } from "react-toastify";
 import { CreateDivisionDto } from "../types/division";
-
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from '@mui/icons-material/Delete';
+import { confirmAlert } from "react-confirm-alert";
+import 'react-confirm-alert/src/react-confirm-alert.css';
+import "../../constants/confirm-custom.css";
+import AppSnackbar from "../alert/AppSnackbar";
 
 interface Props {
   standardId: string;
@@ -19,15 +20,25 @@ interface Props {
 }
 
 const StandardDivisionPanel: React.FC<Props> = ({ standardId, schoolId }) => {
+  const [alertMessage, setAlertMessage] = useState<string | null>(null);
+  const [alertType, setAlertType] = useState<"success" | "error" | "info" | "warning">("info");
   const { data: divisions = [], isFetching } =
     useGetDivisionsByStandardIdQuery(standardId);
   const [input, setInput] = useState("");
   const [addDivision] = useAddDivisionMutation();
   const [deleteDivision] = useDeleteDivisionMutation();
 
+  useEffect(() => {
+     if (alertMessage) {
+       const timer = setTimeout(() => setAlertMessage(null), 2000);
+       return () => clearTimeout(timer);
+     }
+   }, [alertMessage]);
+
   const handleAdd = async () => {
     if (!input.trim()) {
-      toast.error("Division name is required.");
+      setAlertType("error");
+      setAlertMessage("Division name is required.");
       return;
     }
     try {
@@ -37,26 +48,45 @@ const StandardDivisionPanel: React.FC<Props> = ({ standardId, schoolId }) => {
         schoolId,
       }
       await addDivision(createPayLoad).unwrap();
-      toast.success("Division added.");
+      setAlertType("success");
+      setAlertMessage("Division added.");
       setInput("");
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
-      toast.error("Failed to add division.");
+      setAlertType("error");
+      setAlertMessage("Failed to add division.");
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (confirm("Delete this division?")) {
-      try {
-        console.log("Deleting division with ID:", id);
-        await deleteDivision(id).unwrap();
-        toast.success("Division deleted.");
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      } catch (err) {
-        toast.error("Failed to delete.");
-      }
-    }
-  };
+const handleDelete = async (id: string) => {
+  confirmAlert({
+    title: "तुम्हाला हा विभाग हटवायचा आहे का?",
+    message: "कृपया पुढे जाण्यासाठी पुष्टी करा.",
+    buttons: [
+      {
+        label: "होय",
+        onClick: async () => {
+          try {
+            await deleteDivision(id).unwrap();
+            setAlertType("success");
+            setAlertMessage("विभाग यशस्वीरित्या हटवला!");
+          } catch (err) {
+            setAlertType("error");
+            setAlertMessage(
+              "विभाग हटवण्यात अडचण आली: " + (err as any).message
+            );
+          }
+        },
+      },
+      {
+        label: "नाही",
+        onClick: () => {},
+      },
+    ],
+  });
+};
+
+
 
   return (
    <div className="space-y-4 pt-4">
@@ -68,6 +98,13 @@ const StandardDivisionPanel: React.FC<Props> = ({ standardId, schoolId }) => {
       value={input}
       onChange={(e) => setInput(e.target.value)}
     />
+
+     <AppSnackbar
+  open={!!alertMessage}
+  message={alertMessage}
+  type={alertType}
+  onClose={() => setAlertMessage(null)}
+  />
     <AddCircleIcon 
      onClick={handleAdd}
      

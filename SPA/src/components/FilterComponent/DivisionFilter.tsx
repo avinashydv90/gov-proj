@@ -6,6 +6,7 @@ import { Division } from "../types/division";
 interface DivisionFilterProps {
   divisions?: Division[];
   selectedStandardId?: string;
+  value?: string | null;
   onDivisionChange: (division: Division | null) => void;
 }
 
@@ -17,15 +18,19 @@ const filterOptions = createFilterOptions<Division>({
 export default function DivisionFilter({
   divisions,
   selectedStandardId,
+  value,
   onDivisionChange,
 }: DivisionFilterProps) {
   const filteredDivisions = selectedStandardId
     ? divisions?.filter((div) => div.standardId === selectedStandardId) || []
     : [];
+    const selectedObj =
+    filteredDivisions.find((d) => d.id === value) || null;
 
   return (
     <Autocomplete
       options={filteredDivisions}
+      value={selectedObj}
       getOptionLabel={(option) => option?.name || ""}
       filterOptions={filterOptions}
       onChange={(_, newValue) => onDivisionChange(newValue)}

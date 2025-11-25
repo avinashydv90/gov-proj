@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PageLayout from "../../shared-components/PageLayout";
 import {
   useDeleteStudentMutation,
   useGetStudentBySchoolIdQuery,
 } from "../../services/studentApi";
 import { useNavigate } from "react-router-dom";
-//import { toast } from "react-toastify";
 import IsLoading from "../../Status/IsLoading";
 import { useGetAllSchoolsQuery } from "../../services/schoolApi";
 import { useGetAllCasteTypesQuery } from "../../services/StaffService/casteTypeApi";
@@ -20,13 +19,17 @@ import {
   Tooltip, IconButton,
 
 } from "@mui/material";
+import "../../constants/confirm-custom.css";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import { useDialogs } from '@toolpad/core/useDialogs';
+//import { useDialogs } from '@toolpad/core/useDialogs';
 import Filter from "../FilterComponent/Filter";
 import StandardFilter from "../FilterComponent/StandardFilter";
 import DivisionFilter from "../FilterComponent/DivisionFilter";
+import { confirmAlert } from "react-confirm-alert";
+import 'react-confirm-alert/src/react-confirm-alert.css';  
+import AppSnackbar from "../alert/AppSnackbar";
 
 //import { jwtDecode } from "jwt-decode";
 
@@ -50,6 +53,8 @@ const StudentList: React.FC = () => {
    const [selectedSchool, setSelectedSchool] = useState<string | null>(null);
   const [selectedStandard, setSelectedStandard] = useState<string | null>(null);
   const [selectedDivision, setSelectedDivision] = useState<string | null>(null);
+  const [alertMessage, setAlertMessage] = useState<string | null>(null);
+  const [alertType, setAlertType] = useState<"success" | "error" | "info" | "warning">("info");
 
     const headers = [
     "अ.क्र.",
@@ -99,7 +104,7 @@ const StudentList: React.FC = () => {
     const { data: casteTypeData } = useGetAllCasteTypesQuery();
     const { data: religionTypeData } = useGetAllReligionTypesQuery();
 
-   const dialogs = useDialogs();
+   //const dialogs = useDialogs();
 
   const students = studentsData ?? [];
   const [deleteStudent] = useDeleteStudentMutation();
@@ -109,6 +114,13 @@ const StudentList: React.FC = () => {
 
 const [page, setPage] = useState(0);
 const [rowsPerPage, setRowsPerPage] = useState(10);
+
+useEffect(() => {
+     if (alertMessage) {
+       const timer = setTimeout(() => setAlertMessage(null), 2000);
+       return () => clearTimeout(timer);
+     }
+   }, [alertMessage]);
 
 const handleChangePage = (
   event: React.MouseEvent<HTMLButtonElement> | null,
@@ -124,21 +136,32 @@ const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => 
 };
 
 const handleDelete = async (id: string) => {
-    const confirmed = await dialogs.confirm(
-      "Are you sure you want to delete this student?"
-    );
-
-    if (confirmed) {
-      try {
-        await deleteStudent(id).unwrap();
-        await dialogs.alert("Student deleted successfully.");
-        refetch();
-      } catch (err) {
-        await dialogs.alert("Failed to delete the student.");
-        console.error(err);
+  confirmAlert({
+    title: "तुम्हाला हा विद्यार्थी हटवायचा आहे का?",
+    message: "कृपया पुढे जाण्यासाठी पुष्टी करा.",
+    buttons: [
+      {
+        label: "होय",
+        onClick: async () => {
+          try {
+            await deleteStudent(id).unwrap();
+            setAlertType("success");
+            setAlertMessage("विद्यार्थी यशस्वीरित्या हटवला!");
+            refetch();
+          } catch (error) {
+            setAlertType("error");
+            setAlertMessage("विद्यार्थी हटवण्यात अडचण आली: " + (error as any).message);
+          }
+        }
+      },
+      {
+        label: "नाही",
+        onClick: () => {}
       }
-    }
-  };
+    ]
+  });
+};
+
    // Filter students based on standard & division
   const filteredStudents = students.filter(student =>
     (!selectedStandard || student.standardId === selectedStandard) &&
@@ -184,29 +207,50 @@ const getDivisionNameById = (id: string, divisionData?: Division[]) => {
   return (
     
     <PageLayout>
-   <div className="flex flex-col bg-gray-50 py-6 px-2 sm:px-4 md:px-6">
-      <h2 className="text-2xl font-bold mb-1 text-center text-[#5C4033]">
+   <div className="flex flex-col bg-gray-50 py-6 px-6 sm:px-4 md:px-6 mb-18">
+      <h2 className="text-2xl font-bold mb-6 text-center text-[#5C4033]">
         विद्यार्थी यादी
       </h2>
+       <AppSnackbar
+  open={!!alertMessage}
+  message={alertMessage}
+  type={alertType}
+  onClose={() => setAlertMessage(null)}
+  />
       <div className="flex gap-4 mb-6">
-         <Filter schools={schoolsData} onSchoolChange={(school) => {
-    setSelectedSchool(school?.id ?? null);
-    setSelectedStandard(null); // Reset dependent filters
-    setSelectedDivision(null);
-  }} />
-        <StandardFilter
-  standards={standardData}
-  selectedSchoolId={selectedSchool ?? ""}
-  onStandardChange={(standard) => {
-    setSelectedStandard(standard?.id ?? null);
-    setSelectedDivision(null); // Reset divisions
-  }}
-/>
+           <Filter
+    schools={schoolsData}
+    selectedSchool={schoolsData?.find(s => s.id === selectedSchool) || null}
+    onSchoolChange={(school) => {
+      const id = school?.id ?? null;
+      setSelectedSchool(id);
+
+      // Reset dependent filters ON SCHOOL CHANGE
+      setSelectedStandard(null);
+      setSelectedDivision(null);
+    }}
+  />
+       <StandardFilter
+    standards={standardData}
+    selectedSchoolId={selectedSchool ?? ""}
+    value={selectedStandard}
+    onStandardChange={(standard) => {
+      const id = standard?.id ?? null;
+      setSelectedStandard(id);
+
+      // Reset division when standard changes
+      setSelectedDivision(null);
+    }}
+  />
         <DivisionFilter
-  divisions={divisionData}
-  selectedStandardId={selectedStandard ?? ""}
-  onDivisionChange={(division) => setSelectedDivision(division?.id ?? null)}
-/>
+    divisions={divisionData}
+    selectedStandardId={selectedStandard ?? ""}
+    value={selectedDivision}
+    onDivisionChange={(division) =>
+      setSelectedDivision(division?.id ?? null)
+    }
+  />
+
       </div>
 
 
@@ -239,7 +283,7 @@ const getDivisionNameById = (id: string, divisionData?: Division[]) => {
                 <TableCell
                   key={header}
                   align={header === "कृती" ? "center" : "left"}
-                   sx={{ fontSize: "1rem", fontWeight: "bold" 
+                   sx={{ fontSize: "1rem", fontWeight: "medium" 
                     ,  backgroundColor: "grey-500", // keep visible when sticky
           position: "sticky",
           top: 0,

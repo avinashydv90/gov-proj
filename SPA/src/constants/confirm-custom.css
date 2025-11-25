@@ -1,0 +1,54 @@
+.react-confirm-alert-overlay {
+    background: rgba(0, 0, 0, 0.4);
+    /* Dark overlay */
+    z-index: 9999;
+}
+
+.react-confirm-alert {
+    width: 420px;
+    /* ⭐ Increase dialog width */
+    padding: 20px;
+    border-radius: 12px;
+    /* Rounded corners */
+}
+
+.react-confirm-alert-body {
+    font-size: 18px;
+    /* ⭐ Bigger text */
+    color: #333;
+}
+
+/* Buttons Row */
+.react-confirm-alert-button-group {
+    justify-content: center;
+    gap: 14px;
+    margin-top: 20px;
+}
+
+/* Yes Button */
+.react-confirm-alert-button-group>button:nth-child(1) {
+    background-color: #5C4033 !important;
+    /* ⭐ Brown theme */
+    color: white !important;
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+/* No Button */
+.react-confirm-alert-button-group>button:nth-child(2) {
+    background-color: #dcdcdc !important;
+    /* Grey */
+    color: #333 !important;
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.react-confirm-alert-button-group>button:hover {
+    opacity: 0.85;
+}

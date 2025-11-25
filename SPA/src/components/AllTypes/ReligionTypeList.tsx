@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import {  ToastContainer } from "react-toastify";
 import PageLayout from "../../shared-components/PageLayout";
 import {
   useDeleteReligionTypeMutation,
@@ -11,25 +10,52 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import { useDialogs } from "@toolpad/core/useDialogs";
+import { useEffect, useState } from "react";
+import AppSnackbar from "../alert/AppSnackbar";
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
+import "../../constants/confirm-custom.css";
+//import { useDialogs } from "@toolpad/core/useDialogs";
 
 export const ReligionTypeList: React.FC = () => {
+    const [alertMessage, setAlertMessage] = useState<string | null>(null);
+  const [alertType, setAlertType] = useState<"success" | "error" | "info" | "warning">("info");
   const navigate = useNavigate();
-  const dialogs = useDialogs();
+  //const dialogs = useDialogs();
   const { data: religionTypes, isLoading } = useGetAllReligionTypesQuery();
   const [deleteReligionType] = useDeleteReligionTypeMutation();
 
-  const handleDelete = async (id: string) => {
-   const confirmed = await dialogs.confirm("आपण हटवू इच्छिता याची खात्री आहे का?");
-   if (confirmed) {
-     try {
-       await deleteReligionType(id).unwrap();
-       await dialogs.alert("धर्म प्रकार यशस्वीरित्या हटवला!");
-     } catch (error) {
-       await dialogs.alert("धर्म प्रकार हटवण्यात अडचण आली:");
-       console.error(error);
+  useEffect(() => {
+     if (alertMessage) {
+       const timer = setTimeout(() => setAlertMessage(null), 2000);
+       return () => clearTimeout(timer);
      }
-   }
+   }, [alertMessage]);
+
+  const handleDelete = async (id: string) => {
+    confirmAlert({
+    title: "तुम्हाला हा धर्म प्रकार हटवायचा आहे का?",
+message: "कृपया पुढे जाण्यासाठी पुष्टी करा.",
+    buttons: [
+      {
+        label: 'होय',
+        onClick: async()=>{
+          try{
+            await deleteReligionType(id).unwrap();
+        setAlertType("success");
+        setAlertMessage("धर्म प्रकार यशस्वीरित्या हटवला!");
+          } catch (error) {
+            setAlertType("error");
+            setAlertMessage("धर्म प्रकार हटवण्यात अडचण आली:" + (error as any).message);
+          }
+        }
+      },
+      {
+        label: 'नाही',
+        onClick: () => {} 
+      }
+    ]
+    });
   };
 
   if (isLoading) {
@@ -55,7 +81,12 @@ export const ReligionTypeList: React.FC = () => {
         <h2 className="text-2xl font-bold mb-4 text-center text-[#5C4033]">
           धर्म प्रकार यादी
         </h2>
-        <ToastContainer position="top-right" autoClose={3000} />
+        <AppSnackbar
+  open={!!alertMessage}
+  message={alertMessage}
+  type={alertType}
+  onClose={() => setAlertMessage(null)}
+  />
         <div className="flex justify-end mb-4">
          <AddCircleIcon 
          onClick={() => navigate("/admin/add-religiontype")}

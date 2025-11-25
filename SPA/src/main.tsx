@@ -41,8 +41,6 @@ import { StaffTypeList } from "./components/Staff/StaffTypeList.tsx";
 import ReligionTypeForm from "./components/AllTypes/ReligionTypeForm.tsx";
 import { ReligionTypeList } from "./components/AllTypes/ReligionTypeList.tsx";
 import AttendanceList from "./components/StudentAttendance/AttendanceList.tsx";
-import { DialogsProvider } from '@toolpad/core/useDialogs';
-import Login from "./pages/Login.tsx";
 import StaffAttendanceList from "./components/Staff/Attendance/StaffAttendanceList.tsx";
 import StaffAttendanceForm from "./components/Staff/Attendance/StaffAttendanceForm.tsx";
 
@@ -143,144 +141,140 @@ export const router = createBrowserRouter([
       },
       {
         path: "standard-list",
-        element:(<ProtectedRoute allowedRoles={["SuperAdmin","Teacher","Principal"]}><StandardList /></ProtectedRoute> ),
+        element:(<ProtectedRoute allowedRoles={["SuperAdmin","SchoolAdmin"]}><StandardList /></ProtectedRoute> ),
         handle: { label: RouteNames.StandardList },
       },
       {
         path: "add-standard",
-        element: (<ProtectedRoute allowedRoles={["SuperAdmin","Teacher","Principal"]}><StandardForm /></ProtectedRoute>),
+        element: (<ProtectedRoute allowedRoles={["SuperAdmin","SchoolAdmin"]}><StandardForm /></ProtectedRoute>),
         handle: { label: RouteNames.AddStandard },
       },
       {
         path: "edit-standard/:standardId",
-        element: (<ProtectedRoute allowedRoles={["SuperAdmin","Teacher","Principal"]}><StandardForm /></ProtectedRoute>),
+        element: (<ProtectedRoute allowedRoles={["SuperAdmin","SchoolAdmin"]}><StandardForm /></ProtectedRoute>),
         handle: { label: RouteNames.EditStandard },
       },
       {
         path: "add-student",
-        element: (<ProtectedRoute allowedRoles={["SuperAdmin","Teacher"]}><StudentForm /></ProtectedRoute>),
+        element: (<ProtectedRoute allowedRoles={["SuperAdmin","SchoolAdmin"]}><StudentForm /></ProtectedRoute>),
         handle: { label: RouteNames.AddStudent },
       },
       {
         path: "student-list",
-        element: (<ProtectedRoute allowedRoles={["SuperAdmin","Teacher"]}><StudentList /></ProtectedRoute>),
+        element: (<ProtectedRoute allowedRoles={["SuperAdmin","SchoolAdmin"]}><StudentList /></ProtectedRoute>),
         handle: { label: RouteNames.StudentList },
       },
       {
         path: "edit-student/:id",
-       element: (<ProtectedRoute allowedRoles={["SuperAdmin","Teacher"]}><StudentForm /></ProtectedRoute>),
+       element: (<ProtectedRoute allowedRoles={["SuperAdmin","SchoolAdmin"]}><StudentForm /></ProtectedRoute>),
         handle: { label: RouteNames.EditStudent },
       },
       {
         path: "add-attendance",    
-        element: (<ProtectedRoute allowedRoles={["SuperAdmin","Teacher"]}><StudentAttendanceForm /></ProtectedRoute>),
+        element: (<ProtectedRoute allowedRoles={["SuperAdmin","SchoolAdmin"]}><StudentAttendanceForm /></ProtectedRoute>),
         handle: { label: RouteNames.AddStudentAttendance },
       },
       {
         path: "attendance-list",    
-       element: (<ProtectedRoute allowedRoles={["SuperAdmin","Teacher"]}><AttendanceList /></ProtectedRoute>),
+       element: (<ProtectedRoute allowedRoles={["SuperAdmin","SchoolAdmin"]}><AttendanceList /></ProtectedRoute>),
         handle: { label: RouteNames.StudentAttendanceList },
       },{
         path: "add-staff-attendance",    
-        element: (<ProtectedRoute allowedRoles={["SuperAdmin","Teacher"]}><StaffAttendanceForm /></ProtectedRoute>),
+        element: (<ProtectedRoute allowedRoles={["SuperAdmin","SchoolAdmin"]}><StaffAttendanceForm /></ProtectedRoute>),
         handle: { label: RouteNames.StaffAttendance },
       },
       {
         path: "staff-attendance-list",    
-        element: (<ProtectedRoute allowedRoles={["SuperAdmin","Teacher"]}><StaffAttendanceList /></ProtectedRoute>),
+        element: (<ProtectedRoute allowedRoles={["SuperAdmin","SchoolAdmin"]}><StaffAttendanceList /></ProtectedRoute>),
         handle: { label: RouteNames.StaffAttendanceList },
       },
      
       {
         path: "add-schooltype",
-        element: <SchoolTypeForm />,
+         element: (<ProtectedRoute allowedRoles={["SuperAdmin"]}>< SchoolTypeForm/></ProtectedRoute>),
         handle: { label: RouteNames.AddSchoolType },
       },
        {
         path: "edit-schooltype/:id",
-        element: <SchoolTypeForm />,
+         element: (<ProtectedRoute allowedRoles={["SuperAdmin"]}>< SchoolTypeForm/></ProtectedRoute>),
         handle: { label: RouteNames.EditSchoolType },
       },
        {
         path: "schooltype-list",
-        element: <SchoolTypeList />,
+        
+         element: (<ProtectedRoute allowedRoles={["SuperAdmin"]}><SchoolTypeList /></ProtectedRoute>),
         handle: { label: RouteNames.SchoolTypeList },
       },
        {
         path: "employeetype-list",
-        element: <EmployeeTypeList />,
+        element: (<ProtectedRoute allowedRoles={["SuperAdmin","SchoolAdmin"]}><EmployeeTypeList /></ProtectedRoute>),
         handle: { label: RouteNames.EmployeeTypeList },
       }, {
         path: "add-employeetype",
-        element: <EmployeeTypeForm />,
+       element: (<ProtectedRoute allowedRoles={["SuperAdmin","SchoolAdmin"]}><EmployeeTypeForm /></ProtectedRoute>),
         handle: { label: RouteNames.AddEmployeeType },
       },{
         path: "edit-employeetype/:id",
-        element: <EmployeeTypeForm />,
+         element: (<ProtectedRoute allowedRoles={["SuperAdmin","SchoolAdmin"]}><EmployeeTypeForm /></ProtectedRoute>),
         handle: { label: RouteNames.EditEmployeeType },
       },
        {
         path: "stafftype-list",
-        element: <StaffTypeList />,
+         element: (<ProtectedRoute allowedRoles={["SuperAdmin","SchoolAdmin"]}><StaffTypeList /></ProtectedRoute>),
         handle: { label: RouteNames.StaffTypeList },
       },
       {
         path: "add-stafftype",
-        element: <StaffTypeForm />,
+        element: (<ProtectedRoute allowedRoles={["SuperAdmin","SchoolAdmin"]}><StaffTypeForm /></ProtectedRoute>),
         handle: { label: RouteNames.AddStaffType },
       },
        {
         path: "edit-stafftype/:id",
-        element: <StaffTypeForm />,
+        element: (<ProtectedRoute allowedRoles={["SuperAdmin","SchoolAdmin"]}><StaffTypeForm /></ProtectedRoute>),
         handle: { label: RouteNames.EditStaffType },
       }, {
         path: "staff-list",
-        element: <StaffList />,
+        element: (<ProtectedRoute allowedRoles={["SuperAdmin","SchoolAdmin"]}><StaffList /></ProtectedRoute>),
         handle: { label: RouteNames.StaffList },
       },
       {
         path: "add-staff",
-        element: <StaffForm />,
+        element: (<ProtectedRoute allowedRoles={["SuperAdmin","SchoolAdmin"]}><StaffForm /></ProtectedRoute>),
         handle: { label: RouteNames.AddStaff },
       },
        {
         path: "edit-staff/:id",
-        element: <StaffForm />,
+         element: (<ProtectedRoute allowedRoles={["SuperAdmin","SchoolAdmin"]}><StaffForm /></ProtectedRoute>),
         handle: { label: RouteNames.EditStaff },
       }, {
         path: "castetype-list",
-        element: <CasteTypeList />,
+        element: (<ProtectedRoute allowedRoles={["SuperAdmin","SchoolAdmin"]}><CasteTypeList /></ProtectedRoute>),
         handle: { label: RouteNames.CasteTypeList },
       },{
         path: "add-castetype",
-        element: <CasteTypeForm />,
+        element: (<ProtectedRoute allowedRoles={["SuperAdmin","SchoolAdmin"]}><CasteTypeForm /></ProtectedRoute>),
         handle: { label: RouteNames.AddCasteType },
       },
        {
         path: "edit-castetype/:id",
-        element: <CasteTypeForm />,
+         element: (<ProtectedRoute allowedRoles={["SuperAdmin","SchoolAdmin"]}><CasteTypeForm /></ProtectedRoute>),
         handle: { label: RouteNames.EditCasteType },
       },
       {
         path: "religiontype-list",
-        element: <ReligionTypeList />,
+         element: (<ProtectedRoute allowedRoles={["SuperAdmin","SchoolAdmin"]}><ReligionTypeList /></ProtectedRoute>),
         handle: { label: RouteNames.ReligionTypeList },
       },{
         path: "add-religiontype",
-        element: <ReligionTypeForm />,
+        element: (<ProtectedRoute allowedRoles={["SuperAdmin","SchoolAdmin"]}><ReligionTypeForm /></ProtectedRoute>),
         handle: { label: RouteNames.AddReligionType },
       },
        {
         path: "edit-religiontype/:id",
-        element: <ReligionTypeForm />,
+        element: (<ProtectedRoute allowedRoles={["SuperAdmin","SchoolAdmin"]}><ReligionTypeForm /></ProtectedRoute>),
         handle: { label: RouteNames.EditReligionType },
       },
-      {
-        path: "custom-login",
-        element: <Login />,
-        handle: { label: RouteNames.CustomLogin },
-      }
-
+     
     ],
   },
   {
@@ -296,9 +290,7 @@ export const router = createBrowserRouter([
 createRoot(document.getElementById("root")!).render(
   <HelmetProvider>
     <Provider store={store}>
-    <DialogsProvider>
           <RouterProvider router={router} />
-        </DialogsProvider>
     </Provider>
   </HelmetProvider>
 );

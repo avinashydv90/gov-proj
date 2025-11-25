@@ -5,11 +5,10 @@ import PageLayout from "../../shared-components/PageLayout";
 import { useLoginMutation } from "../../services/authApi";
 import { useNavigate } from "react-router-dom";
 import Footer from "../Footer";
-import { toast, Toaster } from "react-hot-toast";
-
 import logo1 from "../../assets/adivasi-vikas-vibhag.png";
 import logo2 from "../../assets/shivrajyabhishek.png";
 import logo3 from "../../assets/nationalemblem.png";
+import AppSnackbar from "../alert/AppSnackbar";
 
 interface ErrorResponse {
   status?: number;
@@ -19,6 +18,8 @@ interface ErrorResponse {
 }
 
 const LoginForm: React.FC = () => {
+  const [alertMessage, setAlertMessage] = useState<string | null>(null);
+  const [alertType, setAlertType] = useState<"success" | "error" | "info" | "warning">("info");
   const [login, { isLoading }] = useLoginMutation();
   const [email, setEmail] = useState("");
   // const [role, setRole] = useState("");
@@ -26,6 +27,13 @@ const LoginForm: React.FC = () => {
   // const [showDropdown, setShowDropdown] = useState(false);
   const navigate = useNavigate();
   const [hideLogo, setHideLogo] = useState(false);
+
+  useEffect(() => {
+     if (alertMessage) {
+       const timer = setTimeout(() => setAlertMessage(null), 2000);
+       return () => clearTimeout(timer);
+     }
+   }, [alertMessage]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -45,7 +53,8 @@ const LoginForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim() || !password.trim()) {
-      toast.error("वापरकर्तानाव आणि संकेतशब्द रिकामे असू शकत नाहीत.");
+      setAlertType("error");
+      setAlertMessage("वापरकर्तानाव आणि संकेतशब्द रिकामे असू शकत नाहीत.");
       return;
     }
     try {
@@ -57,15 +66,20 @@ const LoginForm: React.FC = () => {
     } catch (error) {
       const err = error as Partial<ErrorResponse>;
       if (err?.status === 401) {
-        toast.error("अवैध वापरकर्तानाव किंवा संकेतशब्द.");
+        setAlertType("error");
+        setAlertMessage("अवैध वापरकर्तानाव किंवा संकेतशब्द.");    
       } else if (err?.status === 400) {
-        toast.error("चुकीची विनंती. कृपया आपली माहिती तपासा.");
+        setAlertType("error");
+        setAlertMessage("चुकीची विनंती. कृपया आपली माहिती तपासा.");
       } else if (err?.status === 500) {
-        toast.error("सर्व्हर त्रुटी. कृपया नंतर पुन्हा प्रयत्न करा.");
+        setAlertType("error");
+        setAlertMessage("सर्व्हर त्रुटी. कृपया नंतर पुन्हा प्रयत्न करा.");
       } else if (err?.data?.message) {
-        toast.error(err.data.message);
+        setAlertType("error");
+        setAlertMessage(err.data.message);
       } else {
-        toast.error("काहीतरी चूक झाली. कृपया पुन्हा प्रयत्न करा.");
+        setAlertType("error");
+        setAlertMessage("काहीतरी चूक झाली. कृपया पुन्हा प्रयत्न करा.");
       }
     }
   };
@@ -74,7 +88,12 @@ const LoginForm: React.FC = () => {
 
   return (
     <PageLayout>
-      <Toaster position="top-right" />
+      <AppSnackbar
+        open={!!alertMessage}
+        message={alertMessage}
+        type={alertType}
+        onClose={() => setAlertMessage(null)}
+      />
       <div className="fixed top-0 left-0 w-full z-50">
         <div
           className={`transition-all duration-500 border-b border-gray-300 ${

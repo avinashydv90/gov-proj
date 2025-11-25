@@ -4,41 +4,55 @@ import {
   useGetAttendanceByStandardDivisionAndDateQuery,
   useSaveAttendanceMutation,
 } from "../../services/studentAttendenceApi";
-import { useGetAllStandardsQuery } from "../../services/standardApi";
+import {  useGetStandardsBySchoolIdQuery } from "../../services/standardApi";
 import { useGetDivisionsByStandardIdQuery } from "../../services/divisionApi";
 import PageLayout from "../../shared-components/PageLayout";
 import "../StudentAttendance/globals.css";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import AppSnackbar from "../alert/AppSnackbar";
+import { useGetAllSchoolsQuery } from "../../services/schoolApi";
+
 
 const StudentAttendanceForm: React.FC = () => {
+  const [alertMessage, setAlertMessage] = useState<string | null>(null);
+  const [alertType, setAlertType] = useState<"success" | "error" | "info" | "warning">("info");
+
   const [selectedStandard, setSelectedStandard] = useState<string>("");
   const [selectedDivision, setSelectedDivision] = useState<string>("");
+  const [selectedSchool, setSelectedSchool] = useState("");
+
   const [selectedDate, setSelectedDate] = useState<string>(
     new Date().toISOString().split("T")[0]
   );
   const [selectAll, setSelectAll] = useState(false);
-
-  const { data: standards } = useGetAllStandardsQuery();
-  const { data: divisions } = useGetDivisionsByStandardIdQuery(selectedStandard, {
-    skip: !selectedStandard,
-  });
+const { data: schoolsData } = useGetAllSchoolsQuery();
+  const { data: standards } = useGetStandardsBySchoolIdQuery(
+    selectedSchool ? selectedSchool : skipToken
+  );
+  const { data: divisions } = useGetDivisionsByStandardIdQuery(
+    selectedStandard ? selectedStandard : skipToken
+    
+  );
 
   const { data: studentsData = [], isLoading, refetch } =
     useGetAttendanceByStandardDivisionAndDateQuery(
       selectedStandard && selectedDivision
         ? { standardId: selectedStandard, divisionId: selectedDivision, date: selectedDate }
-        : skipToken
+        : skipToken, { refetchOnMountOrArgChange: true }
     );
 
   const [students, setStudents] = useState(studentsData);
   const [saveAttendance, { isLoading: saving }] = useSaveAttendanceMutation();
 
+  useEffect(() => {
+     if (alertMessage) {
+       const timer = setTimeout(() => setAlertMessage(null), 2000);
+       return () => clearTimeout(timer);
+     }
+   }, [alertMessage]);
+
   // Sync students with query data
   useEffect(() => {
-   if (studentsData && studentsData.length > 0) {
     setStudents(studentsData);
-  }
   }, [studentsData]);
 
 
@@ -51,6 +65,12 @@ const StudentAttendanceForm: React.FC = () => {
     setSelectedStandard(value);
     setSelectedDivision(""); // reset division when standard changes
   };
+const handleSchoolChange = (value: string) => {
+  setSelectedSchool(value);
+  setSelectedStandard("");
+  setSelectedDivision("");
+  setStudents([]);
+};
 
   const handleCheckboxChange = (studentId: string) => {
     setStudents((prev) =>
@@ -76,11 +96,12 @@ const StudentAttendanceForm: React.FC = () => {
 
     try {
       await saveAttendance(payload).unwrap();
-      toast.success("उपस्थिती यशस्वीरीत्या सादर केली गेली!");
+      setAlertType("success");
+      setAlertMessage("उपस्थिती यशस्वीरित्या सादर केली.");
       refetch();
     } catch (err) {
-      console.error(err);
-      toast.error("उपस्थिती सादर करण्यात अयशस्वी.");
+      setAlertType("error");
+      setAlertMessage("उपस्थिती सादर करण्यात अयशस्वी."+ (err as any).message);
     }
   };
 
@@ -91,10 +112,24 @@ const StudentAttendanceForm: React.FC = () => {
           <h2 className="text-2xl font-semibold mb-6 text-center font-noto-serif-devanagari text-[#5C4033]">
             विद्यार्थी हजेरी
           </h2>
-          <ToastContainer position="top-right" autoClose={3000} />
+          <AppSnackbar
+          open={!!alertMessage}
+           message={alertMessage}
+          type={alertType}
+          onClose={() => setAlertMessage(null)}
+           />
 
           {/* Dropdowns and Date Picker */}
           <div className="flex gap-4 mb-6">
+            <select name="" id=""
+           onChange={(e) => handleSchoolChange(e.target.value)}
+            className="custom-select-left-arrow border p-2 font-sm rounded w-1/3 text-gray-700 font-noto-serif-devanagari">
+              <option value="">शाळा निवडा</option>{
+                schoolsData?.map((sch)=>(
+                  <option key={sch.id} value={sch.id}>{sch.name}</option>
+                ))
+              }
+            </select>
             <select
               value={selectedStandard}
               onChange={(e) => handleStandardChange(e.target.value)}
@@ -135,7 +170,7 @@ const StudentAttendanceForm: React.FC = () => {
           {students.length > 0 && (
             <div className="flex items-center gap-2 mb-4 justify-end">
               <label className="text-gray-700 font-bold font-noto-serif-devanagari">
-                Select All
+                सर्व निवडा
               </label>
               <input
                 type="checkbox"

@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { skipToken } from "@reduxjs/toolkit/query/react";
-
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { useGetAllSchoolsQuery } from "../../../services/schoolApi";
 import { useGetStaffAttendanceBySchoolIdAndDateQuery, useSaveStaffAttendanceMutation } from "../../../services/staffAttendanceApi";
 import PageLayout from "../../../shared-components/PageLayout";
 import { StaffAttendance } from "../../types/IStaffAttendance";
+import AppSnackbar from "../../alert/AppSnackbar";
 
 const StaffAttendanceForm: React.FC = () => {
+  
+const [alertMessage, setAlertMessage] = useState<string | null>(null);
+  const [alertType, setAlertType] = useState<"success" | "error" | "info" | "warning">("info");
   const [selectedSchool, setSelectedSchool] = useState<string>("");
   const [selectedDate, setSelectedDate] = useState<string>(
     new Date().toISOString().split("T")[0]
@@ -26,6 +27,13 @@ const StaffAttendanceForm: React.FC = () => {
 
   const [staffList, setStaffList] = useState(staffData);
   const [saveStaffAttendance, { isLoading: saving }] = useSaveStaffAttendanceMutation();
+
+  useEffect(() => {
+     if (alertMessage) {
+       const timer = setTimeout(() => setAlertMessage(null), 2000);
+       return () => clearTimeout(timer);
+     }
+   }, [alertMessage]);
 
   // Sync staff list with query data
  useEffect(() => {
@@ -61,11 +69,14 @@ const payload: StaffAttendance[] = staffList.map((s) => ({
 }));
     try {
       await saveStaffAttendance(payload).unwrap();
-      toast.success("कर्मचारी उपस्थिती यशस्वीरीत्या सादर केली गेली!");
+      setAlertType("success");
+      setAlertMessage("कर्मचारी उपस्थिती यशस्वीरित्या सादर केली.");
+      //
       refetch();
     } catch (err) {
       console.error(err);
-      toast.error("कर्मचारी उपस्थिती सादर करण्यात अयशस्वी.");
+      setAlertType("error");
+      setAlertMessage("कर्मचारी उपस्थिती सादर करण्यात अयशस्वी.");
     }
   };
 
@@ -76,7 +87,12 @@ const payload: StaffAttendance[] = staffList.map((s) => ({
           <h2 className="text-2xl font-semibold mb-6 text-center font-noto-serif-devanagari text-[#5C4033]">
             कर्मचारी उपस्थिती
           </h2>
-          <ToastContainer position="top-right" autoClose={3000} />
+          <AppSnackbar
+  open={!!alertMessage}
+  message={alertMessage}
+  type={alertType}
+  onClose={() => setAlertMessage(null)}
+  />
 
           {/* School Dropdown and Date Picker */}
           <div className="flex gap-4 mb-6 justify-center">

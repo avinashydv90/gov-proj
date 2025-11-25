@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
 import PageLayout from "../../shared-components/PageLayout";
 import {
   useDeleteStaffTypeMutation,
@@ -10,37 +9,54 @@ import IconButton from "@mui/material/IconButton";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { useDialogs } from "@toolpad/core/useDialogs";
+//import { useDialogs } from "@toolpad/core/useDialogs";
+import { useEffect, useState } from "react";
+import AppSnackbar from "../alert/AppSnackbar";
+import { confirmAlert } from "react-confirm-alert";
+import 'react-confirm-alert/src/react-confirm-alert.css';
+import "../../constants/confirm-custom.css";
 
 export const StaffTypeList: React.FC = () => {
-  const dialogs = useDialogs();
+  const [alertMessage, setAlertMessage] = useState<string | null>(null);
+  const [alertType, setAlertType] = useState<"success" | "error" | "info" | "warning">("info");
+  //const dialogs = useDialogs();
   const navigate = useNavigate();
   const { data: staffTypes, isLoading } = useGetAllStaffTypesQuery();
   const [deleteStaffType] = useDeleteStaffTypeMutation();
 
-  // const handleDelete = async (id: string) => {
-  //   if (window.confirm("आपण हटवू इच्छिता याची खात्री आहे का?")) {
-  //     try {
-  //       await deleteStaffType(id).unwrap();
-  //       toast.success("स्टाफ प्रकार यशस्वीरित्या हटवला!");
-  //     } catch (error) {
-  //       console.error("स्टाफ प्रकार हटवण्यात अडचण आली:", error);
-  //       toast.error("हटवण्यात अडचण आली.");
-  //     }
-  //   }
-  // };
+  useEffect(() => {
+     if (alertMessage) {
+       const timer = setTimeout(() => setAlertMessage(null), 2000);
+       return () => clearTimeout(timer);
+     }
+   }, [alertMessage]);
+
     const handleDelete = async (id: string) => {
-      const confirmed = await dialogs.confirm("आपण हटवू इच्छिता याची खात्री आहे का?");
-    if (confirmed) {
-      try {
-        await deleteStaffType(id).unwrap();
-        toast.success("स्टाफ प्रकार यशस्वीरित्या हटवला!");
-      } catch (error) {
-        console.error("स्टाफ प्रकार हटवण्यात अडचण आली:", error);
-        toast.error("हटवण्यात अडचण आली.");
+  confirmAlert({
+    title: "तुम्हाला हा स्टाफ प्रकार हटवायचा आहे का?",
+    message: "कृपया पुढे जाण्यासाठी पुष्टी करा.",
+    buttons: [
+      {
+        label: "होय",
+        onClick: async () => {
+          try {
+            await deleteStaffType(id).unwrap();
+            setAlertType("success");
+            setAlertMessage("स्टाफ प्रकार यशस्वीरित्या हटवला!");
+          } catch (error) {
+            setAlertType("error");
+            setAlertMessage("स्टाफ प्रकार हटवण्यात अडचण आली: " + (error as any).message);
+          }
+        }
+      },
+      {
+        label: "नाही",
+        onClick: () => {}
       }
-    }
-  };
+    ]
+  });
+};
+
 
   if (isLoading) {
     return (
@@ -65,7 +81,12 @@ export const StaffTypeList: React.FC = () => {
         <h2 className="text-2xl font-bold mb-4 text-center text-[#5C4033]">
           स्टाफ प्रकार यादी
         </h2>
-        <ToastContainer position="top-right" autoClose={3000} />
+         <AppSnackbar
+  open={!!alertMessage}
+  message={alertMessage}
+  type={alertType}
+  onClose={() => setAlertMessage(null)}
+  />
         <div className="flex justify-end mb-4">
           <AddCircleIcon 
             onClick={() => navigate("/admin/add-stafftype")}

@@ -24,7 +24,7 @@ export const staffAttendanceApi = createApi({
         }),
         downloadStaffAttendancePdf: builder.mutation<Blob, StaffAttendanceReportDto[]>({
             query: (attendance) => ({
-                url: "StaffAttendance/DownloadStaffAttendancePdf",
+                url: "StaffAttendance/download-pdf",
                 method: "POST",
                 body: attendance,
                 responseHandler: async (response) => {

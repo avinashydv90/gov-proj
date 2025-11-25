@@ -2,8 +2,6 @@ import { useEffect, useState } from "react";
 import { IStudentRegistrationRequest, IStudentUpdationRequest } from "../types/student";
 import { useAddStudentMutation, useGetStudentByIdQuery, useUpdateStudentMutation } from "../../services/studentApi";
 import { useNavigate, useParams } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import PageLayout from "../../shared-components/PageLayout";
 import InputField from "../InputField";
 import SelectField from "../SelectField";
@@ -13,9 +11,11 @@ import { useGetAllSchoolsQuery } from "../../services/schoolApi";
 import { useGetAllStandardsQuery } from "../../services/standardApi";
 import { useGetDivisionsByStandardIdQuery } from "../../services/divisionApi";
 import TextareaField from "../TextareaField";
+import AppSnackbar from "../alert/AppSnackbar";
 
 const StudentForm: React.FC = () => {
-
+const [alertMessage, setAlertMessage] = useState<string | null>(null);
+const [alertType, setAlertType] = useState<"success" | "error" | "info" | "warning">("info");
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const isEditMode = !!id;
@@ -23,6 +23,7 @@ const StudentForm: React.FC = () => {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   
   const [selectedStandard, setSelectedStandard] = useState<string>("");
+  
 
   const [formData, setFormData] = useState<IStudentRegistrationRequest>({
     fullName: "",
@@ -49,21 +50,26 @@ const StudentForm: React.FC = () => {
   const {data:schools}=useGetAllSchoolsQuery();
   const {data:standards}=useGetAllStandardsQuery();
 
-  // Get divisions for selected standard
 const { data: divisions } = useGetDivisionsByStandardIdQuery(selectedStandard, {
-  skip: !selectedStandard, // skip query if no standard selected
+  skip: !selectedStandard, 
 });
-// handle standard change
+
 const handleStandardChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
   const value = e.target.value;
   setSelectedStandard(value);
   setFormData((prev) => ({
     ...prev,
-    standardId: value,   // ✅ set standardId in formData
-    divisionId: "",      // reset division
+    standardId: value,   
+    divisionId: "",      
   }));
 };
-console.log("Selected division:", divisions);
+useEffect(() => {
+  if (alertMessage) {
+    const timer = setTimeout(() => setAlertMessage(null), 2000);
+    return () => clearTimeout(timer);
+  }
+}, [alertMessage]);
+
 
 useEffect(()=>{
   if (isEditMode && existingStudent) {
@@ -97,12 +103,21 @@ useEffect(()=>{
       newErrors.contact = "Please enter a valid 10-digit phone number.";
     }
 
-    if (Object.keys(newErrors).length) {
-      Object.values(newErrors).forEach(msg => toast.error(msg));
-      setErrors(newErrors);
-      return false;
-    }
-    return true;
+   if (Object.keys(newErrors).length > 0) {
+  const firstErrorField = Object.keys(newErrors)[0];
+
+  const el = document.getElementById(firstErrorField);
+  el?.scrollIntoView({ behavior: "smooth", block: "center" });
+
+  const errorMsg = Object.values(newErrors)[0]; // ⭐ first error only
+  setAlertType("error");
+  setAlertMessage(errorMsg);
+
+  return false;
+}
+
+return true;
+
   };
 
   if (isEditMode && isStudentLoading) {
@@ -112,7 +127,6 @@ useEffect(()=>{
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
   if (!validateForm()) return;
-    // Ensure dateOfBirth is ISO string
  const preparePayload = (data: typeof formData) => ({
   ...data,
   dateOfBirth: data.dateOfBirth
@@ -128,13 +142,15 @@ try{
         id :id,
     }
     await updateStudent(editPayload).unwrap();
-    toast.success("Student updated successfully.");
+    setAlertType("success");
+    setAlertMessage("विद्यार्थी यशस्वीरित्या अद्यतनित केला गेला आहे.");
 }
   else {
    const newPayload = preparePayload(formData);
       console.log("Registering new student with payload:", newPayload);
       await registerStudent(newPayload).unwrap();
-      toast.success("Student registered successfully.");
+      setAlertType("success");
+      setAlertMessage("विद्यार्थी यशस्वीरित्या नोंदवला गेला आहे.");
       
     setFormData({
       fullName: "",
@@ -154,10 +170,12 @@ try{
       standardId: "",
     });
   }
-  navigate("/admin/student-list", { state: { updated: true } });
+  setTimeout(() => {
+    navigate("/admin/student-list", { state: { updated: true } });
+  }, 1600);
 } catch (error) {
-  console.error("Error in student form submission:", error);
-  toast.error("An error occurred while submitting the form. Please try again.");
+  setAlertType("error");
+  setAlertMessage("फॉर्म सबमिशन दरम्यान त्रुटी आली आहे. कृपया पुन्हा प्रयत्न करा." + (error as any).message);
 }
   }
   const casteTypeOptions = casteType?.map(c => ({ id: c.id, name: c.casteName })) || [];
@@ -166,6 +184,12 @@ try{
 
   return (
   <PageLayout>
+     <AppSnackbar
+  open={!!alertMessage}
+  message={alertMessage}
+  type={alertType}
+  onClose={() => setAlertMessage(null)}
+  />
    <div className="w-full flex justify-center px-4 py-6">
       <div className="w-full max-w-6xl bg-white rounded-lg shadow-lg p-8 border border-gray-200">
          <h2 className="text-2xl font-bold mb-8 text-center text-[#5C4033]">
@@ -219,7 +243,7 @@ try{
   onChange={handleStandardChange}
   error={errors.standardId}
   options={
-    standards?.filter(s => s.id).map(s => ({
+    standards ?.filter(s => s.schoolId === formData.schoolId).map(s => ({
       id: s.id!,
       name: s.name,
     })) || []
@@ -232,7 +256,7 @@ required
 value={formData.divisionId}
 onChange={handleChange}
 error={errors.divisionId}
-disabled={!selectedStandard}
+disabled={!selectedStandard }
 options={
 divisions
 ?.filter((d) => d.id)
@@ -266,12 +290,10 @@ name: d.name,
                : "नोंदणी करा"}
                </button>
             </div>
-         </form>
-         <ToastContainer position="top-right" autoClose={3000} />
+         </form>  
       </div>
    </div>
 </PageLayout>
-
   );
 };
 export default StudentForm;

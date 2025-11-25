@@ -8,6 +8,7 @@ export interface StaffAttendance {
 export interface StaffAttendanceReportDto {
     srNo: number;
     fullName: string;
+    date: string;
     schoolId: string;
     isPresent: boolean;
 }
