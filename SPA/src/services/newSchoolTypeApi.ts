@@ -1,4 +1,4 @@
-// src/services/schoolTypeApi.ts
+
 import { createApi } from "@reduxjs/toolkit/query/react";
 import dynamicBaseQuery from "./StaffService/customBaseQuery";
 import {
@@ -6,12 +6,13 @@ import {
   SchoolType,
   UpdateSchoolTypeRequest,
 } from "../components/types/schoolType";
+import { baseUrl } from "./api";
 
-const BASE_URL = "https://api.poitdp.shahapur-mh.in/api";
+//const BASE_URL = "https://api.poitdp.shahapur-mh.in/api";
 
 export const newSchoolTypeApi = createApi({
   reducerPath: "SchoolTypeApi",
-  baseQuery: dynamicBaseQuery(BASE_URL),
+  baseQuery: dynamicBaseQuery(baseUrl),
   tagTypes: ["SchoolType"],
 
   endpoints: (builder) => ({

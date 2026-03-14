@@ -9,8 +9,9 @@ import { useGetDivisionsByStandardIdQuery } from "../../services/divisionApi";
 import PageLayout from "../../shared-components/PageLayout";
 import "../StudentAttendance/globals.css";
 import AppSnackbar from "../alert/AppSnackbar";
-import { useGetAllSchoolsQuery } from "../../services/schoolApi";
-
+import {  useGetAllSchoolsQuery, useGetSchoolByIdQuery } from "../../services/schoolApi";
+import { getSchoolIdFromToken } from "../../constants/authUtils";
+import { getRoleFromToken } from "../../constants/roleUtils";
 
 const StudentAttendanceForm: React.FC = () => {
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
@@ -19,12 +20,15 @@ const StudentAttendanceForm: React.FC = () => {
   const [selectedStandard, setSelectedStandard] = useState<string>("");
   const [selectedDivision, setSelectedDivision] = useState<string>("");
   const [selectedSchool, setSelectedSchool] = useState("");
+  const decodedSchoolId = getSchoolIdFromToken();
+  const role = getRoleFromToken();
+  const { data: school} = useGetSchoolByIdQuery(decodedSchoolId);
 
   const [selectedDate, setSelectedDate] = useState<string>(
     new Date().toISOString().split("T")[0]
   );
   const [selectAll, setSelectAll] = useState(false);
-const { data: schoolsData } = useGetAllSchoolsQuery();
+  const { data: schoolsData } = useGetAllSchoolsQuery();
   const { data: standards } = useGetStandardsBySchoolIdQuery(
     selectedSchool ? selectedSchool : skipToken
   );
@@ -50,20 +54,24 @@ const { data: schoolsData } = useGetAllSchoolsQuery();
      }
    }, [alertMessage]);
 
-  // Sync students with query data
   useEffect(() => {
     setStudents(studentsData);
   }, [studentsData]);
 
 
-  // Keep selectAll in sync with students
+useEffect(() => {
+  if (role !== "SuperAdmin" && school?.id) {
+    setSelectedSchool(school.id);
+  }
+}, [school, role]);
+ 
   useEffect(() => {
     setSelectAll(students.length > 0 && students.every((s) => s.isPresent));
   }, [students]);
 
   const handleStandardChange = (value: string) => {
     setSelectedStandard(value);
-    setSelectedDivision(""); // reset division when standard changes
+    setSelectedDivision(""); 
   };
 const handleSchoolChange = (value: string) => {
   setSelectedSchool(value);
@@ -121,21 +129,29 @@ const handleSchoolChange = (value: string) => {
 
           {/* Dropdowns and Date Picker */}
           <div className="flex gap-4 mb-6">
-            <select name="" id=""
+            <select 
+            value={selectedSchool}
            onChange={(e) => handleSchoolChange(e.target.value)}
-            className="custom-select-left-arrow border p-2 font-sm rounded w-1/3 text-gray-700 font-noto-serif-devanagari">
-              <option value="">शाळा निवडा</option>{
-                schoolsData?.map((sch)=>(
-                  <option key={sch.id} value={sch.id}>{sch.name}</option>
-                ))
-              }
+            className="custom-select-left-arrow border p-2 font-sm rounded w-1/2 text-gray-700 font-noto-serif-devanagari">
+              <option value="">-- शाळा निवडा --</option>
+
+  {(role === "SuperAdmin"
+    ? schoolsData
+    : school
+    ? [school]
+    : []
+  )?.map((s) => (
+    <option key={s.id} value={s.id}>
+      {s.name}
+    </option>
+  ))}
             </select>
             <select
               value={selectedStandard}
               onChange={(e) => handleStandardChange(e.target.value)}
               className="custom-select-left-arrow border p-2 font-sm rounded w-1/3 text-gray-700 font-noto-serif-devanagari"
             >
-              <option value="">इयत्ता निवडा</option>
+              <option value="">-- इयत्ता निवडा --</option>
               {standards?.map((s) => (
                 <option key={s.id} value={s.id}>
                   {s.name}
@@ -149,7 +165,7 @@ const handleSchoolChange = (value: string) => {
               disabled={!selectedStandard}
               className="custom-select-left-arrow border p-2 rounded w-1/3 font-sm text-gray-700 font-noto-serif-devanagari"
             >
-              <option value="">विभाग निवडा</option>
+              <option value="">-- विभाग निवडा --</option>
               {divisions?.map((d) => (
                 <option key={d.id} value={d.id}>
                   {d.name}

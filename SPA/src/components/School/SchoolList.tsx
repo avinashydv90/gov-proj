@@ -18,7 +18,8 @@ import AppSnackbar from "../alert/AppSnackbar";
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import "../../constants/confirm-custom.css";
-//import { useDialogs } from "@toolpad/core/useDialogs";
+import toMarathiNumber from "../../constants/toMarathiNumber";
+
 
 const SchoolList: React.FC = () => {
      const [alertMessage, setAlertMessage] = useState<string | null>(null);
@@ -85,6 +86,7 @@ const handleDelete = async (id: string) => {
     const match = schoolTypes?.find((type) => type.id === id);
     return match ? match.type : 'N/A';
   };
+  
 
   <><ErrorMessage isError={isError} title="अरेरे! काहीतरी चुकलं" message="कृपया इंटरनेट कनेक्शन तपासा आणि पुन्हा प्रयत्न करा." />
   <IsLoading isLoading={isLoading} message="Schools लोड करत आहे..." /></>
@@ -142,12 +144,12 @@ const handleDelete = async (id: string) => {
             <tbody className="divide-y divide-gray-200">
                {schools?.map((school, index) => (
                <tr key={school.id} className="hover:bg-gray-50">
-                  <td className="px-3 py-2">{index + 1}</td>
+                  <td className="px-3 py-2">{toMarathiNumber(index + 1)}</td>
                   <td className="px-3 py-2">{school.schoolCode}</td>
                   <td className="px-3 py-2">{school.clusterCode}</td>
                   <td className="px-3 py-2">{school.name}</td>
                   <td className="px-3 py-2">
-                     {new Date(school.establishMentDate).toLocaleDateString()}
+                    {new Date(school.establishMentDate).toLocaleDateString("mr-IN")}
                   </td>
                   <td className="px-3 py-2">
                      {getSchoolTypeName(school.schoolTypeId.toString())}
@@ -159,7 +161,7 @@ const handleDelete = async (id: string) => {
                   <td className="px-3 py-2">{school.pinCode}</td>
                   <td className="px-3 py-2 truncate max-w-[180px]">{school.email}</td>
                   <td className="px-3 py-2">{school.phoneNumber}</td>
-                  <td className="px-3 py-2">{school.lowerStandard} - {school.higherStandard}</td>
+                  <td className="px-3 py-2">{toMarathiNumber(school.lowerStandard)} - {toMarathiNumber(school.higherStandard)}</td>
                   <td className="px-3 py-2 text-center md:text-lg">
                      <div className="flex justify-center gap-2">
                         <Tooltip title="Edit">

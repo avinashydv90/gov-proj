@@ -22,11 +22,12 @@ export const staffAttendanceApi = createApi({
             }),
             invalidatesTags: ["StaffAttendance"],
         }),
-        downloadStaffAttendancePdf: builder.mutation<Blob, StaffAttendanceReportDto[]>({
-            query: (attendance) => ({
-                url: "StaffAttendance/download-pdf",
+
+        downloadStaffAttendancePdf: builder.mutation<Blob, { schoolName: string; staffs: StaffAttendanceReportDto[] }>({
+            query: ({ schoolName, staffs }) => ({
+                url: `StaffAttendance/download-pdf?schoolName=${encodeURIComponent(schoolName)}`,
                 method: "POST",
-                body: attendance,
+                body: staffs,
                 responseHandler: async (response) => {
                     if (!response.ok) {
                         const text = await response.text();

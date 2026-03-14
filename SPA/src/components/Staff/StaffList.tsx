@@ -1,12 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import PageLayout from "../../shared-components/PageLayout";
-//import { jwtDecode } from "jwt-decode";
 import { skipToken } from "@reduxjs/toolkit/query";
 import {
   useDeleteStaffMutation,
+  useGetAllStaffQuery,
   useGetStaffBySchoolIdQuery,
 } from "../../services/StaffService/staffApi";
-import { useGetAllSchoolsQuery } from "../../services/schoolApi";
+import { useGetAllSchoolsQuery, useGetSchoolByIdQuery } from "../../services/schoolApi";
 import { useGetAllEmployeeTypeQuery } from "../../services/StaffService/employeeTypeApi";
 import { useGetAllCasteTypesQuery } from "../../services/StaffService/casteTypeApi";
 import { useGetAllReligionTypesQuery } from "../../services/StaffService/religionTypeApi";
@@ -24,37 +24,33 @@ import { confirmAlert } from 'react-confirm-alert';
 import "../../constants/confirm-custom.css";
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import AppSnackbar from "../alert/AppSnackbar";
-
-// interface Jwtpayload{
-//   sub: string;
-//   school_id?:string;
-// }
+import { getSchoolIdFromToken } from "../../constants/authUtils";
+import toMarathiNumber from "../../constants/toMarathiNumber";
+import { getRoleFromToken } from "../../constants/roleUtils";
 
 export const StaffList: React.FC = () => {
- const [alertMessage, setAlertMessage] = useState<string | null>(null);
+  const decodedSchoolId = getSchoolIdFromToken();
+  const role = getRoleFromToken();
+  const [alertMessage, setAlertMessage] = useState<string | null>(null);
   const [alertType, setAlertType] = useState<"success" | "error" | "info" | "warning">("info");
   const navigate = useNavigate();
   const [selectedSchool, setSelectedSchool] = useState<ISchool | null>(null);
   const { data: staffs, isLoading } = useGetStaffBySchoolIdQuery(
-    selectedSchool?.id ?? skipToken
-  );
-  // const token = localStorage.getItem("token");
+  role === "SuperAdmin" ? skipToken : decodedSchoolId
+);
 
-  // let schoolId: string | undefined;
-  // if(token){
-  //   try{
-  //     const decoded = jwtDecode<Jwtpayload>(token);
-  //     schoolId = decoded.school_id;
-  //   }
-  //   catch (error) {
-  //     console.error("Token decoding failed:", error);
+const { data: allStaff } =
+  useGetAllStaffQuery(undefined, { skip: role !== "SuperAdmin" });
+ const staffList = role === "SuperAdmin" ? allStaff ?? [] : staffs ?? [];
 
-  //   }
-  // }
-  //  const schoolId ="f12ee097-5132-454f-9161-07564a3e9f88";
-  // const { data: staffs, isLoading } = useGetStaffBySchoolIdQuery(
-  //   schoolId ?? skipToken
-  // );
+  const filteredStaff =
+  role === "SuperAdmin"
+    ? staffList?.filter(
+        (s) => selectedSchool && String(s.schoolId) === String(selectedSchool.id)
+      )
+    : staffList;
+  const { data:school } = useGetSchoolByIdQuery(decodedSchoolId);
+
   const { data: schoolsData } = useGetAllSchoolsQuery();
   const { data: staffTypeData } = useGetAllStaffTypesQuery();
   const { data: employeeTypeData } = useGetAllEmployeeTypeQuery();
@@ -69,6 +65,11 @@ export const StaffList: React.FC = () => {
        return () => clearTimeout(timer);
      }
    }, [alertMessage]);
+   useEffect(() => {
+  if (role !== "SuperAdmin" && school) {
+    setSelectedSchool(school);
+  }
+}, [school, role]);
 
 const handleDelete = async (id: string) => {
   confirmAlert({
@@ -96,14 +97,12 @@ const handleDelete = async (id: string) => {
   });
 };
 
-
-
   const handleSchoolChange = (school: ISchool | null) => {
     setSelectedSchool(school);
   };
 
 
-  if (isLoading) {
+  if (role !== "SuperAdmin" && isLoading) {
     return (
       <div className="flex items-center justify-center h-[60vh]">
         <div className="text-center">
@@ -126,7 +125,8 @@ const handleDelete = async (id: string) => {
           <h2 className="text-2xl font-bold mb-4 text-center text-[#5C4033]">
             कर्मचारी यादी
           </h2>
-          <Filter schools={schoolsData} onSchoolChange={handleSchoolChange} />
+          <Filter  schools={role === "SuperAdmin" ? schoolsData : school}
+          onSchoolChange={handleSchoolChange} />
           <div className="text-center mt-10 text-lg text-gray-600">
             कृपया शाळा निवडा
           </div>
@@ -134,6 +134,7 @@ const handleDelete = async (id: string) => {
       </PageLayout>
     );
   }
+
 
   return (
     <PageLayout>
@@ -147,10 +148,11 @@ const handleDelete = async (id: string) => {
   type={alertType}
   onClose={() => setAlertMessage(null)}
   />
-        <Filter 
-        schools={schoolsData}
-        selectedSchool={selectedSchool}
-         onSchoolChange={handleSchoolChange} />
+       <Filter
+         schools={role === "SuperAdmin" ? schoolsData : school}
+             onSchoolChange={handleSchoolChange}
+         selectedSchool={selectedSchool}
+       />
             <div className="flex justify-end mb-4">
           <AddCircleIcon
             onClick={() => navigate("/admin/add-staff")}
@@ -178,10 +180,10 @@ const handleDelete = async (id: string) => {
                   "कर्मचारी प्रकार",
                   "स्टाफ प्रकार",
                   "शाळा",
-                  "ईमेल", // नवीन कॉलम
-                  "संपर्क क्रमांक", // नवीन कॉलम
-                  "पत्ता", // नवीन कॉलम
-                  "क्रिया", // Actions
+                  "ईमेल", 
+                  "संपर्क क्रमांक",
+                  "पत्ता",
+                  "क्रिया",
                 ].map((header) => (
                   <th
                     key={header}
@@ -193,24 +195,24 @@ const handleDelete = async (id: string) => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {staffs?.map((staff, index) => (
+              {filteredStaff?.map((staff, index) => (
                 <tr key={staff.id} className="hover:bg-gray-50 text-center">
-                  <td className="px-2 py-2">{index + 1}</td>
+                  <td className="px-2 py-2">{toMarathiNumber(index + 1)}</td>
                   <td className="px-2 py-2">{staff.name}</td>
                   <td className="px-2 py-2">{staff.gender}</td>
                   <td className="px-2 py-2">{staff.qualification}</td>
                   <td className="px-2 py-2">{staff.subject}</td>
                   <td className="px-2 py-2">
-                    {staff.minimumStandard} - {staff.maximumStandard}
+                    {toMarathiNumber(staff.minimumStandard)} - {toMarathiNumber(staff.maximumStandard)}
                   </td>
                   <td className="px-2 py-2">
                     {staff.dateOfBirth
-                      ? new Date(staff.dateOfBirth).toLocaleDateString()
+                      ? new Date(staff.dateOfBirth).toLocaleDateString("mr-IN")
                       : ""}
                   </td>
                   <td className="px-2 py-2">
                     {staff.joiningDate
-                      ? new Date(staff.joiningDate).toLocaleDateString()
+                      ? new Date(staff.joiningDate).toLocaleDateString("mr-IN")
                       : ""}
                   </td>
                   <td className="px-2 py-2">{staff.religion}</td>
@@ -267,7 +269,7 @@ const handleDelete = async (id: string) => {
                   </td>
                 </tr>
               ))}
-              {staffs?.length === 0 && (
+              {filteredStaff?.length === 0 && (
                 <tr>
                   <td colSpan={16} className="text-center py-4">
                     कर्मचारी सापडले नाहीत.

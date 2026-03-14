@@ -15,6 +15,7 @@ import { useGetAllSchoolTypesQuery } from "../../services/newSchoolTypeApi";
 import InputField from "../InputField";
 import TextareaField from "../TextareaField";
 import AppSnackbar from "../alert/AppSnackbar";
+import { initialSchoolRegistration } from "./initialSchoolRegistration";
 
 const SchoolRegistrationForm: React.FC = () => {
 const [alertMessage, setAlertMessage] = useState<string | null>(null);
@@ -25,22 +26,9 @@ const [alertMessage, setAlertMessage] = useState<string | null>(null);
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
-  const [formData, setFormData] = useState<ISchoolRegistrationRequest>({
-    schoolCode: "",
-    clusterCode: "",
-    name: "",
-    address: "",
-    city: "",
-    district: "",
-    pinCode: "",
-    state: "",
-    email: "",
-    phoneNumber: "",
-    lowerStandard: 0,
-    higherStandard: 0,
-    establishMentDate: "",
-    schoolTypeId: "",
-  });
+  const [formData, setFormData] = useState<ISchoolRegistrationRequest>(
+    initialSchoolRegistration 
+  );
 
   const [registerSchool, { isLoading: isRegistering }] = useAddSchoolMutation();
   const { data: schoolTypes, isLoading: isSchoolTypesLoading } =
@@ -100,12 +88,12 @@ useEffect(() => {
   const validateForm = (): boolean => {
     const newErrors: { [key: string]: string } = {};
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    const schoolCodeRegex = /^2\d{10}$/;
-    const clusterCodeRegex = /^2\d{9}$/;
-    const pinCodeRegex = /^[1-9][0-9]{5}$/;
-    const phoneNumberRegex = /^\d{10,11}$/;
+    const schoolCodeRegex = /^[2२][0-9०-९]{10}$/;
+    const clusterCodeRegex = /^[2२][0-9०-९]{9}$/;
+    const pinCodeRegex = /^[1-9१-९][0-9०-९]{5}$/;
+    const phoneNumberRegex = /^[0-9०-९]{10,11}$/;
     const onlyLettersRegex = /^[A-Za-z\u0900-\u097F\s]+$/;
-    const schoolNameRegex = /^[\p{L}\s.'-]+$/u;
+    const schoolNameRegex = /^[\p{L}\p{M}0-9\s.'-]+$/u;
 
    if (formData.name.length > 100) {
   newErrors.name = "शाळेचे नाव 100 अक्षरांपेक्षा कमी असावे.";
@@ -114,20 +102,20 @@ useEffect(() => {
   return false;
 }
 
-if (!schoolNameRegex.test(formData.name.trim())) {
-  newErrors.name = "शाळेचे नाव फक्त अक्षरे, स्पेस, डॉट (.) आणि विशेष चिन्हे (-, ') असावीत.";
+if (!schoolNameRegex.test(formData.name?.trim() || "")) {
+  newErrors.name = "शाळेचे नाव कोणत्याही भाषेतील अक्षरे, स्पेस, डॉट (.) आणि विशेष चिन्हे (-, ') असावीत.";
   setAlertType("error");
-  setAlertMessage(newErrors.name); 
+  setAlertMessage(newErrors.name);
   return false;
 }
 
-    if (!schoolCodeRegex.test(formData.schoolCode.trim())) {
+    if (!schoolCodeRegex.test(formData.schoolCode?.trim() || "")) {
       newErrors.schoolCode = "वैध शाळेचा कोड प्रविष्ट करा ";
       setAlertType("error");
       setAlertMessage(newErrors.schoolCode);
       return false;
     }
-    if (!clusterCodeRegex.test(formData.clusterCode.trim())) {
+    if (!clusterCodeRegex.test(formData.clusterCode?.trim() || "")) {
       newErrors.clusterCode = "वैध क्लस्टर कोड प्रविष्ट करा ";
       setAlertType("error");
       setAlertMessage(newErrors.clusterCode);
@@ -140,11 +128,14 @@ if (!schoolNameRegex.test(formData.name.trim())) {
       setAlertMessage(newErrors.address);
       return false;
     }
-   if (!formData.city.trim()) {
+    if (!formData.city?.trim()) {
   newErrors.city = "कृपया शहर भरा.";
-  setAlertType("error");
+} else if (!onlyLettersRegex.test(formData.city.trim())) {
+  newErrors.city =
+    "शहर फक्त अक्षरांत असावे. संख्या किंवा विशेष चिन्हे वापरू नका.";
+    setAlertType("error");
   setAlertMessage(newErrors.city);
-  return false;   
+  return false;  
 }
 
 if (!onlyLettersRegex.test(formData.city.trim())) {
@@ -259,22 +250,7 @@ return true;
         await registerSchool(registerPayload).unwrap();
         setAlertType("success");
        setAlertMessage("विद्यालय यशस्वीरित्या नोंदणीकृत झाले!");
-          setFormData({
-          schoolCode: "",
-          clusterCode: "",
-          name: "",
-          address: "",
-          city: "",
-          district: "",
-          pinCode: "",
-          state: "",
-          email: "",
-          phoneNumber: "",
-          lowerStandard: 0,
-          higherStandard: 0,
-          establishMentDate: "",
-          schoolTypeId: "",
-        });
+          setFormData(initialSchoolRegistration);
       }
 setTimeout(() => {
   navigate("/admin/school-list", { state: { updated: true } });

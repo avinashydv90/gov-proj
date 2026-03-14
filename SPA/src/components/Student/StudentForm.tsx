@@ -7,47 +7,35 @@ import InputField from "../InputField";
 import SelectField from "../SelectField";
 import { useGetAllCasteTypesQuery } from "../../services/StaffService/casteTypeApi";
 import { useGetAllReligionTypesQuery } from "../../services/StaffService/religionTypeApi";
-import { useGetAllSchoolsQuery } from "../../services/schoolApi";
+import { useGetAllSchoolsQuery, useGetSchoolByIdQuery } from "../../services/schoolApi";
 import { useGetAllStandardsQuery } from "../../services/standardApi";
 import { useGetDivisionsByStandardIdQuery } from "../../services/divisionApi";
 import TextareaField from "../TextareaField";
 import AppSnackbar from "../alert/AppSnackbar";
+import { getSchoolIdFromToken } from "../../constants/authUtils";
+import { getRoleFromToken } from "../../constants/roleUtils";
+import initialStudentRegistrationRequest from "./initialStudentRegistrationRequest";
 
 const StudentForm: React.FC = () => {
-const [alertMessage, setAlertMessage] = useState<string | null>(null);
-const [alertType, setAlertType] = useState<"success" | "error" | "info" | "warning">("info");
+  const [alertMessage, setAlertMessage] = useState<string | null>(null);
+  const [alertType, setAlertType] = useState<"success" | "error" | "info" | "warning">("info");
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const isEditMode = !!id;
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  
+  const role = getRoleFromToken();
   const [selectedStandard, setSelectedStandard] = useState<string>("");
-  
+  const decodedSchoolId = getSchoolIdFromToken();
+  const { data: school} = useGetSchoolByIdQuery(decodedSchoolId);
 
-  const [formData, setFormData] = useState<IStudentRegistrationRequest>({
-    fullName: "",
-    dateOfBirth: "",
-    grNumber: 0,
-    gender: "",
-    address: "",
-    guardianName: "",
-    motherName: "",
-    contact: "",
-    caste: "",
-    casteTypeId: "",
-    religion: "",
-    religionTypeId: "",
-    divisionId: "",
-    schoolId: "",
-    standardId: "",
-  });
+  const [formData, setFormData] = useState<IStudentRegistrationRequest>(initialStudentRegistrationRequest);
   const [registerStudent, { isLoading: isRegistering }] = useAddStudentMutation();
   const [updateStudent, { isLoading: isUpdating }] = useUpdateStudentMutation();
   const {data: existingStudent, isLoading: isStudentLoading } = useGetStudentByIdQuery(id!, { skip: !isEditMode });
   const {data:casteType} = useGetAllCasteTypesQuery();
   const {data:religionTypes} = useGetAllReligionTypesQuery();
-  const {data:schools}=useGetAllSchoolsQuery();
+  const {data:schools} = useGetAllSchoolsQuery();
   const {data:standards}=useGetAllStandardsQuery();
 
 const { data: divisions } = useGetDivisionsByStandardIdQuery(selectedStandard, {
@@ -70,6 +58,14 @@ useEffect(() => {
   }
 }, [alertMessage]);
 
+useEffect(() => {
+  if (role !== "SuperAdmin" && decodedSchoolId) {
+    setFormData((prev) => ({
+      ...prev,
+      schoolId: decodedSchoolId
+    }));
+  }
+}, [decodedSchoolId, role]);
 
 useEffect(()=>{
   if (isEditMode && existingStudent) {
@@ -80,6 +76,7 @@ useEffect(()=>{
         ? existingStudent.dateOfBirth.split("T")[0]
         : prev.dateOfBirth || "",
     }));
+     setSelectedStandard(existingStudent.standardId || "");
   }
 }, [isEditMode, existingStudent]);
 
@@ -109,7 +106,7 @@ useEffect(()=>{
   const el = document.getElementById(firstErrorField);
   el?.scrollIntoView({ behavior: "smooth", block: "center" });
 
-  const errorMsg = Object.values(newErrors)[0]; // ⭐ first error only
+  const errorMsg = Object.values(newErrors)[0]; 
   setAlertType("error");
   setAlertMessage(errorMsg);
 
@@ -152,23 +149,7 @@ try{
       setAlertType("success");
       setAlertMessage("विद्यार्थी यशस्वीरित्या नोंदवला गेला आहे.");
       
-    setFormData({
-      fullName: "",
-      dateOfBirth: "",
-      grNumber: 0,
-      gender: "",
-      address: "",
-      guardianName: "",
-      motherName: "",
-      contact: "",
-      caste: "",
-      casteTypeId: "",
-      religion: "",
-      religionTypeId: "",
-      divisionId: "",
-      schoolId: "",
-      standardId: "",
-    });
+    setFormData(initialStudentRegistrationRequest);
   }
   setTimeout(() => {
     navigate("/admin/student-list", { state: { updated: true } });
@@ -180,7 +161,12 @@ try{
   }
   const casteTypeOptions = casteType?.map(c => ({ id: c.id, name: c.casteName })) || [];
   const religionTypeOptions = religionTypes?.map(r => ({ id: r.id, name: r.name })) || [];
-  const schoolOptions = schools?.map(s => ({ id: s.id, name: s.name })) || [];
+  const schoolOption =
+  role === "SuperAdmin"
+    ? schools?.map((s) => ({ id: s.id, name: s.name })) || []
+    : school
+    ? [{ id: school.id, name: school.name }]
+    : [];
 
   return (
   <PageLayout>
@@ -226,13 +212,14 @@ try{
                   error={errors.religionTypeId}
                   required
                   options={religionTypeOptions} />
+
                   <SelectField label="शाळा"
                   name="schoolId"
                   value={formData.schoolId}
                   onChange={handleChange}
                   error={errors.schoolId}
                   required
-                  options={schoolOptions} />
+                  options={schoolOption} disabled={role !== "SuperAdmin"}/>
             </div>
             <div className="grid grid-cols-3 gap-4">
 <SelectField

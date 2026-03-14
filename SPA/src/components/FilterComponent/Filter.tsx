@@ -3,7 +3,7 @@ import TextField from "@mui/material/TextField";
 import { ISchool } from "../types/School";
 
 interface SchoolFilterProps {
- schools?: ISchool[]; // Optional prop in case it's undefined at first
+  schools?: ISchool[] | ISchool | null;
   onSchoolChange: (school: ISchool | null) => void;
  selectedSchool?: ISchool | null;
  
@@ -15,14 +15,20 @@ const filterOptions = createFilterOptions<ISchool>({
 });
 
 export default function Filter({ schools, onSchoolChange,selectedSchool }: SchoolFilterProps) {
+  const schoolOptions = Array.isArray(schools)
+    ? schools
+    : schools
+    ? [schools]
+    : [];
   return (
     <Autocomplete
-      options={schools || []}
+    options={schoolOptions} // Provide an empty array if schools is undefined}
       value={selectedSchool || null}
       getOptionLabel={(option) => option?.name || "" }
       filterOptions={filterOptions}
+      
       onChange={(_, newValue) => onSchoolChange(newValue)}
-      sx={{ width: 300 }}
+      sx={{ width: 380 }}
        renderInput={(params) => <TextField {...params} label=" कृपया शाळा निवडा"
        className="mt-1 block w-full rounded-md border text-sm font-semibold 
        shadow-sm p-2 bg-white/90 border-[#5C4033] focus:border-[#4a3328] focus:ring-[#4a3328]"

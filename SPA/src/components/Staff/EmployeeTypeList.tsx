@@ -11,6 +11,7 @@ import "../../constants/confirm-custom.css";
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import { useEffect, useState } from "react";
 import AppSnackbar from "../alert/AppSnackbar";
+import toMarathiNumber from "../../constants/toMarathiNumber";
 
 export const EmployeeTypeList: React.FC = () => {
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
@@ -107,7 +108,7 @@ export const EmployeeTypeList: React.FC = () => {
             <tbody className="divide-y divide-gray-200">
               {employeeTypes?.map((employeeType, index) => (
                 <tr key={employeeType.id} className="hover:bg-gray-50 text-center">
-                  <td className="px-3 text-lg py-2">{index + 1}</td>
+                  <td className="px-3 text-lg py-2">{toMarathiNumber(index + 1)}</td>
                   <td className="px-3 text-lg py-2">{employeeType.name}</td>
                   <td className="px-3 py-2">
                     <div className="flex justify-center space-x-2">
@@ -130,6 +131,11 @@ export const EmployeeTypeList: React.FC = () => {
             </tbody>
           </table>
         </div>
+          <div className="flex justify-end mt-3 mt-50">
+ <p className="text-medium text-m text-gray-600 italic">
+    <strong> टीप:</strong> कर्मचारी प्रकार उदा. प्राचार्य, शिक्षक इत्यादी नमूद करावा.
+  </p>
+</div>
       </div>
     </PageLayout>
   );

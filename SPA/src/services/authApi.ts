@@ -1,22 +1,19 @@
 // services/authApi.ts
 
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
 import {
   AuthResponse,
   LoginRequest,
   RegisterRequest,
 } from "../components/types/auth";
+import dynamicBaseQuery from "./StaffService/customBaseQuery";
+import { baseUrl } from "./api";
 
 export const authApi = createApi({
   reducerPath: "authApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: "https://api.poitdp.shahapur-mh.in/api/Auth",
-    // prepareHeaders: (headers) => {
-    //   const token = localStorage.getItem("token");
-    //   if (token) headers.set("Authorization", `Bearer ${token}`);
-    //   return headers;
-    // },
-  }),
+  baseQuery: dynamicBaseQuery(baseUrl + "Auth"),
+
+
   endpoints: (builder) => ({
     login: builder.mutation<AuthResponse, LoginRequest>({
       query: (credentials) => ({

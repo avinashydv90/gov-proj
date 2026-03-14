@@ -11,7 +11,6 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 import { useEffect, useState } from "react";
 import AppSnackbar from "../alert/AppSnackbar";
 import "../../constants/confirm-custom.css";
-//import { useDialogs } from "@toolpad/core/useDialogs";
 
 export const SchoolTypeList: React.FC = () => {
     const [alertMessage, setAlertMessage] = useState<string | null>(null);
@@ -42,7 +41,8 @@ export const SchoolTypeList: React.FC = () => {
             setAlertMessage("शाळेचा प्रकार यशस्वीरित्या हटवला!");
           } catch (error) {
             setAlertType("error");
-            setAlertMessage("शाळेचा प्रकार हटवण्यात अडचण आली: " + (error as any).message);
+            setAlertMessage("शाळा प्रकार हटवता येत नाही. कृपया आधी शाळा तक्त्यातील संबंधित नोंदी हटवा."
+               + (error as any).message);
           }
         }
       },

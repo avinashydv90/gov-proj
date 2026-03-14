@@ -1,8 +1,9 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import dynamicBaseQuery from "./customBaseQuery";
 import { IStaffType } from "../../components/types/IStaffType";
+import { baseUrl } from "../api";
 
-const baseUrl = "https://api.poitdp.shahapur-mh.in/api";
+//const baseUrl = "https://api.poitdp.shahapur-mh.in/api";
 
 export const staffTypeApi = createApi({
   reducerPath: "staffTypeApi",

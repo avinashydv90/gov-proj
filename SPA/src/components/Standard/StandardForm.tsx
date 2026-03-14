@@ -6,9 +6,10 @@ import {
   useGetStandardByIdQuery,
   useUpdateStandardMutation,
 } from "../../services/standardApi";
-import { useGetAllSchoolsQuery } from "../../services/schoolApi";
+import {  useGetSchoolByIdQuery } from "../../services/schoolApi";
 import PageLayout from "../../shared-components/PageLayout";
 import AppSnackbar from "../alert/AppSnackbar";
+import { getSchoolIdFromToken } from "../../constants/authUtils";
 
 
 const StandardForm: React.FC = () => {
@@ -18,6 +19,8 @@ const StandardForm: React.FC = () => {
   const { standardId } = useParams<{ standardId: string }>();
   const isEditMode = !!standardId;
 
+  const schoolIdFromToken = getSchoolIdFromToken();
+
   const [formData, setFormData] = useState<ICreateStandardDto>({
     name: "",
     schoolId: "",
@@ -25,7 +28,10 @@ const StandardForm: React.FC = () => {
 
   const [addStandard, { isLoading: isAdding }] = useCreateStandardMutation();
   const [updateStandard, { isLoading: isUpdating }] =  useUpdateStandardMutation();
-  const { data: schools = [] } = useGetAllSchoolsQuery();
+  //const { data: schools = [] } = useGetAllSchoolsQuery();
+  const { data: school } = useGetSchoolByIdQuery(schoolIdFromToken, {
+    skip: !schoolIdFromToken,
+  });
 
   const {
     data: existingStandard,
@@ -34,6 +40,14 @@ const StandardForm: React.FC = () => {
     isSuccess: isStandardSuccess,
   } = useGetStandardByIdQuery(String(standardId), { skip: !isEditMode });
 
+  useEffect(() => {
+  if (schoolIdFromToken && !isEditMode) {
+    setFormData((prev) => ({
+      ...prev,
+      schoolId: schoolIdFromToken,
+    }));
+  }
+}, [schoolIdFromToken, isEditMode]);
   useEffect(() => {
   if (alertMessage) {
     const timer = setTimeout(() => setAlertMessage(null), 2000);
@@ -81,7 +95,7 @@ const StandardForm: React.FC = () => {
       }
       setTimeout(() => {
  navigate("/admin/standard-list");
-}, 2000);
+}, 1800);
 
       
     } catch (err) {
@@ -159,12 +173,18 @@ const StandardForm: React.FC = () => {
                 required
                 className="mt-1 block w-full rounded-md border text-lg font-sm border-[#5C4033] p-2"
               >
-                <option value="">शाळा निवडा</option>
-                {schools.map((school) => (
+                {/* <option value="">शाळा निवडा</option>
+                {/* {schools.map((school) => (
                   <option key={school.id} value={school.id}>
                     {school.name}
                   </option>
-                ))}
+                ))} */}
+                                {school && (
+                  <option value={school.id}>
+                    {school.name}
+                  </option>
+                )}
+
               </select>
             </div>
 

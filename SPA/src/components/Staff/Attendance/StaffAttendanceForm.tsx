@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { skipToken } from "@reduxjs/toolkit/query/react";
-import { useGetAllSchoolsQuery } from "../../../services/schoolApi";
+import { useGetAllSchoolsQuery, useGetSchoolByIdQuery } from "../../../services/schoolApi";
 import { useGetStaffAttendanceBySchoolIdAndDateQuery, useSaveStaffAttendanceMutation } from "../../../services/staffAttendanceApi";
 import PageLayout from "../../../shared-components/PageLayout";
 import { StaffAttendance } from "../../types/IStaffAttendance";
 import AppSnackbar from "../../alert/AppSnackbar";
+import { getSchoolIdFromToken } from "../../../constants/authUtils";
+import { getRoleFromToken } from "../../../constants/roleUtils";
 
 const StaffAttendanceForm: React.FC = () => {
   
@@ -14,6 +16,10 @@ const [alertMessage, setAlertMessage] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState<string>(
     new Date().toISOString().split("T")[0]
   );
+  const decodedSchoolId = getSchoolIdFromToken(); 
+  const role = getRoleFromToken();
+  const { data: school } = useGetSchoolByIdQuery(decodedSchoolId);
+
   const [selectAll, setSelectAll] = useState(false);
 
   const { data: schools } = useGetAllSchoolsQuery();
@@ -35,10 +41,15 @@ const [alertMessage, setAlertMessage] = useState<string | null>(null);
      }
    }, [alertMessage]);
 
-  // Sync staff list with query data
  useEffect(() => {
   setStaffList(staffData || []);
 }, [staffData]);
+
+useEffect(()=>{
+  if(role !== "SuperAdmin" && school?.id){
+    setSelectedSchool(school.id);
+  }
+},[school,role]);
 
   // Sync selectAll with staff
   useEffect(() => {
@@ -95,18 +106,24 @@ const payload: StaffAttendance[] = staffList.map((s) => ({
   />
 
           {/* School Dropdown and Date Picker */}
-          <div className="flex gap-4 mb-6 justify-center">
+          <div className="flex gap-6 mb-6 justify-center">
             <select
               value={selectedSchool}
               onChange={(e) => setSelectedSchool(e.target.value)}
-              className="custom-select-left-arrow border p-2 rounded w-1/4 text-gray-700 font-noto-serif-devanagari"
+              className="custom-select-left-arrow border p-2 rounded w-1/3 text-gray-700 font-noto-serif-devanagari"
             >
-              <option value="">शाळा निवडा</option>
-              {schools?.map((school) => (
-                <option key={school.id} value={school.id}>
-                  {school.name}
-                </option>
-              ))}
+                 <option value="">-- शाळा निवडा --</option>
+
+  {(role === "SuperAdmin"
+    ? schools
+    : school
+    ? [school]
+    : []
+  )?.map((s) => (
+    <option key={s.id} value={s.id}>
+      {s.name}
+    </option>
+  ))}
             </select>
 
             <input

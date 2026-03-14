@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Laila:wght@300;400;500;600;700&family=Noto+Serif+Devanagari:wght@600&display=swap');
 @import "tailwindcss";
 @import 'swiper/css';
 @import 'swiper/css/navigation';
@@ -22,7 +23,6 @@ body {
 * {
   font-family: "MyCustomFont", sans-serif !important;
 } */
-
 
 .nav-link {
   position: relative;
@@ -77,7 +77,7 @@ body {
 
 .tree-container {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  font-size: 14px;
+  font-size: 11px;
   color: #5E3023;
   padding: 10px;
   background-color: #f9f6f4;

@@ -12,6 +12,7 @@ import AppSnackbar from "../alert/AppSnackbar";
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import "../../constants/confirm-custom.css";
+import toMarathiNumber from "../../constants/toMarathiNumber";
 
 
 export const CasteTypeList: React.FC = () => {
@@ -108,7 +109,7 @@ export const CasteTypeList: React.FC = () => {
             <tbody className="divide-y divide-gray-200">
               {casteTypes?.map((casteType, index) => (
                 <tr key={casteType.id} className="hover:bg-gray-50 text-center">
-                  <td className="px-3 text-lg py-2">{index + 1}</td>
+                  <td className="px-3 text-lg py-2">{toMarathiNumber(index + 1)}</td>
                   <td className="px-3 text-lg py-2">{casteType.casteName}</td>
                   <td className="px-3 py-2">
                     <div className="flex justify-center space-x-2">
@@ -131,6 +132,11 @@ export const CasteTypeList: React.FC = () => {
             </tbody>
           </table>
         </div>
+          <div className="flex justify-end mt-3 mt-50">
+  <p className="text-medium text-m text-gray-600 italic">
+    <strong> टीप:</strong> जात प्रकार उदा. मराठा, कुंभी, पाटील इत्यादी नमूद करावा.
+  </p>
+</div>
       </div>
     </PageLayout>
   );

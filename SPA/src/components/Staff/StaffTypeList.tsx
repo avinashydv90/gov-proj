@@ -9,12 +9,12 @@ import IconButton from "@mui/material/IconButton";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-//import { useDialogs } from "@toolpad/core/useDialogs";
 import { useEffect, useState } from "react";
 import AppSnackbar from "../alert/AppSnackbar";
 import { confirmAlert } from "react-confirm-alert";
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import "../../constants/confirm-custom.css";
+import toMarathiNumber from "../../constants/toMarathiNumber";
 
 export const StaffTypeList: React.FC = () => {
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
@@ -113,7 +113,7 @@ export const StaffTypeList: React.FC = () => {
             <tbody className="divide-y divide-gray-200">
               {staffTypes?.map((staffType, index) => (
                 <tr key={staffType.id} className="hover:bg-gray-50 text-center">
-                  <td className="px-3 text-lg py-2">{index + 1}</td>
+                  <td className="px-3 text-lg py-2">{toMarathiNumber(index + 1)}</td>
                   <td className="px-3 text-lg py-2">{staffType.name}</td>
                   <td className="px-3 py-2">
                     <div className="flex justify-center space-x-2">
@@ -135,6 +135,11 @@ export const StaffTypeList: React.FC = () => {
             </tbody>
           </table>
         </div>
+         <div className="flex justify-end mt-3 mt-50">
+  <p className="text-medium text-m text-gray-600 italic">
+    <strong > टीप:</strong> कर्मचारी प्रकार उदा. कायमस्वरूपी, कराराधारित इत्यादी नमूद करावा.
+  </p>
+</div>
       </div>
     </PageLayout>
   );

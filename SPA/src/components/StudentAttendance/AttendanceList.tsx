@@ -1,4 +1,4 @@
-import {   useState } from "react";
+import {   useEffect, useState } from "react";
 import { useGetAllStandardsQuery } from "../../services/standardApi";
 import { useGetDivisionsByStandardIdQuery } from "../../services/divisionApi";
 import { useDownloadAttendancePdfMutation, useGetAttendanceByStandardDivisionAndDateQuery } from "../../services/studentAttendenceApi";
@@ -6,24 +6,32 @@ import { skipToken } from "@reduxjs/toolkit/query/react";
 import PageLayout from "../../shared-components/PageLayout";
 import "../StudentAttendance/globals.css";
 import { StudentAttendanceReportDto } from "../types/studentAttendence";
-import { useGetAllSchoolsQuery } from "../../services/schoolApi";
-//import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
-
-const schoolId = "7ab5bd57-a14f-409e-abf1-55f661d44636"
-//const schoolId = "ef420f0e-7dd4-4930-91bc-809da2bc9ff1"
+import { useGetAllSchoolsQuery, useGetSchoolByIdQuery } from "../../services/schoolApi";
+import { getSchoolIdFromToken } from "../../constants/authUtils";
+import { getRoleFromToken } from "../../constants/roleUtils";
 
 const AttendanceList: React.FC = () => {
+
    const [selectedStandard, setSelectedStandard] = useState<string>("");
    const [selectedDivision, setSelectedDivision] = useState<string>("");
+   const [selectedSchool, setSelectedSchool] = useState("");
    const [selectedDate, setSelectedDate] = useState<string>(
        new Date().toISOString().split("T")[0]
      );
-    const { data: schools, isLoading: isSchoolsLoading } = useGetAllSchoolsQuery();    
+   
+   const decodedSchoolId = getSchoolIdFromToken();
+   const role = getRoleFromToken();
+   const { data: school, isLoading: isSchoolsLoading } = useGetSchoolByIdQuery(decodedSchoolId); 
+
    const [downloadAttendancePdf, { isLoading: isPdfLoading }] = useDownloadAttendancePdfMutation();
- 
+   const { data: schoolsData } = useGetAllSchoolsQuery();
    const { data: standards, isLoading: isStandardsLoading } = useGetAllStandardsQuery();
-   const { data: divisions, isLoading: isDivisionsLoading } = useGetDivisionsByStandardIdQuery(selectedStandard, { skip: !selectedStandard });
-   const { data: studentsData = [], isLoading: isStudentsLoading } =
+const { data: divisions, isLoading: isDivisionsLoading } =
+  useGetDivisionsByStandardIdQuery(
+    selectedStandard ? selectedStandard : skipToken
+  );
+
+   const { data: students = [], isLoading: isStudentsLoading } =
     useGetAttendanceByStandardDivisionAndDateQuery(
       selectedStandard && selectedDivision
         ? {
@@ -35,26 +43,26 @@ const AttendanceList: React.FC = () => {
         
     );
 
-  // Final students data reference
-  const students = studentsData;
+  const filteredStandards = selectedSchool
+  ? standards?.filter((s) => String(s.schoolId) === String(selectedSchool))
+  : [];
 
-  const filteredStandards = standards?.filter(
-    (s) => String(s.schoolId) === String(schoolId)
-  );
+useEffect(() => {
+  if (role !== "SuperAdmin" && school?.id) {
+    setSelectedSchool(school.id);
+  }
+}, [school, role]);
 
-
-   //  useEffect(() => {
-   //    if (studentsData && studentsData.length > 0) {
-   //      // Reset students whenever the query returns new data
-   //      setStudents(studentsData);
-   //    }
-   //  }, [studentsData]);
-
-      const handleStandardChange = (value: string) => {
+   const handleStandardChange = (value: string) => {
       setSelectedStandard(value);
-      setSelectedDivision(""); // reset division when standard changes
-    };
-
+      setSelectedDivision(""); 
+   };
+   const handleSchoolChange = (value: string) => {
+      setSelectedSchool(value);
+      setSelectedStandard("");
+      setSelectedDivision("");
+  
+   };
 
 const handleDownloadPDF = async () => {
   const reportData: StudentAttendanceReportDto[] = students.map((s, index) => ({
@@ -63,13 +71,12 @@ const handleDownloadPDF = async () => {
     standard: standards?.find(st => st.id === s.standardId)?.name || "-",
     division: divisions?.find(d => d.id === s.divisionId)?.name || "-",
     date: selectedDate,
-    schoolId: schoolId,
+    schoolId: selectedSchool,
     isPresent: s.isPresent,
   }));
- const schoolName = schools?.find(sch => sch.id === schoolId)?.name || "-";
+ const schoolName = schoolsData?.find(sch => String(sch.id) === String(selectedSchool))?.name || "-";
 
   try {
-    // Fix here 👇
      await downloadAttendancePdf({
       schoolName,
       students: reportData,
@@ -79,7 +86,6 @@ const handleDownloadPDF = async () => {
   }
 };
 
- // Loading state
   if (isStandardsLoading || isDivisionsLoading || isStudentsLoading || isSchoolsLoading) {
     return <PageLayout><p className="text-center mt-20">Loading...</p></PageLayout>;
   }
@@ -94,12 +100,29 @@ const handleDownloadPDF = async () => {
          {/* Dropdowns and Date Picker */}
          <div className="flex gap-4 mb-6">
             <select
+  value={selectedSchool}
+  onChange={(e) => handleSchoolChange(e.target.value)}
+  className="custom-select-left-arrow border p-2 font-sm rounded w-1/2 text-gray-700 font-noto-serif-devanagari"
+>
+<option value="">-- शाळा निवडा --</option>
+ {(role === "SuperAdmin"
+    ? schoolsData
+    : school
+    ? [school]
+    : []
+  )?.map((s) => (
+    <option key={s.id} value={s.id}>
+      {s.name}
+    </option>
+  ))}
+</select>
+            <select
                value={selectedStandard}
                onChange={(e) =>
                handleStandardChange(e.target.value)}
                className="custom-select-left-arrow border p-2 font-sm rounded w-1/3 text-gray-700 font-noto-serif-devanagari"
                >
-               <option value="">इयत्ता निवडा</option>
+               <option value="">--इयत्ता निवडा--</option>
                {filteredStandards?.map((s) => (
                <option key={s.id} value={s.id}>
                {s.name}
@@ -113,7 +136,7 @@ const handleDownloadPDF = async () => {
                disabled={!selectedStandard}
                className="custom-select-left-arrow border p-2 rounded w-1/3 font-sm text-gray-700 font-noto-serif-devanagari"
                >
-               <option value="">विभाग निवडा</option>
+               <option value="">-- विभाग निवडा --</option>
                {divisions?.map((d) => (
                <option key={d.id} value={d.id}>
                   {d.name}

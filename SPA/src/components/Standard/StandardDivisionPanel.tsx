@@ -110,12 +110,6 @@ const handleDelete = async (id: string) => {
      
           className="text-[#5C4033] cursor-pointer"
           fontSize="large"/>
-    {/* <button
-      onClick={handleAdd}
-      className="bg-[#5C4033] text-white px-4 py-2 rounded hover:bg-[#4a3328] font-md"
-    >
-      जोडा
-    </button> */}
   </div>
 
   <div>
@@ -130,11 +124,11 @@ const handleDelete = async (id: string) => {
               <th className="border px-4 py-2 text-center">क्रिया</th>
             </tr>
           </thead>
-          <tbody className="bg-white">
+          <tbody className="bg-white ">
             {divisions.map((div) => (
               <tr key={div.id} className="hover:bg-gray-50">
-                <td className="border px-4 py-2 text-center">{div.name}</td>
-                <td className="border px-4 py-2 text-center">
+                <td className="border px-4 py-2 text-center ">{div.name}</td>
+                <td className="border px-4 py-2 text-center ">
                   <Tooltip title="Delete">
           <IconButton  onClick={() => handleDelete(div.id)}>
             <DeleteIcon />

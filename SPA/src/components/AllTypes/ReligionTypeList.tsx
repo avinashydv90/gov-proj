@@ -15,13 +15,13 @@ import AppSnackbar from "../alert/AppSnackbar";
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import "../../constants/confirm-custom.css";
-//import { useDialogs } from "@toolpad/core/useDialogs";
+
 
 export const ReligionTypeList: React.FC = () => {
     const [alertMessage, setAlertMessage] = useState<string | null>(null);
   const [alertType, setAlertType] = useState<"success" | "error" | "info" | "warning">("info");
   const navigate = useNavigate();
-  //const dialogs = useDialogs();
+
   const { data: religionTypes, isLoading } = useGetAllReligionTypesQuery();
   const [deleteReligionType] = useDeleteReligionTypeMutation();
 
@@ -134,6 +134,11 @@ message: "कृपया पुढे जाण्यासाठी पुष�
             </tbody>
           </table>
         </div>
+        <div className="flex justify-end mt-3 mt-50">
+  <p className="text-medium text-m text-gray-600 italic">
+    <strong> टीप:</strong> धर्म प्रकार उदा. हिंदू, ईसाई, मुस्लिम इत्यादी नमूद करावा.
+  </p>
+</div>
       </div>
     </PageLayout>
   );

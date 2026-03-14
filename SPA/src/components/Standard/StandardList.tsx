@@ -1,8 +1,7 @@
-
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import { useGetAllSchoolsQuery } from "../../services/schoolApi";
+import { useGetAllSchoolsQuery, useGetSchoolByIdQuery } from "../../services/schoolApi";
 import PageLayout from "../../shared-components/PageLayout";
 import StandardDivisionPanel from "./StandardDivisionPanel";
 import { useDeleteStandardMutation, useGetAllStandardsQuery } from "../../services/standardApi";
@@ -19,6 +18,7 @@ import AppSnackbar from "../alert/AppSnackbar";
 import { confirmAlert } from "react-confirm-alert";
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import "../../constants/confirm-custom.css";
+import { getSchoolIdFromToken } from "../../constants/authUtils";
 
 
 const StandardList: React.FC = () => {
@@ -28,6 +28,7 @@ const StandardList: React.FC = () => {
   const [openDivisionIds, setOpenDivisionIds] = useState<string[]>([]);
   const [selectedSchool, setSelectedSchool] = useState<ISchool | null>(null);
 
+  const decodedSchoolId = getSchoolIdFromToken();
 
   const {
     data: standards = [],
@@ -35,19 +36,19 @@ const StandardList: React.FC = () => {
     isError,
     refetch,
   } = useGetAllStandardsQuery();
-  const { data: schools = [] } = useGetAllSchoolsQuery();
+  const { data: school, isLoading: isLoadingSchools } = useGetSchoolByIdQuery(decodedSchoolId);
+
+  const { data: schools } = useGetAllSchoolsQuery();
 
   const [deleteStandard, { isLoading: isDeleting }] =
     useDeleteStandardMutation();
 
-    //const dialogs = useDialogs();
-
-    useEffect(() => {
-     if (alertMessage) {
-       const timer = setTimeout(() => setAlertMessage(null), 2000);
-       return () => clearTimeout(timer);
-     }
-   }, [alertMessage]);
+ useEffect(() => {
+   if(school){
+     setSelectedSchool(school);
+   }
+    
+  }, [school]);
 
   const toggleDivision = (standardId: string) => {
     setOpenDivisionIds((prev) =>
@@ -58,8 +59,8 @@ const StandardList: React.FC = () => {
   };
 
 const getSchoolName = (schoolId: string) => {
-  const school = schools.find((s) => String(s.id) === String(schoolId));
-  return school?.name || "Unknown School";
+  const schoolName = schools?.find((s) => String(s.id) === String(schoolId)) ;
+  return schoolName?.name || "Unknown School";
 };
 
 
@@ -94,14 +95,31 @@ const getSchoolName = (schoolId: string) => {
      setSelectedSchool(school);
       setOpenDivisionIds([]); 
   };
-  <PageLayout>
-    <IsLoading isLoading={isLoading} />
-   <ErrorMessage isError={isError} />
-  </PageLayout>
+if (isLoading || isLoadingSchools) {
+  return (
+    <PageLayout>
+      <IsLoading isLoading={true} />
+    </PageLayout>
+  );
+}
 
-const filteredStandards = selectedSchool ? 
-standards.filter(standard =>standard.schoolId === selectedSchool.id) :standards;
+if (isError) {
+  return (
+    <PageLayout>
+      <ErrorMessage isError={true} />
+    </PageLayout>
+  );
+}
 
+
+const filteredStandards = selectedSchool
+  ? standards.filter(
+      (standard) => String(standard.schoolId) === String(selectedSchool.id)
+    )
+  : standards;
+
+  console.log("Filtered Standards:", filteredStandards);
+  console.log("Selected School:", selectedSchool);
 
   return (
   <PageLayout>
@@ -116,9 +134,9 @@ standards.filter(standard =>standard.schoolId === selectedSchool.id) :standards;
   type={alertType}
   onClose={() => setAlertMessage(null)}
   />
-        <Filter
-  schools={schools}
-  onSchoolChange={handleSchoolChange}
+<Filter
+  schools={school}
+      onSchoolChange={handleSchoolChange}
   selectedSchool={selectedSchool}
 />
 
@@ -163,10 +181,10 @@ standards.filter(standard =>standard.schoolId === selectedSchool.id) :standards;
                   return (
                   <React.Fragment key={std.id}>
                      <tr className="hover:bg-gray-50">
-                        <td className="px-6 py-4 text-lg font-sm text-gray-800">
+                        <td className="px-6 py-4 text-s font-sm text-gray-800 ">
                            {std.name}
                         </td>
-                        <td className="px-6 py-4 text-lg font-sm text-gray-800">
+                        <td className="px-6 py-4 text-s font-sm text-gray-800 ">
                            {getSchoolName(std.schoolId)}
                         </td>
                         <td className="px-6 py-4 text-sm font-semibold text-center">

@@ -1,17 +1,18 @@
 import axios from "axios";
+import { baseUrl } from "../services/api";
 
 interface AuthResponse {
   token: string;
   userName: string;
 }
-const apiUrl = "https://api.poitdp.shahapur-mh.in/api/Auth";
+//const apiUrl = "https://api.poitdp.shahapur-mh.in/api/Auth";
 
 export const loginAPI = async (
   email: string,
   password: string
 ): Promise<AuthResponse> => {
   try {
-    const response = await axios.post<AuthResponse>(`${apiUrl}/login`, {
+    const response = await axios.post<AuthResponse>(`${baseUrl}Auth/login`, {
       email,
       password,
     });
@@ -29,7 +30,7 @@ export const registerAPI = async (
   password: string
 ): Promise<void> => {
   try {
-    const response = await axios.post<void>(`${apiUrl}/register`, {
+    const response = await axios.post<void>(`${baseUrl}Auth/register`, {
       userName,
       email,
       role,

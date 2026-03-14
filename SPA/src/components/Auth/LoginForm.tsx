@@ -62,7 +62,13 @@ const LoginForm: React.FC = () => {
       localStorage.setItem("token", data.token);
       localStorage.setItem("userName", data.email);
       localStorage.setItem("role", data.role);
-      navigate("/admin/school-list");
+      // सुधारित नेव्हिगेशन लॉजिक
+  if (data.role === "SuperAdmin") {
+    navigate("/admin/school-list");
+  } else {
+    // Teacher किंवा इतर रोलसाठी
+    navigate("/admin/student-list");
+  }
     } catch (error) {
       const err = error as Partial<ErrorResponse>;
       if (err?.status === 401) {
@@ -83,8 +89,6 @@ const LoginForm: React.FC = () => {
       }
     }
   };
-
-  // const roles = ["User", "Admin", "SuperAdmin"];
 
   return (
     <PageLayout>

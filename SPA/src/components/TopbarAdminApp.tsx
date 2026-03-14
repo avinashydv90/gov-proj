@@ -3,40 +3,44 @@ import logo1 from "../assets/adivasi-vikas-vibhag.png";
 import logo2 from "../assets/shivrajyabhishek.png";
 import logo3 from "../assets/nationalemblem.png";
 import { NavLink } from "react-router-dom";
+import UserAvatar from "../pages/UserAvatar";
 
 const TopbarAdminApp = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [hideLogo, setHideLogo] = useState(false);
-  // const navigate = useNavigate();
-  // const location = useLocation();
 
   // Check user role
-  const userRole = localStorage.getItem("role");
+const userRole = localStorage.getItem("role") || "";
 
   const menuItems = [
     {
       label: "शाळांची यादी",
       path: "/admin/school-list",
-      userRole: "SuperAdmin",
+      userRole: ["SuperAdmin"],
     },
-  { label: "शाळेचा प्रकार", path: "/admin/schooltype-list" },
-  { label: "इयत्ता आणि विभाग", path: "/admin/standard-list" },
-  { label: "कर्मचारी यादी", path: "/admin/staff-list" },
-  { label: "कर्मचारी प्रकार", path: "/admin/employeetype-list" },
-  { label: "स्टाफ प्रकार", path: "/admin/stafftype-list" },
-  { label: "जात यादी", path: "/admin/castetype-list" },
-  { label: "धर्म प्रकार", path: "/admin/religiontype-list" },
-  { label: "कर्मचारी हजेरी", path: "/admin/add-staff-attendance" },
-  { label: "कर्मचारी हजेरी यादी", path: "/admin/staff-attendance-list" },
-  { label: "विद्यार्थी", path: "/admin/student-list" },
-  { label: "हजेरी यादी", path: "/admin/attendance-list" },
-  { label: "हजेरी",  path: "/admin/add-attendance" },
-  { label: "लॉगआउट", path: "/logout" }
+  { label: "शाळेचा प्रकार", path: "/admin/schooltype-list" ,userRole: ["SuperAdmin"]},
+  { label: "इयत्ता आणि विभाग", path: "/admin/standard-list" ,userRole: ["SuperAdmin","Principal","Teacher"]},
+  { label: "कर्मचारी यादी", path: "/admin/staff-list" ,userRole: ["SuperAdmin","Principal"]},
+  { label: "कर्मचारी प्रकार", path: "/admin/employeetype-list", userRole: ["SuperAdmin","Principal"] },
+  { label: "स्टाफ प्रकार", path: "/admin/stafftype-list", userRole: ["SuperAdmin","Principal"] },
+  { label: "जात यादी", path: "/admin/castetype-list" ,userRole: ["SuperAdmin","Principal","Teacher"]},
+  { label: "धर्म प्रकार", path: "/admin/religiontype-list",userRole: ["SuperAdmin","Principal","Teacher"] },
+  { label: "कर्मचारी हजेरी", path: "/admin/add-staff-attendance" ,userRole: ["SuperAdmin","Principal"]},
+  { label: "कर्मचारी हजेरी यादी", path: "/admin/staff-attendance-list" ,userRole: ["SuperAdmin","Principal"]},
+  { label: "विद्यार्थी", path: "/admin/student-list",userRole: ["SuperAdmin","Principal","Teacher"] },
+  { label: "हजेरी यादी", path: "/admin/attendance-list",userRole: ["SuperAdmin","Principal","Teacher"] },
+  { label: "हजेरी",  path: "/admin/add-attendance",userRole: ["SuperAdmin","Principal","Teacher"] },
+
   ];
 
-  const filteredMenuItems = menuItems.filter(
-    (item) => !item.userRole || item.userRole === userRole
-  );
+
+const filteredMenuItems = menuItems.filter((item) => {
+  // १. जर युजर SuperAdmin असेल, तर त्याला सर्वकाही दिसेल.
+  if (userRole === "SuperAdmin") return true;
+
+  // २. इतर रोलसाठी (Principal, Teacher), आयटमच्या userRole लिस्टमध्ये त्यांचा रोल आहे का ते तपासा.
+  return item.userRole.includes(userRole);
+});
 
   useEffect(() => {
     const handleScroll = () => {
@@ -100,6 +104,9 @@ const TopbarAdminApp = () => {
               </li>
             ))}
           </ul>
+           {/* User Avatar */}
+      
+       <UserAvatar/>
         </div>
 
         {/* Mobile Nav Menu */}

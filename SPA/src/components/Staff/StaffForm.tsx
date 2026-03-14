@@ -8,12 +8,13 @@ import { IStaff } from "../types/IStaff";
 import { useGetAllEmployeeTypeQuery } from "../../services/StaffService/employeeTypeApi";
 import { useGetAllStaffTypesQuery } from "../../services/StaffService/staffTypeApi";
 import { useGetAllCasteTypesQuery } from "../../services/StaffService/casteTypeApi";
-import { useGetAllSchoolsQuery } from "../../services/schoolApi";
+import { useGetAllSchoolsQuery, useGetSchoolByIdQuery } from "../../services/schoolApi";
 import { useGetAllReligionTypesQuery } from "../../services/StaffService/religionTypeApi";
 import TextareaField from "../TextareaField";
 import AppSnackbar from "../alert/AppSnackbar";
-
-
+import { getSchoolIdFromToken } from "../../constants/authUtils";
+import initialStaffRegistrationRequest from "./Attendance/initialStaffRegistrationRequest";
+import { getRoleFromToken } from "../../constants/roleUtils";
 
 const StaffForm: React.FC = () => {
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
@@ -21,40 +22,20 @@ const StaffForm: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const isEditMode = !!id;
-
-  const [formData, setFormData] = useState<IStaff>({
-    id: "",
-    name: "",
-    qualification: "",
-    subject: "",
-    joiningDate: "",
-    gender: "",
-    address: "",
-    contact: "",
-    email: "",
-    password: "",
-    minimumStandard: "",
-    maximumStandard: "",
-    dateOfBirth: "",
-    caste: "",
-    religion: "",
-    employeeTypeId: "",
-    staffTypeId: "",
-    userId: "",
-    schoolId: "",
-    religionTypeId: "",
-    casteTypeId: "",
-  });
+  const decodedSchoolId = getSchoolIdFromToken();
+  const role = getRoleFromToken();
+  const { data: school } = useGetSchoolByIdQuery(decodedSchoolId);
+  const { data: schools } = useGetAllSchoolsQuery();
+  const [formData, setFormData] = useState<IStaff>(initialStaffRegistrationRequest);
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const { data: staffType } = useGetAllStaffTypesQuery();
   const { data: employeeType } = useGetAllEmployeeTypeQuery();
   const { data: casteType } = useGetAllCasteTypesQuery();
-  const { data: schools } = useGetAllSchoolsQuery();
   const { data: religionTypes } = useGetAllReligionTypesQuery();
 
- const [createStaff] = useCreateStaffMutation();
+  const [createStaff] = useCreateStaffMutation();
   const [updateStaff] = useUpdateStaffMutation();
 
   const { data: existingStaff } = useGetStaffByIdQuery(id!, {
@@ -68,6 +49,14 @@ const StaffForm: React.FC = () => {
   }
 }, [alertMessage]);
 
+useEffect(() => {
+  if (role !== "SuperAdmin" && decodedSchoolId) {
+    setFormData((prev) => ({
+      ...prev,
+      schoolId: decodedSchoolId
+    }));
+  }
+}, [decodedSchoolId, role]);
 
 useEffect(() => {
   if (isEditMode && existingStaff) {
@@ -140,11 +129,11 @@ const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     if (isEditMode) {
       await updateStaff(payload).unwrap();
       setAlertType("success");
-      setAlertMessage("staff updated successfully.");
-    } else {
-      await createStaff(payload).unwrap();
-      setAlertType("success");
-      setAlertMessage("staff created successfully.");
+    setAlertMessage("कर्मचारी यशस्वीरित्या अद्यतनित केला गेला.");
+} else {
+  await createStaff(payload).unwrap();
+  setAlertType("success");
+  setAlertMessage("कर्मचारी यशस्वीरित्या तयार केला गेला.");
     }
     setTimeout(()=>{
         navigate("/admin/staff-list", { state: { updated: true } });
@@ -159,7 +148,12 @@ const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   const casteTypeOptions = casteType?.map((c ) => ({ id: c.id, name: c.casteName })) || [];
   const employeeTypeOptions = employeeType?.map((e) => ({ id: e.id, name: e.name })) || [];
   const staffTypeOptions = staffType?.map((s) => ({ id: s.id, name: s.name })) || [];
-  const schoolOptions = schools?.map((s) => ({ id: s.id, name: s.name })) || [];
+ const schoolOption =
+  role === "SuperAdmin"
+    ? schools?.map((s) => ({ id: s.id, name: s.name })) || []
+    : school
+    ? [{ id: school.id, name: school.name }]
+    : [];
   const religionOptions = religionTypes?.map((r) => ({
   id: r.id,
   name: r.name,
@@ -198,7 +192,7 @@ const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 />
               <InputField label="संपर्क" name="contact" value={formData.contact} required onChange={handleChange} />
               <InputField label="ईमेल" name="email" value={formData.email} onChange={handleChange} />
-              <InputField label="password" name="password" value={formData.password} onChange={handleChange} />
+              <InputField label="पासवर्ड" name="password" value={formData.password} onChange={handleChange} />
               <InputField label="किमान इयत्ता" name="minimumStandard" value={formData.minimumStandard} required onChange={handleChange} />
               <InputField label="कमाल इयत्ता" name="maximumStandard" value={formData.maximumStandard} required onChange={handleChange} />
               <InputField label="जन्मतारीख" type="date" name="dateOfBirth" value={formData.dateOfBirth} onChange={handleChange} required error={errors.dateOfBirth} />
@@ -207,7 +201,16 @@ const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 
               <SelectField label="कर्मचारी प्रकार" name="employeeTypeId" value={formData.employeeTypeId} onChange={handleChange} required error={errors.employeeTypeId} options={employeeTypeOptions} />
               <SelectField label="स्टाफ प्रकार" name="staffTypeId" value={formData.staffTypeId} onChange={handleChange} required error={errors.staffTypeId} options={staffTypeOptions} />
-              <SelectField label="शाळा" name="schoolId" value={formData.schoolId} onChange={handleChange} required error={errors.schoolId} options={schoolOptions} />
+              <SelectField
+  label="शाळा"
+  name="schoolId"
+  value={formData.schoolId}
+  onChange={handleChange}
+  required
+  error={errors.schoolId}
+  options={schoolOption}
+  disabled={role !== "SuperAdmin"}
+/>
 
               
               <SelectField label="धर्म प्रकार" name="religionTypeId" value={formData.religionTypeId} onChange={handleChange} required error={errors.religionTypeId} options={religionOptions} />

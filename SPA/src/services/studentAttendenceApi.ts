@@ -40,6 +40,7 @@ export const studentAttendanceApi = createApi({
       }),
       invalidatesTags: ["StudentAttendance"], // refresh the cache
     }),
+
     downloadAttendancePdf: builder.mutation<Blob, { schoolName: string; students: StudentAttendanceReportDto[] }>({
       query: ({ schoolName, students }) => ({
         url: `StudentAttendance/download-pdf?schoolName=${encodeURIComponent(schoolName)}`,
